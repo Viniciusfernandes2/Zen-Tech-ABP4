@@ -3,6 +3,7 @@
    
 | nº     | Aluno            | Data     |
 |--------|------------------|----------|
+| ------ |  Problemas Tecnicos  | 16/09    |
 | EU 001 |  Luana Pinheiro  | 18/09    |
 | LD 002 |  Vinicius Barbosa| 18/09    |
 | PD 003 |  Rodrigo de Andrade | 18/09 |
