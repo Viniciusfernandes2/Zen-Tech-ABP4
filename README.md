@@ -216,7 +216,7 @@ Nossa Equipe :
 | Dev Team        | Tiago Santini Da Silva     | <a href="https://github.com/TiagoSan77">Github</a>|
 | Dev Team        | Luana Pinheiro dos Santos Ve | <a href="">Github</a>|
 | Dev Team        | Vinicius Barbosa Fernandes    | <a href="">Github</a>|
-| Dev Team        | Caio Cesar Silva Azevedo dos Reis |<a href="">Github</a> |
+| Dev Team        | Rodrigo De Andrade Paula |<a href="">Github</a> |
 
 </div>
 
