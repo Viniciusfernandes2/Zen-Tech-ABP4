@@ -211,11 +211,11 @@ Nossa Equipe :
 
 | Função          | Nome                          | Links                                                                                                                         |
 |-----------------|-------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
-| Project Owner   | Tiago Santini Da Silva     | <a href="https://github.com/TiagoSan77">Github</a>|
-| Scrum Master    | Luana Pinheiro dos Santos Ve | <a href="">Github</a>|
-| Dev Team        | Bruno Henrique Menezes Ramos | <a href="">Github</a> |
+| Project Owner   | Edlaine De Paula Souza | <a href="https://github.com/edlaine-souza">Github</a>|
+| Scrum Master    | Bruno Henrique Menezes Ramos | <a href="">Github</a> |
+| Dev Team        | Tiago Santini Da Silva     | <a href="https://github.com/TiagoSan77">Github</a>|
+| Dev Team        | Luana Pinheiro dos Santos Ve | <a href="">Github</a>|
 | Dev Team        | Vinicius Barbosa Fernandes    | <a href="">Github</a>|
-| Dev Team        | Edlaine De Paula Souza | <a href="https://github.com/edlaine-souza">Github</a>|
 | Dev Team        | Caio Cesar Silva Azevedo dos Reis |<a href="">Github</a> |
 
 </div>
