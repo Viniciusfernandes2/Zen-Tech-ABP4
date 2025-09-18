@@ -1,11 +1,6 @@
-# Tasks
-Tasks APB - 4DSM
+# Tasks Sprint 01.
 
-
-**<h2>
-Tasks sprint1 :
-</h2>
-  <div align="center">
+<div align="center">
    
 | nº     | Aluno            | Data     |
 |--------|------------------|----------|
