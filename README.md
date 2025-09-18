@@ -1,6 +1,6 @@
 # Zen-Tech - Documentação
 <div align="center">
-<img  alt="logo-Zen-Tech" src="./imagens/zen tech logo.webp" height="400px" width="400px">
+ 
 </div>
 
 <span  id="topo">
@@ -21,19 +21,17 @@
 Sobre o Projeto :📋 
 </h2>
 <p>
- Este projeto foi desenvolvido pela equipe ZenTech com o objetivo de criar uma plataforma web interativa para a visualização e análise de dados meteorológicos, coletados por três estações instaladas no Lago de Furnas. A aplicação tem como finalidade monitorar variáveis ambientais críticas, como velocidade do vento, temperatura, umidade, entre outras, proporcionando uma experiência gráfica intuitiva aos usuários.
-
-A solução contribui para a prevenção de acidentes náuticos, além de possibilitar o acompanhamento climático histórico e atual, promovendo o uso consciente e seguro do Lago de Furnas. 
+App do idoso.
 </p>
 <br/>
 
 **Principais Funcionalidades:**
-- 🛡️ Autenticação de usuários
-- 📊 Visualização de dados em tabelas e gráficos interativos
-- ⚠️ Sistema de alertas para ventos extremos
-- 🔄 Comparação de parâmetros entre estações
-- 📥 Exportação de dados em CSV
-- 📱 Interface responsiva
+- 🛡️ 
+- 📊
+- ⚠️ 
+- 🔄 
+- 📥 
+- 📱 
 
 </div>
 
@@ -53,8 +51,8 @@ Cada entrega foi realizada a partir da data definida com o cliente, com o relat�
 | Sprint | Previsão de Entrega | Status | Relatório | Tasks |
 | ------ | -------------------- | ------ | --------- |-------|
 |   1    | 📅 15/04/2025        | :white_check_mark:| [:round_pushpin: Ver Relatório](./Sprint01.md) |[:round_pushpin: Ver Relatório](./taskSprint1.md) |
-|   2    | 📅 13/05/2025        | :white_check_mark:| [:round_pushpin: Ver Relatório](./Sprint02.md) | [:round_pushpin: Ver Relatório](./Sprint01.md)|
-|   3    | 📅 16/06/2025        | :white_check_mark:| [:round_pushpin: Ver Relatório](./Sprint03.md ) | [:round_pushpin: Ver Relatório](./Sprint01.md)|
+|   2    | 📅 13/05/2025        | :white_check_mark:| [:round_pushpin: Ver Relatório]() | [:round_pushpin: Ver Relatório]()|
+|   3    | 📅 16/06/2025        | :white_check_mark:| [:round_pushpin: Ver Relatório]() | [:round_pushpin: Ver Relatório]()|
 
 </div>
 
