@@ -17,4 +17,4 @@
 - EU 001 : Criação do wireframe do Aplicativo.
 - LD 002 : Criação do repositorio do Github e criação do repositorio para as tasks.
 - PD 003 : Criação das páginas de Home, Iniício, Cadastro, e Menu do app.
-- EU 004 : Feito requisito da matéria solicitado pelo professor( Jornada do Usuário ).  
+- EU 004 : Feito requisito da matéria solicitada pelo professor( Jornada do Usuário ).  
