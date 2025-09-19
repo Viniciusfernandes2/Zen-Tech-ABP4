@@ -36,6 +36,13 @@ Figma: https://share.google/fCjJlhN0PqWNUljTA
 - 📱 
 
 </div>
+<div>
+<h2>
+ Jornada do usuário :
+</h2>
+<a href="EU-02-Persona e Jornada do Usuário-Modelo.pdf">
+</div>
+
 
 <br>
 <h2>Gif do projeto functionando.</h2>
