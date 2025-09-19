@@ -41,7 +41,7 @@ Figma: https://share.google/fCjJlhN0PqWNUljTA
  Jornada do usuário :
 </h2>
  
- [:round: Jornada do usuário ](./EU-02-PersonaEJornadaDoUsuário-Modelo.pdf)
+ [Jornada do usuário ](./EU-02-PersonaEJornadaDoUsuário-Modelo.pdf)
 
 
 
