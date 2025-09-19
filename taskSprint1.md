@@ -12,7 +12,8 @@
 
 <h2>
   Atividades Feitas:
-</h2>-
+</h2>
+- Problemas Tecnicos 001 : Faltou internet na instituição para entregar as atividades
 - EU 001 : Criação do wireframe do Aplicativo.
 - LD 002 : Criação do repositorio do Github e criação do repositorio para as tasks.
 - PD 003 : Criação das páginas de Home, Iniício, Cadastro, e Menu do app.
