@@ -23,7 +23,7 @@ Sobre o Projeto :📋
 <p>
 App do idoso.
 
-Figma: https://share.google/fCjJlhN0PqWNUljTA
+Figma (wireframe): https://share.google/fCjJlhN0PqWNUljTA
 </p>
 <br/>
 
