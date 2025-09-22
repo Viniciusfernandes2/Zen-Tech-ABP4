@@ -1,6 +1,6 @@
 # Zen-Tech - Documentação
 <div align="center">
- 
+<img  alt="pulseira-icon" src="./app/assets/pulseira-icon.png" height="900px" width="400px">
 </div>
 
 <span  id="topo">
