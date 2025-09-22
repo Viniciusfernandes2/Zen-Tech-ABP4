@@ -8,6 +8,7 @@
 | LD 002 |  Vinicius Barbosa| 18/09    |
 | PD 003 |  Rodrigo de Andrade | 18/09 |
 | EU 004 |  Edlaine Paula | 18/09  |
+| PD 005 |  Rodrigo de Andrade | 22/09 |
 | PD 006 |  Tiago Santini | 22/09  |
 
 <h2>
@@ -19,4 +20,5 @@
 - LD 002 : Criação do repositorio do Github e criação do repositorio para as tasks.
 - PD 003 : Criação das páginas de Home, Iniício, Cadastro, e Menu do app.
 - EU 004 : Feito requisito da matéria solicitada pelo professor( Jornada do Usuário ).
-- PD 006: Implementação do banco de dados não relacional MongoDB em ambiente de nuvem.  
+- PD 005 : Criação da página de Configuração de Emergência.
+- PD 006 : Implementação do banco de dados não relacional MongoDB em ambiente de nuvem.  
