@@ -3,6 +3,11 @@
 <img  alt="pulseira-icon" src="./app/assets/pulseira-icon.png" height="900px" width="400px">
 </div>
 
+# Zen-Tech - Documentação
+<div align="center">
+ 
+</div>
+
 <span  id="topo">
 <br>
 <p  align="center">
@@ -30,17 +35,20 @@ os dados via Wi-Fi para um aplicativo mobile de monitoramento. O sistema também
 alertas por SMS para um número previamente cadastrado sempre que for detectada uma
 ocorrência classificada como queda.
 
-Figma (wireframe): https://share.google/fCjJlhN0PqWNUljTA
-</p>
-<br/>
 
-**Principais Funcionalidades:**
-- 🛡️ 
-- 📊
-- ⚠️ 
+<br>**Principais Funcionalidades:**</br>
+- 🛡️  Sistema de Cadastro e Vinculação
+- 📊  
+- ⚠️  Detecção Automática de Quedas
 - 🔄 
 - 📥 
-- 📱 
+- 📱  Interface simples e responsiva
+<h2>
+
+ Protótipo do Projeto : 📱
+</h2>
+Figma (wireframe):<a href="https://share.google/fCjJlhN0PqWNUljTA">Clique Aqui!</a>
+<br/>
 
 </div>
 <div>
