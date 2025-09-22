@@ -1,15 +1,16 @@
 # Tasks Sprint 01.
 
    
-| nº     | Aluno            | Data     |
-|--------|------------------|----------|
-| ------ |  Problemas Tecnicos 001  | 16/09    |
-| EU 001 |  Luana Pinheiro  | 18/09    |
-| LD 002 |  Vinicius Barbosa| 18/09    |
-| PD 003 |  Rodrigo de Andrade | 18/09 |
-| EU 004 |  Edlaine Paula | 18/09  |
-| PD 005 |  Rodrigo de Andrade | 22/09 |
-| PD 006 |  Tiago Santini | 22/09  |
+| nº      | Aluno            | Data     |
+|---------|------------------|----------|
+| ------  |  Problemas Tecnicos 001  | 16/09    |
+| EU 001  |  Luana Pinheiro  | 18/09    |
+| LD 002  |  Vinicius Barbosa| 18/09    |
+| PD 003  |  Rodrigo de Andrade | 18/09 |
+| EU 004  |  Edlaine Paula | 18/09  |
+| IEC 005 |  Bruno Menezes | 22/09 |
+| PD 006  |  Tiago Santini | 22/09  |
+| EU 012  |  Rodrigo de Andrade | 22/09 |
 
 <h2>
   Atividades Feitas:
@@ -20,5 +21,6 @@
 - LD 002 : Criação do repositorio do Github e criação do repositorio para as tasks.
 - PD 003 : Criação das páginas de Home, Iniício, Cadastro, e Menu do app.
 - EU 004 : Feito requisito da matéria solicitada pelo professor( Jornada do Usuário ).
-- PD 005 : Criação da página de Configuração de Emergência.
-- PD 006 : Implementação do banco de dados não relacional MongoDB em ambiente de nuvem.  
+- IEC 005: Criação de novas Tasks.
+- PD 006 : Implementação do banco de dados não relacional MongoDB em ambiente de nuvem.
+- EU 012 : Criação da página de Configuração de Emergência.   
