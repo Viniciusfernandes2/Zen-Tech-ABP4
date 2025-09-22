@@ -12,13 +12,18 @@
     "expo-status-bar": "~2.2.3",
     "react": "19.0.0",
     "react-native": "0.79.6",
+    "expo-location": "~18.1.6",
+    "react-native-maps": "1.20.1",
     "@expo/vector-icons": "^14.1.0",
     "react-native-paper": "4.9.2",
     "react-native-screens": "~4.11.1",
+    "react-native-webview": "13.13.5",
     "@react-navigation/stack": "*",
     "@react-navigation/native": "*",
     "react-native-gesture-handler": "~2.24.0",
-    "react-native-safe-area-context": "5.4.0"
+    "react-native-safe-area-context": "5.4.0",
+    "@react-native-community/geolocation": "*",
+    "@react-native-async-storage/async-storage": "2.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

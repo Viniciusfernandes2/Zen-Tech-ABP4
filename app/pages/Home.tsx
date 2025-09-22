@@ -13,7 +13,7 @@ const Home = ({ navigation }: { navigation: any }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Image source={require('../assets/snack-icon.png')} style={styles.logo} />
-      <Text style={styles.title}>Alerta de Quedas</Text>
+      <Text style={styles.title}>BioAlert</Text>
     </SafeAreaView>
   );
 }
