@@ -21,7 +21,13 @@
 Sobre o Projeto :📋 
 </h2>
 <p>
-App do idoso.
+Sistema de Detecção de Quedas para Idosos
+Muitas pessoas em idade avançada permanecem sozinhas em casa, o que aumenta o risco em casos
+de queda.
+O objetivo é especificar e implementar um sistema que detecte automaticamente quedas e envie
+os dados via Wi-Fi para um aplicativo mobile de monitoramento. O sistema também deverá emitir
+alertas por SMS para um número previamente cadastrado sempre que for detectada uma
+ocorrência classificada como queda.
 
 Figma (wireframe): https://share.google/fCjJlhN0PqWNUljTA
 </p>
