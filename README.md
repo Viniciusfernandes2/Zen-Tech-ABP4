@@ -21,9 +21,10 @@
 Sobre o Projeto :📋 
 </h2>
 <p>
-Sistema de Detecção de Quedas para Idosos
+Sistema de Detecção de Quedas para Idosos.
+<p>
 Muitas pessoas em idade avançada permanecem sozinhas em casa, o que aumenta o risco em casos
-de queda.
+de queda.<br>
 O objetivo é especificar e implementar um sistema que detecte automaticamente quedas e envie
 os dados via Wi-Fi para um aplicativo mobile de monitoramento. O sistema também deverá emitir
 alertas por SMS para um número previamente cadastrado sempre que for detectada uma
