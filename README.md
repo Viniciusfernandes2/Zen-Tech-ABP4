@@ -3,11 +3,6 @@
 <img  alt="pulseira-icon" src="./app/assets/pulseira-icon.png" height="900px" width="400px">
 </div>
 
-# Zen-Tech - Documentação
-<div align="center">
- 
-</div>
-
 <span  id="topo">
 <br>
 <p  align="center">
