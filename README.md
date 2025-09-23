@@ -65,10 +65,10 @@ Figma (wireframe):<a href="https://share.google/fCjJlhN0PqWNUljTA">Clique Aqui!<
 ##### [🔝 Voltar ao topo ](#topo)
 
 <h2 id="sprint">
-Entregas de Sprints :
+Entregas de Sprints e Tasks :
 </h2>
 
-Cada entrega foi realizada a partir da data definida com o cliente, com o relatório completo do que foi desenvolvido nas sprints. Abaixo está a relação das sprints:
+Todas as entregas serão realizadas conforme os prazos acordados com o cliente. Para cada ciclo de desenvolvimento, será gerado um relatório completo por sprint e uma planilha de tarefas, na aba Tasks, que detalha cada atividade executada, o responsável, a data de conclusão e uma descrição do trabalho realizado. A relação detalhada das sprints e tarefas é apresentada abaixo.
 
 <div align="center">
 
@@ -137,31 +137,27 @@ Requisitos do Cliente :
 
  <h3> Requisitos funcionais :</h3>
   <p>
-    RF01 – O sistema deve restringir o acesso a usuários autenticados;
+    RF01 –  O sistema deve detectar automaticamente eventos classificados como queda, com base em dados de movimento;
   </p> 
   <p>
-    RF02 – O sistema deve permitir a visualização do histórico de dados de cada estação em formato 
-    tabular;
+    RF02 – O sistema deve enviar os dados de detecção via Wi-Fi para um aplicativo mobile de monitoramento;
   </p>
   <p>
-      RF03 – O sistema deve exibir gráficos com os parâmetros coletados por uma estação 
-    meteorológica;
+      RF03 – O sistema deve permitir o cadastro de um número de telefone para recebimento de alertas por SMS;
   </p>
   <p>
-    RF04 – O sistema deve permitir a comparação de um mesmo parâmetro entre diferentes estações 
-    por meio de gráficos;
+    RF04 – O sistema deve enviar alertas por SMS automaticamente quando uma queda for detectada;
   </p>
   <p>
-     RF05 – O sistema deve possibilitar o download de dados em formato CSV. 
+     RF05 – O aplicativo mobile deve exibir o status de monitoramento em tempo real. 
   </p>
    
   
 <h3>Requisitos não funcionais :</h3>
 
-<p>RNF01 – O sistema deve exibir gráficos interativos para melhor análise dos dados;</p>
-<p>RNF02 – A interface deve ser responsiva, garantindo um layout consistente em diferentes 
-dispositivos e tamanhos de tela;</p>
-<p>RNF03 – O sistema deve incluir uma página explicativa sobre o projeto.</p>
+<p>RNF01 – O sistema deve garantir baixa latência na transmissão de dados entre o dispositivo IoT e o backend;</p>
+<p>RNF02 – O aplicativo mobile deve possuir interface intuitiva e acessível, adequada ao perfil do usuário idoso ou familiar;</p>
+<p>RNF03 – A solução deve utilizar tecnologias de containerização (Docker) e pipeline de CI/CD;</p>
 </div>
 
 <br>
