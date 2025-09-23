@@ -30,13 +30,19 @@ Sistema de Detecção de Quedas para Idosos.
 <p>
 Muitas pessoas em idade avançada permanecem sozinhas em casa, o que aumenta o risco em casos
 de queda.<br>
-O objetivo é especificar e implementar um sistema que detecte automaticamente quedas e envie
+<p>
+O Bio Alert é uma solução tecnológica desenvolvida pela Zentech para aumentar a segurança de idosos que permanecem sozinhos em casa. O sistema utiliza sensores 
+inteligentes para detectar automaticamente quedas e acionar rapidamente mecanismos de alerta, garantindo socorro imediato em situações de emergência.
+</p>
+
+**Objetivo Principal:**
+<p>O objetivo é especificar e implementar um sistema que detecte automaticamente quedas e envie
 os dados via Wi-Fi para um aplicativo mobile de monitoramento. O sistema também deverá emitir
 alertas por SMS para um número previamente cadastrado sempre que for detectada uma
-ocorrência classificada como queda.
+ocorrência classificada como queda.</p>
 
 
-<br>**Principais Funcionalidades:**</br>
+**Principais Funcionalidades:**
 - 🛡️  Sistema de Cadastro e Vinculação
 - 📊  
 - ⚠️  Detecção Automática de Quedas
