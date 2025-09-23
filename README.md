@@ -32,7 +32,7 @@ Muitas pessoas em idade avançada permanecem sozinhas em casa, o que aumenta o r
 de queda.<br>
 <p>
 O Bio Alert é uma solução tecnológica desenvolvida pela Zentech para aumentar a segurança de idosos que permanecem sozinhos em casa. O sistema utiliza sensores 
-inteligentes para detectar automaticamente quedas e acionar rapidamente mecanismos de alerta, garantindo socorro imediato em situações de emergência.
+inteligentes, pela pulseira, para detectar automaticamente quedas e acionar rapidamente mecanismos de alerta, garantindo socorro imediato em situações de emergência.
 </p>
 
 **Objetivo Principal:**
@@ -43,11 +43,10 @@ ocorrência classificada como queda.</p>
 
 
 **Principais Funcionalidades:**
-- 🛡️  Sistema de Cadastro e Vinculação
-- 📊  
+- 🛡️  Sistema de Cadastro e Vinculação  
 - ⚠️  Detecção Automática de Quedas
-- 🔄 
-- 📥 
+- 💬  Alertas Imediatos por SMS
+- 🚨  Alerta queda(pulseira)  
 - 📱  Interface simples e responsiva
 <h2>
 
@@ -67,7 +66,6 @@ Figma (wireframe):<a href="https://share.google/fCjJlhN0PqWNUljTA">Clique Aqui!<
 
 
 <br>
-<h2>Gif do projeto functionando.</h2>
 
 ##### [🔝 Voltar ao topo ](#topo)
 
