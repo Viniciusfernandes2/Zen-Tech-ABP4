@@ -10,7 +10,9 @@
 | EU 004  |  Edlaine Paula | 18/09  |
 | IEC 005 |  Bruno Menezes | 22/09 |
 | PD 006  |  Tiago Santini | 22/09  |
-| EU 012  |  Rodrigo de Andrade | 22/09 |
+| PD 007  |  Rodrigo de Andrade | 22/09 |
+| EU 008  |  Luana Pinheiro  | 22/09    |
+
 
 <h2>
   Atividades Feitas:
@@ -23,4 +25,5 @@
 - EU 004 : Feito requisito da matéria solicitada pelo professor( Jornada do Usuário ).
 - IEC 005: Criação de novas Tasks.
 - PD 006 : Implementação do banco de dados não relacional MongoDB em ambiente de nuvem.
-- EU 012 : Criação da página de Configuração de Emergência.   
+- PD 007 :  Criação da página de Configuração de Emergência.   
+- EU 008 : Desenvolvimento da Logo. 
