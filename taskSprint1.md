@@ -12,6 +12,7 @@
 | PD 006  |  Tiago Santini | 22/09  |
 | PD 007  |  Rodrigo de Andrade | 22/09 |
 | EU 008  |  Luana Pinheiro  | 22/09    |
+| IEC 009 |  Edlaine Paula | 22/09 |
 
 
 <h2>
@@ -26,4 +27,5 @@
 - IEC 005: Criação de novas Tasks.
 - PD 006 : Implementação do banco de dados não relacional MongoDB em ambiente de nuvem.
 - PD 007 :  Criação da página de Configuração de Emergência.   
-- EU 008 : Desenvolvimento da Logo. 
+- EU 008 : Desenvolvimento da Logo.
+- IEC 009 : Atualizando a página do Redmi do Github.
