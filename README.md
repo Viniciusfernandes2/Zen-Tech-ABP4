@@ -214,6 +214,11 @@ Tecnologias :
 <a href="https://code.visualstudio.com/" target="_blank">
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" alt="VS Code" width="30" height="30">
 </a>
+
+<!-- Docker -->
+<a href="https://www.docker.com/" target="_blank"> 
+<img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-plain.svg" alt="Docker" width="30" height="30"> 
+</a>
 </div>
 
 <br>
