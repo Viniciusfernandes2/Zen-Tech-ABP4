@@ -4,12 +4,14 @@ Use esta tabela para acompanhar todas as tasks do projeto. Marque ⬜ para pende
 
 Legenda IDs
 
-| ID | Descrição                            | 
-| EU | Experiencia do Usuario               |
-| PD | Programação para Dispositivos Moveis |
-| IT | Internet das coisas e Aplicações     |
-| LW | Laboratorio de Desenvolvimento Web   |
-| IC | Integração e Entrega Continua        |
+| ID | Descrição                              |
+|----|----------------------------------------|
+| EU | Experiência do Usuário                 |
+| PD | Programação para Dispositivos Móveis   |
+| IT | Internet das Coisas e Aplicações       |
+| LW | Laboratório de Desenvolvimento Web     |
+| IC | Integração e Entrega Contínua          |
+
 
 ## Sprint 1 – IoT e Detecção Local
 
