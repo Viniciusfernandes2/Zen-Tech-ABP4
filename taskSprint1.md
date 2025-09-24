@@ -28,7 +28,7 @@ Legenda IDs
 | IC 009   | Atualizando a página do Readme do Github.                                        | Edlaine Paula      | 22/09    | ✅      |
 | LD 010   | Levantamento dos requisitos e elaboração das tasks das 3 Sprints (mutavel)       | Bruno Menezes      | 24/09    | ✅      |
 | IC 011   | Backlog Priorizado por Sprints                                                   | Edlaine Paula      | 24/09    | ⬜      |
-| IT 012   | Levantamento de Pontos Positivos e Negativos Acelerometro MPU6050 para compra    |                    |          | ⬜      |
+| IT 012   | Finalização da configuração do Git (Criação de Branches) e inicio Git Actions    |                    |          | ⬜      |
 | PD 013   | Modelagem do Banco de Dados (UML)                                                |                    |          | ⬜      |
 | IT 014   | Levantamento de Pontos Positivos e Negativos Acelerometro MPU9250 para compra    |                    |          | ⬜      |
 |          | Montar circuito ESP32 + acelerômetro                                             |                    |          | ⬜      |
