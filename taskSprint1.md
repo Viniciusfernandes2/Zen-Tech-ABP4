@@ -29,7 +29,7 @@ Legenda IDs
 | LD 010   | Levantamento dos requisitos e elaboração das tasks das 3 Sprints (mutavel)       | Bruno Menezes      | 24/09    | ✅      |
 | IC 011   | Backlog Priorizado por Sprints                                                   | Edlaine Paula      | 24/09    | ⬜      |
 | IT 012   | Finalização da configuração do Git (Criação de Branches) e inicio Git Actions    |                    |          | ⬜      |
-| PD 013   | Modelagem do Banco de Dados (UML)                                                |                    |          | ⬜      |
+| PD 013   | Modelagem do Banco de Dados (UML)                                                |  Tiago Santini               |     24/09     | ✅      |
 | IT 014   | Levantamento de Pontos Positivos e Negativos Acelerometro MPU9250 para compra    |  Luana Pinheiro           |  24/09        | ✅      |
 |          | Montar circuito ESP32 + acelerômetro                                             |                    |          | ⬜      |
 |          | Testar alimentação do sensor via 3.3V                                            |                    |          | ⬜      |
