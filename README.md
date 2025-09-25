@@ -102,25 +102,56 @@ Product Backlog :
    
 |item  | Funcionalidade                     | Descrição                                                                                   | Prioridade |
 |----------|------------------------------------|---------------------------------------------------------------------------------------------|------------|
-|  | **WireFrame do projeto**           | Criar estrutura basica do projeto | ALTA
-| RP01| **Protótipo (Figma)**              | Criar protótipo das principais telas (Login, Cadastro, Home e Gráficos).                     | ALTA       |
-| RF01 | **Tela de Login**                  | Desenvolver tela de login e integrá-la com o back-end para autenticação.                     | ALTA       |
-| RF01 | **Tela de Cadastro**               | Criar tela para cadastro de usuários com validação e integração com o back-end.              | ALTA       |
-| RP02 | **Back-end – Autenticação**        | Implementar API de autenticação com Node.js, usando MongoDB e segurança (JWT).               | ALTA       |
-|  | **Home Page – Front-end**          | Desenvolver home page com navegação para as outras funcionalidades.                        | MÉDIA      |
-| RNF03 | **Página Explicativa**                      | Criar uma página com a explicação do projeto e seus objetivos.   | MÉDIA      |
-| RNF01 | **Tela de Gráficos e Estatísticas**| Exibir dados meteorológicos em gráficos interativos.                | MÉDIA      |
-| RP02 | **Infraestrutura Front-end**       | Configurar projeto React TypeScript, rotas e estrutura de componentes.                       | MÉDIA      |
-| RP02 | **Documentação no Github**       | Criar documentação do projeto com grafico bundown e backlog                       | MÉDIA      |
-| RNF02 | **Validação Responsiva**           | Garantir que as telas tenham layout responsivo em diferentes dispositivos.                   | BAIXA      |
-| RF02 | **Histórico de Dados (Tabular)**            | Exibir registros históricos de cada estação em forma de tabela. | ALTA       |
-| RF03 | **Gráficos de Parâmetros**                  | Mostrar gráficos interativos dos parâmetros de uma estação.    | ALTA       |
-| RF04 | **Gráficos Comparativos**                   | Comparar o mesmo parâmetro entre diferentes estações.          | MÉDIA      |
-| RF05 | **Download de Dados (CSV)**                 | Permitir a exportação dos dados em formato CSV.                | ALTA       |
-|  | **Sistema de Alertas e Notícias**           | Implementar lógica de alertas e exibi-los na home page (agora painel de notícias).  | ALTA       |
-|  | **Refinamento e Integração Final**          | Ajustar integrações entre front-end e back-end e corrigir bugs.    | MÉDIA      |
-| RP02| **Documentação Final**                      | Consolidar a documentação do projeto.     | MÉDIA      |
-|  | **Integrar Chatbot**                       | Integrar Chatbot para geração de alertas  | ALTA       |
+|RNF  |	**Criação do repositório Github**	|	Criar repositório principal e repositório para gestão de tasks	|	ALTA	|	
+|RNF|	**Documentação do Readme**		|	Atualizar página do Readme do Github com documentação do projeto|	ALTA	|
+|RNF|	**Levantamento de requisitos**	|	Elaborar requisitos e tasks para as 3 Sprints			|	ALTA	|
+|RNF|	**Backlog Priorizado**		|	Criar backlog priorizado por Sprints				|	ALTA	|
+|	|**Wireframe do Aplicativo**	|		Criar estrutura básica do wireframe			|	ALTA	|
+|RF	|**Protótipo das páginas**		|	Desenvolver páginas de Home, Início, Cadastro e Menu		|	ALTA	|
+|RNF	|**Jornada do Usuário**		|	Documentar requisito solicitado pelo professor (Jornada do Usuário)|	ALTA	|
+|RF	|**Página Configuração de Emergência**| 	Criar página para configuração de contatos de emergência	|	ALTA	|
+|RNF	|**Desenvolvimento da Logo**	|	Criar identidade visual do aplicativo				|	MÉDIA	|
+|RNF	|**Modelagem do Banco de Dados**	|	Criar UML do banco de dados					|	ALTA	|
+|RNF	|**Implementação MongoDB**		|	Configurar MongoDB em ambiente de nuvem				|	ALTA	|
+|RNF	|**Análise de Sensores**		|	Levantar pontos positivos/negativos MPU6050 e MPU9250		|	ALTA	|
+|RNF	|**Montagem do Circuito**		|	Montar circuito ESP32 + acelerômetro				|	ALTA	|
+|RNF	|**Teste de Alimentação**		|	Testar alimentação do sensor via 3.3V				|	ALTA	|
+|RNF	|**Comunicação I2C**		|		Verificar comunicação I2C entre ESP32 e sensor		|	ALTA	|
+|RNF	|**Ajuste Endereçamento**		|	Ajustar endereçamento I2C do sensor				|	ALTA	|
+|RNF	|**Ambiente de Desenvolvimento**	|	Configurar Arduino IDE/PlatformIO				|	ALTA	|
+|RF	|**Sketch Base ESP32**		|	Criar sketch base para o ESP32					|	ALTA	|
+|RF	|**Importar Biblioteca**		|	Importar e configurar biblioteca do sensor			|	ALTA	|
+|RF	|**Leitura Dados Acelerômetro**	|	Validar leitura de dados crus do acelerômetro (ax, ay, az)	|	ALTA	|
+|RF	|**Leitura Dados Giroscópio**	|	Validar leitura de dados crus do giroscópio (gx, gy, gz)	|	ALTA	|
+|RNF	|**Esquema Elétrico**		|	Documentar esquema elétrico completo				|	MÉDIA	|
+|RF	|**Normalização de Dados**		|	Normalizar valores lidos (g's e °/s)				|	ALTA	|
+|RF	|**Calibração Acelerômetro**	|		Implementar calibração do acelerômetro			|	ALTA	|
+|RF	|**Calibração Giroscópio**		|	Implementar calibração do giroscópio				|	ALTA	|
+|RNF	|**Log Serial Debug**		|	Criar log serial para debug dos dados				|	MÉDIA	|
+|RNF	|**Vídeo Validação Movimento**	|	Gravar vídeo de teste de movimento para validação		|	MÉDIA	|
+|RF	|**Cálculo Magnitude Aceleração**	|	Implementar cálculo da magnitude da aceleração			|	ALTA	|
+|RF	|**Definir Thresholds**		|	Definir thresholds iniciais para detecção de queda		|	ALTA	|
+|RF	|**Detecção Pico Aceleração**	|	Criar função para identificar pico de aceleração		|	ALTA	|
+|RF	|**Detecção Ausência Movimento**	|	Implementar detecção de ausência de movimento pós-pico		|	ALTA	|
+|RF	|**Classificação Queda**		|	Combinar regras simples para classificar queda			|	ALTA	|
+|RF	|**Teste Thresholds**		|	Testar diferentes thresholds (2.5g, 3g, 3.5g)			|	ALTA	|
+|RF	|**Validação Movimentos Normais**	|	Validar com simulação de movimentos normais (andar, sentar)	|	ALTA	|
+|RNF	|**Resultados Calibração**		|	Documentar os resultados da calibração				|	MÉDIA	|
+|RF	|**Conexão Wi-Fi**			|	Configurar conexão do ESP32 com rede Wi-Fi local		|	ALTA	|
+|RF	|**Reconexão Automática**		|	Implementar rotina de reconexão automática			|	ALTA	|
+|RF	|**Envio HTTP POST**		|		Criar envio básico via HTTP POST para servidor de testes|	ALTA	|
+|RF	|**Payload JSON**			|	Criar payload JSON com dados do evento				|	ALTA	|
+|RF	|**Validação Envio Tempo Real**	|	Validar envio em tempo real (Serial + servidor)			|	ALTA	|
+|RNF	|**Endpoint API**			|	Documentar endpoint usado para envio				|	MÉDIA	|
+|RF	|**Simulação Quedas Reais**		|	Simular quedas reais (deixar objeto cair com sensor)		|	ALTA	|
+|RF	|**Coleta Dados Cenários**		|	Coletar dados de diferentes cenários (queda vs movimento normal)|	ALTA	|
+|RF	|**Validação Falsos Positivos**	|	Validar taxa de falsos positivos				|	ALTA	|
+|RF	|**Validação Falsos Negativos**	|	Validar taxa de falsos negativos				|	ALTA	|
+|RNF	|**Estabilidade Conexão**		|	Testar estabilidade da conexão Wi-Fi (> 1h)			|	ALTA	|
+|RNF	|**Métricas Performance**		|	Documentar métricas iniciais de performance			|	MÉDIA	|
+|RNF	|**Estrutura JSON**			|	Documentar estrutura do JSON enviado ao backend			|	MÉDIA	|
+|RNF	|**Aprendizados e Melhorias**	|	Registrar aprendizados e melhorias futuras			|	MÉDIA	|
+|RNF	|**Relatório Final Sprint** 	|		Entregar relatório final (vídeo + documentação)		|	ALTA	|
 
   </div>
 </div>
