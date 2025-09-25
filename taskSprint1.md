@@ -30,7 +30,7 @@ Legenda IDs
 | IC 011   | Backlog Priorizado por Sprints                                                   | Edlaine Paula      | 24/09    | ⬜      |
 | IT 012   | Finalização da configuração do Git (Criação de Branches) e inicio Git Actions    |                    |          | ⬜      |
 | PD 013   | Modelagem do Banco de Dados (UML)                                                |                    |          | ⬜      |
-| IT 014   | Levantamento de Pontos Positivos e Negativos Acelerometro MPU9250 para compra    |                    |          | ⬜      |
+| IT 014   | Levantamento de Pontos Positivos e Negativos Acelerometro MPU9250 para compra    |  Luana Pinheiro           |  24/09        | ✅      |
 |          | Montar circuito ESP32 + acelerômetro                                             |                    |          | ⬜      |
 |          | Testar alimentação do sensor via 3.3V                                            |                    |          | ⬜      |
 |          | Verificar comunicação I2C entre ESP32 e sensor                                   |                    |          | ⬜      |
