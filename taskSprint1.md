@@ -31,6 +31,7 @@ Legenda IDs
 | IT 012   | Finalização da configuração do Git (Criação de Branches) e inicio Git Actions    |                    |          | ⬜      |
 | PD 013   | Modelagem do Banco de Dados (UML)                                                |  Tiago Santini               |     24/09     | ✅      |
 | IT 014   | Levantamento de Pontos Positivos e Negativos Acelerometro MPU9250 para compra    |  Luana Pinheiro           |  24/09        | ✅      |
+| PD 015   | Imagens da Logo, Bem-Vindo e Cadastro, e Criação dos Cadastros de Idoso e Cuidador    |  Rodrigo de Andrade      |  24/09    | ✅      |
 |          | Montar circuito ESP32 + acelerômetro                                             |                    |          | ⬜      |
 |          | Testar alimentação do sensor via 3.3V                                            |                    |          | ⬜      |
 |          | Verificar comunicação I2C entre ESP32 e sensor                                   |                    |          | ⬜      |
