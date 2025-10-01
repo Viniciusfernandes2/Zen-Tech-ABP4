@@ -1,6 +1,6 @@
-// pages/Emergencia.tsx
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Emergencia = ({ navigation }: { navigation: any }) => {
   return (
@@ -22,7 +22,7 @@ const Emergencia = ({ navigation }: { navigation: any }) => {
         </TouchableOpacity>
 
         <TouchableOpacity 
-          style={styles.button}
+          style={styles.configButton}
           onPress={() => navigation.navigate('ConfiguracaoEmergencia')}
         >
           <Text style={styles.configButtonText}>Configurar Contatos de Emergência</Text>
@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 20,
+    paddingTop: 40,
   },
   title: {
     fontSize: 28,
@@ -65,13 +66,14 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: 16,
     marginBottom: 30,
     textAlign: 'center',
     color: '#666',
+    lineHeight: 22,
   },
   button: {
-    backgroundColor: '#3EBCE5',
+    backgroundColor: '#3E8CE5',
     padding: 18,
     borderRadius: 10,
     marginBottom: 15,
@@ -111,7 +113,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 20,
     borderLeftWidth: 4,
-    borderLeftColor: '#3EBCE5',
+    borderLeftColor: '#3E8CE5',
   },
   infoText: {
     fontSize: 14,
@@ -123,7 +125,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
   },
-  footerText: {
+  footerText: { 
     fontSize: 14,
     color: '#666',
     textAlign: 'center',

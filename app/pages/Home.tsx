@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
-import { View, Text, Image, StyleSheet, ActivityIndicator, SafeAreaView } from 'react-native';
+import { useEffect } from 'react';
+import { Text, Image, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Home = ({ navigation }: { navigation: any }) => {
   useEffect(() => {
@@ -12,28 +13,37 @@ const Home = ({ navigation }: { navigation: any }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Image source={require('../assets/snack-icon.png')} style={styles.logo} />
+      <Image source={require('../assets/pulseira-icon-sos.png')} style={styles.logo} />
       <Text style={styles.title}>BioAlert</Text>
+      <Text style={styles.subtitle}>Monitoramento Inteligente de Queda de Idoso</Text>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#3EBCE5',
+    flex: 1, 
+    backgroundColor: '#3E8CE5',
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 20,
   },
   logo: {
-    width: 150,
-    height: 150,
+    width: 200,
+    height: 200,
     marginBottom: 20,
   },
   title: {
-    fontSize: 24,
+    fontSize: 32,
     color: 'white',
-    marginTop: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: 'white',
+    textAlign: 'center',
+    opacity: 0.9,
   },
 });
 

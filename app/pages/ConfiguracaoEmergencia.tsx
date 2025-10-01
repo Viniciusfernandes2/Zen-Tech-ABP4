@@ -1,4 +1,3 @@
-// pages/ConfiguracaoEmergencia.tsx
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -8,9 +7,9 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
-  SafeAreaView,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface ContatoEmergencia {
   id: number;
@@ -23,10 +22,8 @@ const ConfiguracaoEmergencia = ({ navigation }: { navigation: any }) => {
     { id: 1, nome: '', telefone: '' },
   ]);
 
-  // Chave para salvar no AsyncStorage
   const STORAGE_KEY = '@contatos_emergencia';
 
-  // Carregar contatos salvos ao iniciar a tela
   useEffect(() => {
     carregarContatos();
   }, []);
@@ -37,7 +34,6 @@ const ConfiguracaoEmergencia = ({ navigation }: { navigation: any }) => {
       if (contatosSalvos) {
         const contatosParseados = JSON.parse(contatosSalvos);
         setContatos(contatosParseados);
-        console.log('Contatos carregados:', contatosParseados);
       }
     } catch (error) {
       console.error('Erro ao carregar contatos:', error);
@@ -47,7 +43,6 @@ const ConfiguracaoEmergencia = ({ navigation }: { navigation: any }) => {
 
   const salvarContatos = async () => {
     try {
-      // Validar pelo menos um contato preenchido
       const contatosPreenchidos = contatos.filter(contato => 
         contato.nome.trim() && contato.telefone.trim()
       );
@@ -57,7 +52,6 @@ const ConfiguracaoEmergencia = ({ navigation }: { navigation: any }) => {
         return;
       }
 
-      // Validar formato dos telefones
       for (const contato of contatosPreenchidos) {
         if (!validarTelefone(contato.telefone)) {
           Alert.alert('Erro', `Telefone "${contato.telefone}" não é válido. Use o formato (XX) XXXXX-XXXX`);
@@ -65,17 +59,13 @@ const ConfiguracaoEmergencia = ({ navigation }: { navigation: any }) => {
         }
       }
 
-      // Filtrar apenas contatos preenchidos para salvar
       const contatosParaSalvar = contatos.filter(contato => 
         contato.nome.trim() && contato.telefone.trim()
       );
 
-      // Salvar no AsyncStorage
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(contatosParaSalvar));
       
       Alert.alert('Sucesso', 'Contatos de emergência salvos com sucesso!');
-      
-      // Voltar para a tela anterior
       navigation.goBack();
     } catch (error) {
       Alert.alert('Erro', 'Não foi possível salvar os contatos.');
@@ -84,7 +74,6 @@ const ConfiguracaoEmergencia = ({ navigation }: { navigation: any }) => {
   };
 
   const validarTelefone = (telefone: string): boolean => {
-    // Remove caracteres não numéricos e verifica se tem entre 10 e 11 dígitos
     const numeroLimpo = telefone.replace(/\D/g, '');
     return numeroLimpo.length >= 10 && numeroLimpo.length <= 11;
   };
@@ -117,20 +106,14 @@ const ConfiguracaoEmergencia = ({ navigation }: { navigation: any }) => {
   };
 
   const formatarTelefone = (texto: string): string => {
-    // Remove tudo que não é dígito
     const numeros = texto.replace(/\D/g, '');
-    
-    // Limita a 11 dígitos (máximo para celular brasileiro)
     const numerosLimitados = numeros.slice(0, 11);
     
-    // Aplica a formatação
     if (numerosLimitados.length <= 10) {
-      // Formato: (XX) XXXX-XXXX para telefone fixo
       return numerosLimitados
         .replace(/(\d{2})(\d{0,4})(\d{0,4})/, '($1) $2-$3')
         .replace(/-$/, '');
     } else {
-      // Formato: (XX) XXXXX-XXXX para celular
       return numerosLimitados
         .replace(/(\d{2})(\d{0,5})(\d{0,4})/, '($1) $2-$3')
         .replace(/-$/, '');
@@ -312,7 +295,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   adicionarButton: {
-    backgroundColor: '#3EBCE5',
+    backgroundColor: '#3E8CE5',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
