@@ -1,14 +1,14 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import {
   View,
   ActivityIndicator,
   StyleSheet,
-  SafeAreaView,
+  Text
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const LoadingScreen = ({ navigation }: { navigation: any }) => {
   useEffect(() => {
-    // Show loading indicator for 4 seconds before navigating to Principal
     const timer = setTimeout(() => {
       navigation.navigate('Principal');
     }, 4000);
@@ -17,19 +17,37 @@ const LoadingScreen = ({ navigation }: { navigation: any }) => {
   }, [navigation]);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#f5f5f5' }}>
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#5fcf80" />
+    <SafeAreaView style={styles.container}>
+      <View style={styles.content}>
+        <ActivityIndicator size="large" color="#3E8CE5" />
+        <Text style={styles.loadingText}>Carregando...</Text>
+        <Text style={styles.subText}>Preparando seu ambiente</Text>
       </View>
     </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({ 
   container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  content: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 20,
+  },
+  loadingText: {
+    marginTop: 20,
+    fontSize: 18,
+    color: '#333',
+    fontWeight: '600',
+  },
+  subText: {
+    marginTop: 10,
+    fontSize: 14,
+    color: '#666',
   },
 });
 

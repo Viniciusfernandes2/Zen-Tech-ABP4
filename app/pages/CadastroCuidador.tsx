@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { 
-  View, 
   Text, 
   TextInput, 
   TouchableOpacity, 
@@ -11,12 +10,12 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const Cadastro = ({ navigation }: { navigation: any }) => {
+const CadastroCuidador = ({ navigation }: { navigation: any }) => {
   const [nome, setNome] = useState('');
   const [dataNascimento, setDataNascimento] = useState('');
-  const [endereco, setEndereco] = useState('');
-  const [telefone1, setTelefone1] = useState('');
-  const [telefone2, setTelefone2] = useState('');
+  const [parentesco, setParentesco] = useState('');
+  const [email, setEmail] = useState('');
+  const [telefone, setTelefone] = useState('');
 
   const formatarData = (text: string) => {
     const numbers = text.replace(/\D/g, '');
@@ -44,9 +43,19 @@ const Cadastro = ({ navigation }: { navigation: any }) => {
     }
   };
 
+  const validarEmail = (email: string) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
   const handleConfirmar = () => {
-    if (!nome.trim() || !dataNascimento.trim() || !endereco.trim() || !telefone1.trim()) {
-      Alert.alert('Atenção', 'Por favor, preencha todos os campos obrigatórios');
+    if (!nome.trim() || !dataNascimento.trim() || !parentesco.trim() || !email.trim() || !telefone.trim()) {
+      Alert.alert('Atenção', 'Por favor, preencha todos os campos');
+      return;
+    }
+
+    if (!validarEmail(email)) {
+      Alert.alert('Atenção', 'Por favor, insira um email válido');
       return;
     }
 
@@ -55,13 +64,22 @@ const Cadastro = ({ navigation }: { navigation: any }) => {
       return;
     }
 
-    const telefoneLimpo = telefone1.replace(/\D/g, '');
+    const telefoneLimpo = telefone.replace(/\D/g, '');
     if (telefoneLimpo.length < 10) {
-      Alert.alert('Atenção', 'Por favor, insira um telefone principal válido');
+      Alert.alert('Atenção', 'Por favor, insira um telefone válido');
       return;
     }
 
-    navigation.navigate('CadastroCuidador');
+    Alert.alert(
+      'Confirmação',
+      'Dados do cuidador salvos com sucesso!',
+      [
+        {
+          text: 'OK',
+          onPress: () => navigation.navigate('Menu')
+        }
+      ]
+    );
   };
 
   return (
@@ -71,8 +89,8 @@ const Cadastro = ({ navigation }: { navigation: any }) => {
           source={require('../assets/cadastro.png')} 
           style={styles.logo}
         />
-        <Text style={styles.title}>Cadastro do Idoso</Text>
-        <Text style={styles.subtitle}>Preencha seus dados pessoais</Text>
+        <Text style={styles.title}>Cadastro do Cuidador</Text>
+        <Text style={styles.subtitle}>Preencha os dados do cuidador principal</Text>
 
         <TextInput
           style={styles.input}
@@ -91,39 +109,38 @@ const Cadastro = ({ navigation }: { navigation: any }) => {
         />
 
         <TextInput
-          style={[styles.input, styles.multilineInput]}
-          placeholder="Endereço Completo *"
-          value={endereco}
-          onChangeText={setEndereco}
-          multiline
-          numberOfLines={3}
+          style={styles.input}
+          placeholder="Parentesco *"
+          value={parentesco}
+          onChangeText={setParentesco}
         />
 
         <TextInput
           style={styles.input}
-          placeholder="Telefone Principal *"
-          value={telefone1}
-          onChangeText={(text) => setTelefone1(formatarTelefone(text))}
-          maxLength={15}
-          keyboardType="phone-pad"
+          placeholder="Email *"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoComplete="email"
         />
 
         <TextInput
           style={styles.input}
-          placeholder="Telefone Opcional"
-          value={telefone2}
-          onChangeText={(text) => setTelefone2(formatarTelefone(text))}
+          placeholder="Telefone *"
+          value={telefone}
+          onChangeText={(text) => setTelefone(formatarTelefone(text))}
           maxLength={15}
           keyboardType="phone-pad"
         />
 
-        <Text style={styles.obrigatorio}>* Campos obrigatórios</Text>
+        <Text style={styles.obrigatorio}>* Todos os campos são obrigatórios</Text>
 
         <TouchableOpacity
           style={styles.button}
           onPress={handleConfirmar}
         >
-          <Text style={styles.buttonText}>Continuar</Text>
+          <Text style={styles.buttonText}>Confirmar</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
@@ -140,8 +157,8 @@ const styles = StyleSheet.create({
     paddingTop: 40,
   },
   logo: {
-    width: 80,
-    height: 80,
+    width: 120,
+    height: 120,
     marginBottom: 20,
     alignSelf: 'center',
   },
@@ -170,11 +187,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     fontSize: 16,
   },
-  multilineInput: {
-    height: 80,
-    textAlignVertical: 'top',
-    paddingTop: 12,
-  },
   obrigatorio: {
     width: '100%',
     textAlign: 'left',
@@ -198,4 +210,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Cadastro; 
+export default CadastroCuidador;

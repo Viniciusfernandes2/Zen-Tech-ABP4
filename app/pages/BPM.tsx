@@ -3,12 +3,12 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   ScrollView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const BPM = () => {
-  const bpm = 80; // Valor fixo de 80 BPM
+  const bpm = 80;
 
   const getStatus = () => {
     if (bpm < 60) return 'Abaixo do normal';
@@ -41,6 +41,13 @@ const BPM = () => {
           Seus batimentos cardíacos estão sendo monitorados constantemente.
           Em caso de alterações significativas, você será notificado.
         </Text>
+
+        <View style={styles.infoBox}>
+          <Text style={styles.infoTitle}>Referências:</Text>
+          <Text style={styles.infoItem}>• Normal: 60-100 BPM</Text>
+          <Text style={styles.infoItem}>• Abaixo do normal: menos de 60 BPM</Text>
+          <Text style={styles.infoItem}>• Acima do normal: mais de 100 BPM</Text>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -52,7 +59,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   content: {
-    flex: 1,
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
@@ -64,10 +71,11 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: 16,
     marginBottom: 30,
     textAlign: 'center',
     color: '#666',
+    lineHeight: 22,
   },
   bpmContainer: {
     alignItems: 'center',
@@ -83,7 +91,8 @@ const styles = StyleSheet.create({
     color: '#666',
   },
   statusContainer: {
-    padding: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
     borderRadius: 20,
     marginBottom: 30,
   },
@@ -97,6 +106,27 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#666',
     lineHeight: 24,
+    marginBottom: 30,
+  },
+  infoBox: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: '100%',
+    borderLeftWidth: 4,
+    borderLeftColor: '#3E8CE5',
+  },
+  infoTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#333',
+  },
+  infoItem: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 5,
+    lineHeight: 20,
   },
 });
 
