@@ -56,7 +56,7 @@ Figma (wireframe):<a href="https://share.google/fCjJlhN0PqWNUljTA">Clique Aqui!<
  Jornada do usuário :
 </h2>
  
- [Jornada do usuário ](./EU-02-PersonaEJornadaDoUsuário-Modelo.pdf)
+ [Jornada do usuário ](./EU/EU-02-PersonaEJornadaDoUsuário-Modelo.pdf)
 
 
 
