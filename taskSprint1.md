@@ -34,8 +34,11 @@ Legenda IDs
 | PD 015   | Imagens da Logo, Bem-Vindo e Cadastro, e Criação dos Cadastros de Idoso e Cuidador    |  Rodrigo de Andrade      |  30/09    | ✅      |
 | LD 016   | Estruturação do ambiente Backend e configuração do servidor    |  Tiago Santini Da Siva      |  30/09    | ✅      |
 | EU 017   | Atualização e ajustes do protótipo no Figma    |  Edlaine Paula      |  30/09    | ✅      |
-|          | Montar circuito ESP32 + acelerômetro                                             |                    |          | ⬜      |
-|          | Testar alimentação do sensor via 3.3V                                            |                    |          | ⬜      |
+| IT 018         | Montar circuito ESP32 + acelerômetro                                             |         Bruno Menezes           |  02/10        | ✅      |
+| IT 019         | Conexão do banco de dados nuvem ja criado com o servidor                                           |   Tiago Santini                 |  02/10        | ✅      |
+| IT 020         | Simulção do funcionamento do sistema com a ESP32 GY85                                           |   Vinicius Barbosa                |  02/10        | ✅      |
+| PD 021         | Atualização do estilo na pagina do Menu em colocação de menu hamburguer                                            |   Rodrigo de Andrade               |  02/10        | ✅      |
+| EU 022         | Mapa de espectativas (MosCow)                                            |   Edlaine Paula               |  02/10        | ✅      |
 |          | Verificar comunicação I2C entre ESP32 e sensor                                   |                    |          | ⬜      |
 |          | Ajustar endereçamento I2C do sensor                                              |                    |          | ⬜      |
 |          | Validar leitura de dados crus do acelerômetro                                    |                    |          | ⬜      |
