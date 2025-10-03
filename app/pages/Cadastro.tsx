@@ -7,7 +7,9 @@ import {
   StyleSheet, 
   Image,
   ScrollView,
-  Alert
+  Alert,
+  KeyboardAvoidingView,
+  Platform
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -66,66 +68,88 @@ const Cadastro = ({ navigation }: { navigation: any }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Image 
-          source={require('../assets/cadastro.png')} 
-          style={styles.logo}
-        />
-        <Text style={styles.title}>Cadastro do Idoso</Text>
-        <Text style={styles.subtitle}>Preencha seus dados pessoais</Text>
-
-        <TextInput
-          style={styles.input}
-          placeholder="Nome Completo *"
-          value={nome}
-          onChangeText={setNome}
-        />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Data de Nascimento (DD/MM/AAAA) *"
-          value={dataNascimento}
-          onChangeText={(text) => setDataNascimento(formatarData(text))}
-          maxLength={10}
-          keyboardType="numeric"
-        />
-
-        <TextInput
-          style={[styles.input, styles.multilineInput]}
-          placeholder="Endereço Completo *"
-          value={endereco}
-          onChangeText={setEndereco}
-          multiline
-          numberOfLines={3}
-        />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Telefone Principal *"
-          value={telefone1}
-          onChangeText={(text) => setTelefone1(formatarTelefone(text))}
-          maxLength={15}
-          keyboardType="phone-pad"
-        />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Telefone Opcional"
-          value={telefone2}
-          onChangeText={(text) => setTelefone2(formatarTelefone(text))}
-          maxLength={15}
-          keyboardType="phone-pad"
-        />
-
-        <Text style={styles.obrigatorio}>* Campos obrigatórios</Text>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleConfirmar}
+      <KeyboardAvoidingView 
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <ScrollView 
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
-          <Text style={styles.buttonText}>Continuar</Text>
-        </TouchableOpacity>
-      </ScrollView>
+          <Image 
+            source={require('../assets/cadastro.png')} 
+            style={styles.logo}
+          />
+          <Text style={styles.title}>Cadastro do Idoso</Text>
+          <Text style={styles.subtitle}>Preencha seus dados pessoais</Text>
+
+          <TextInput
+            style={styles.input}
+            placeholder="Nome Completo *"
+            value={nome}
+            onChangeText={setNome}
+            placeholderTextColor="#999"
+            autoCorrect={false}
+            clearButtonMode="while-editing" // Só para iOS
+          />
+
+          <TextInput
+            style={styles.input}
+            placeholder="Data de Nascimento (DD/MM/AAAA) *"
+            value={dataNascimento}
+            onChangeText={(text) => setDataNascimento(formatarData(text))}
+            maxLength={10}
+            keyboardType="numeric"
+            placeholderTextColor="#999"
+            clearButtonMode="while-editing"
+          />
+
+          <TextInput
+            style={[styles.input, styles.multilineInput]}
+            placeholder="Endereço Completo *"
+            value={endereco}
+            onChangeText={setEndereco}
+            multiline
+            numberOfLines={3}
+            textAlignVertical="top"
+            placeholderTextColor="#999"
+          />
+
+          <TextInput
+            style={styles.input}
+            placeholder="Telefone Principal *"
+            value={telefone1}
+            onChangeText={(text) => setTelefone1(formatarTelefone(text))}
+            maxLength={15}
+            keyboardType="phone-pad"
+            placeholderTextColor="#999"
+            clearButtonMode="while-editing"
+          />
+
+          <TextInput
+            style={styles.input}
+            placeholder="Telefone Opcional"
+            value={telefone2}
+            onChangeText={(text) => setTelefone2(formatarTelefone(text))}
+            maxLength={15}
+            keyboardType="phone-pad"
+            placeholderTextColor="#999"
+            clearButtonMode="while-editing"
+          />
+
+          <Text style={styles.obrigatorio}>* Campos obrigatórios</Text>
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={handleConfirmar}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.buttonText}>Continuar</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -138,6 +162,9 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: 20,
     paddingTop: 40,
+    paddingBottom: 40,
+    flexGrow: 1,
+    justifyContent: 'center',
   },
   logo: {
     width: 80,
@@ -169,6 +196,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     backgroundColor: 'white',
     fontSize: 16,
+    color: '#000', // Alterado para preto para melhor contraste
   },
   multilineInput: {
     height: 80,
@@ -190,6 +218,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     marginTop: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
   },
   buttonText: {
     color: 'white',
@@ -198,4 +234,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Cadastro; 
+export default Cadastro;

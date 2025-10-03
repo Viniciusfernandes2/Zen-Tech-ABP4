@@ -15,7 +15,7 @@ const Principal = ({ navigation }: { navigation: any }) => {
       </Text>
       <TouchableOpacity 
         style={styles.button}
-        onPress={() => navigation.navigate('Cadastro')}>
+        onPress={() => navigation.navigate('Menu')}> 
         <Text style={styles.buttonText}>Continuar</Text>
       </TouchableOpacity>
     </View>

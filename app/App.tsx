@@ -14,6 +14,7 @@ import Localizacao from './pages/Localizacao';
 import BPM from './pages/BPM';
 import Emergencia from './pages/Emergencia';
 import ConfiguracaoEmergencia from './pages/ConfiguracaoEmergencia';
+import Perfil from './pages/Perfil';
 
 const Stack = createStackNavigator();
 
@@ -72,7 +73,7 @@ export default function App() {
         <Stack.Screen 
           name="Menu" 
           component={Menu} 
-          options={{ title: 'Menu Principal' }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen 
           name="Pulseira" 
@@ -103,6 +104,11 @@ export default function App() {
           name="ConfiguracaoEmergencia" 
           component={ConfiguracaoEmergencia} 
           options={{ title: 'Configuração de Emergência' }}
+        />
+        <Stack.Screen 
+          name="Perfil" 
+          component={Perfil} 
+          options={{ title: 'Meu Perfil' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

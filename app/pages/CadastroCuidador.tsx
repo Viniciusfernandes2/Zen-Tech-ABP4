@@ -6,7 +6,9 @@ import {
   StyleSheet, 
   Image,
   ScrollView,
-  Alert
+  Alert,
+  KeyboardAvoidingView,
+  Platform
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -84,65 +86,88 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Image 
-          source={require('../assets/cadastro.png')} 
-          style={styles.logo}
-        />
-        <Text style={styles.title}>Cadastro do Cuidador</Text>
-        <Text style={styles.subtitle}>Preencha os dados do cuidador principal</Text>
-
-        <TextInput
-          style={styles.input}
-          placeholder="Nome Completo *"
-          value={nome}
-          onChangeText={setNome}
-        />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Data de Nascimento (DD/MM/AAAA) *"
-          value={dataNascimento}
-          onChangeText={(text) => setDataNascimento(formatarData(text))}
-          maxLength={10}
-          keyboardType="numeric"
-        />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Parentesco *"
-          value={parentesco}
-          onChangeText={setParentesco}
-        />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Email *"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoComplete="email"
-        />
-
-        <TextInput
-          style={styles.input}
-          placeholder="Telefone *"
-          value={telefone}
-          onChangeText={(text) => setTelefone(formatarTelefone(text))}
-          maxLength={15}
-          keyboardType="phone-pad"
-        />
-
-        <Text style={styles.obrigatorio}>* Todos os campos são obrigatórios</Text>
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={handleConfirmar}
+      <KeyboardAvoidingView 
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+      >
+        <ScrollView 
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
-          <Text style={styles.buttonText}>Confirmar</Text>
-        </TouchableOpacity>
-      </ScrollView>
+          <Image 
+            source={require('../assets/cadastro.png')} 
+            style={styles.logo}
+          />
+          <Text style={styles.title}>Cadastro do Cuidador</Text>
+          <Text style={styles.subtitle}>Preencha os dados do cuidador principal</Text>
+
+          <TextInput
+            style={styles.input}
+            placeholder="Nome Completo *"
+            value={nome}
+            onChangeText={setNome}
+            placeholderTextColor="#999"
+            autoCorrect={false}
+            clearButtonMode="while-editing"
+          />
+
+          <TextInput
+            style={styles.input}
+            placeholder="Data de Nascimento (DD/MM/AAAA) *"
+            value={dataNascimento}
+            onChangeText={(text) => setDataNascimento(formatarData(text))}
+            maxLength={10}
+            keyboardType="numeric"
+            placeholderTextColor="#999"
+            clearButtonMode="while-editing"
+          />
+
+          <TextInput
+            style={styles.input}
+            placeholder="Parentesco *"
+            value={parentesco}
+            onChangeText={setParentesco}
+            placeholderTextColor="#999"
+            autoCorrect={false}
+            clearButtonMode="while-editing"
+          />
+
+          <TextInput
+            style={styles.input}
+            placeholder="Email *"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoComplete="email"
+            placeholderTextColor="#999"
+            clearButtonMode="while-editing"
+          />
+
+          <TextInput
+            style={styles.input}
+            placeholder="Telefone *"
+            value={telefone}
+            onChangeText={(text) => setTelefone(formatarTelefone(text))}
+            maxLength={15}
+            keyboardType="phone-pad"
+            placeholderTextColor="#999"
+            clearButtonMode="while-editing"
+          />
+
+          <Text style={styles.obrigatorio}>* Todos os campos são obrigatórios</Text>
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={handleConfirmar}
+            activeOpacity={0.8}
+          >
+            <Text style={styles.buttonText}>Confirmar</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -155,6 +180,9 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: 20,
     paddingTop: 40,
+    paddingBottom: 40,
+    flexGrow: 1,
+    justifyContent: 'center',
   },
   logo: {
     width: 120,
@@ -186,6 +214,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     backgroundColor: 'white',
     fontSize: 16,
+    color: '#000', // Alterado para preto para melhor contraste
   },
   obrigatorio: {
     width: '100%',
@@ -202,6 +231,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     marginTop: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
   },
   buttonText: {
     color: 'white',
