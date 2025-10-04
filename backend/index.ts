@@ -1,19 +1,18 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-// import Routes from './src/routes/index.js';
+import router from './src/routes'; // importa o arquivo backend/routes/index.ts
+
 const app = express();
 
 app.use(cors());
-
 app.use(express.json());
 
-// app.use('/', Routes);
-app.use('/teste', (req, res) => {
-    res.send('API is running...');
+// todas as rotas vão estar sob o prefixo /api
+app.use('/api', router);
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
 
-// connect()
-
-app.listen(3000, () => {
-    console.log(`Servidor rodando na porta http://localhost:3000`);
-});
