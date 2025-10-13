@@ -102,10 +102,10 @@ Product Backlog :
    
 |item  | Funcionalidade                     | Descrição                                                                                   | Prioridade |
 |----------|------------------------------------|---------------------------------------------------------------------------------------------|------------|
-|RNF  |	**Criação do repositório Github**	|	Criar repositório principal e repositório para gestão de tasks	|	ALTA	|	
-|RNF|	**Documentação do Readme**		|	Atualizar página do Readme do Github com documentação do projeto|	ALTA	|
-|RNF|	**Levantamento de requisitos**	|	Elaborar requisitos e tasks para as 3 Sprints			|	ALTA	|
-|RNF|	**Backlog Priorizado**		|	Criar backlog priorizado por Sprints				|	ALTA	|
+|RNF - EU  |	**Protótipo Figma - Wireframe**	|	Protótipo das telas do app no Figma	|	ALTA	|	
+|RNF - PD |	**Protótipo de telas - ExpoGo**		|	Protótipo de telas no ExpoGo utilizando React Native |	ALTA	|
+|RNF - IE |	**Organização - Github**	|	Início de documentação e início da implantação das regras CI/CD			|	ALTA	|
+|RNF - |	**Backlog Priorizado**		|	Criar backlog priorizado por Sprints				|	ALTA	|
 |	|**Wireframe do Aplicativo**	|		Criar estrutura básica do wireframe			|	ALTA	|
 |RF	|**Protótipo das páginas**		|	Desenvolver páginas de Home, Início, Cadastro e Menu		|	ALTA	|
 |RNF	|**Jornada do Usuário**		|	Documentar requisito solicitado pelo professor (Jornada do Usuário)|	ALTA	|
