@@ -56,7 +56,7 @@ Figma (wireframe):<a href="https://share.google/fCjJlhN0PqWNUljTA">Clique Aqui!<
  Jornada do usuário :
 </h2>
  
- [Jornada do usuário ](./EU-02-PersonaEJornadaDoUsuário-Modelo.pdf)
+ [Jornada do usuário ](./EU/EU-02-PersonaEJornadaDoUsuário-Modelo.pdf)
 
 
 
@@ -74,8 +74,8 @@ Todas as entregas serão realizadas conforme os prazos acordados com o cliente. 
 
 | Sprint | Previsão de Entrega | Status | Relatório | Tasks |
 | ------ | -------------------- | ------ | --------- |-------|
-|   1    | 📅 07/10/2025        | :construction:| [:round_pushpin: Ver Relatório](./Sprint01.md) |[:round_pushpin: Ver Relatório](./taskSprint1.md) |
-|   2    | 📅 04/11/2025        | [-]| [:round_pushpin: Ver Relatório]() | [:round_pushpin: Ver Relatório]()|
+|   1    | 📅 07/10/2025        | :white_check_mark:| [:round_pushpin: Ver Relatório](./Sprint01.md) |[:round_pushpin: Ver Relatório](./taskSprint1.md) |
+|   2    | 📅 04/11/2025        |:construction: | [:round_pushpin: Ver Relatório]() | [:round_pushpin: Ver Relatório]()|
 |   3    | 📅 25/11/2025        | [-]| [:round_pushpin: Ver Relatório]() | [:round_pushpin: Ver Relatório]()|
 
 </div>
@@ -85,7 +85,7 @@ Legenda:
 - :construction: **Em Progresso**
 - [-] **Não iniciado**
 
-A apresentação da Sprint 1 em vídeo por ser acessada por [aqui!]() 
+A apresentação da Sprint 1 em vídeo por ser acessada por [aqui!](https://www.youtube.com/watch?v=f40Za_Fj7MA) 
 
 <br>
 
