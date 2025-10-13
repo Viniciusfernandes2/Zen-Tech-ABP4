@@ -14,20 +14,20 @@ const Perfil = ({ navigation }: { navigation: any }) => {
   const [userData, setUserData] = useState({
     nome: 'João Silva',
     dataNascimento: '15/03/1950',
-    endereco: 'Rua das Flores, 123 - São Paulo/SP',
-    telefone1: '(11) 99999-9999',
-    telefone2: '(11) 88888-8888',
+    endereco: 'Rua das Flores, 123 - Jacareí/SP',
+    telefone1: '(12) 99999-9999',
+    telefone2: '(12) 88888-8888',
   });
 
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false); 
 
   const handleSave = () => {
-    Alert.alert('Sucesso', 'Dados atualizados com sucesso!');
+    Alert.alert('Sucesso', 'Dados atualizados com sucesso!'); 
     setIsEditing(false);
   };
 
   const handleEdit = () => {
-    setIsEditing(true);
+    setIsEditing(true); 
   };
 
   const handleCancel = () => {
@@ -132,8 +132,11 @@ const Perfil = ({ navigation }: { navigation: any }) => {
 
         <View style={styles.infoBox}>
           <Text style={styles.infoTitle}>Informações do Cuidador</Text>
-          <Text style={styles.infoText}>📞 Maria Silva - (11) 77777-7777</Text>
+          <Text style={styles.infoText}>👤 Maria Silva</Text>
+          <Text style={styles.infoText}>📅 13/08/1978</Text>
           <Text style={styles.infoText}>👥 Filha</Text>
+          <Text style={styles.infoText}>📧 mariasilva@email.com</Text>
+          <Text style={styles.infoText}>📞 (12)98111-1111</Text>
           <TouchableOpacity 
             style={styles.cuidadorButton}
             onPress={() => navigation.navigate('CadastroCuidador')}

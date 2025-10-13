@@ -112,7 +112,7 @@ const Menu = ({ navigation }: { navigation: any }) => {
         ]}
       >
         <View style={styles.menuContainer}>
-          {/* Header do menu lateral com mesma altura e estilo */}
+          {/* Header do menu lateral */}
           <View style={styles.menuHeader}>
             <View style={styles.menuHeaderContent}>
               <Text style={styles.menuTitle}>Menu</Text>
@@ -160,8 +160,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: '#3E8CE5',
     paddingHorizontal: 15,
-    paddingVertical: 15,
-    height: 120,
+    paddingTop: 60, // Aumentado para iOS
+    paddingBottom: 15,
+    height: 140, // Aumentado para iOS
   },
   hamburgerButton: {
     padding: 10,
@@ -248,7 +249,7 @@ const styles = StyleSheet.create({
   },
   menuHeader: {
     backgroundColor: '#3E8CE5',
-    height: 165, // Mesma altura do header principal
+    height: 185, // Aumentado para corresponder ao novo header
     justifyContent: 'flex-end',
     paddingBottom: 15,
   },
