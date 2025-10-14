@@ -101,7 +101,7 @@ Product Backlog :
   <div align="center">
    
 |item  | Funcionalidade                     | Descrição                                                                                   | Prioridade |
-|----------|------------------------------------|---------------------------------------------------------------------------------------------|------------|
+|--------------|------------------------------------|---------------------------------------------------------------------------------------------|------------|
 |S1 RNF - EU  |	**Protótipo Figma - Wireframe**	|	Protótipo das telas do app no Figma	|	ALTA	|	
 |S1 RNF - PD |	**Protótipo de telas - ExpoGo**		|	Protótipo de telas no ExpoGo utilizando React Native |	ALTA	|
 |S1 RNF - IC |	**Organização - Github**	|	Início de documentação e início da implantação das regras CI/CD			|	ALTA	|
