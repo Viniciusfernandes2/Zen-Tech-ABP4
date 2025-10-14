@@ -102,16 +102,16 @@ Product Backlog :
    
 |item  | Funcionalidade                     | Descrição                                                                                   | Prioridade |
 |----------|------------------------------------|---------------------------------------------------------------------------------------------|------------|
-|S1 - RNF - EU  |	**Protótipo Figma - Wireframe**	|	Protótipo das telas do app no Figma	|	ALTA	|	
-|S1 - RNF - PD |	**Protótipo de telas - ExpoGo**		|	Protótipo de telas no ExpoGo utilizando React Native |	ALTA	|
-|S1 - RNF - IC |	**Organização - Github**	|	Início de documentação e início da implantação das regras CI/CD			|	ALTA	|
-|S1 - RNF - IT |	**Pesquisa sobre Acelerômetros**	|	Pesquisa e comparação entre os Acelerômetros	para adquirir o mais adequado para o projeto	|	ALTA	|
-|S1 - RNF - LW |	**BD - Criação Banco de Dados**	|	Criação Banco de dados Relacional		|	ALTA	|
-|S2 - RNF - EU  |	**Frontend - Telas de Cadastro e Inicial**	|	Criação do Frontend telas de cadastro e inicial |	ALTA	|	
-|S2 - RNF - PD |	**Requisições de teste com o backend**		|	Realizar requisições de teste com o backend |	ALTA	|
-|S2 - RNF - IC |	**Aplicação de Regras CI/CD**	|	Continuação de documentação e início da implantação das regras CI/CD			|	ALTA	|
-|S2 - RNF - IT |	**BD - Conexão Arduino e Backend**	|	Conexão entre o sistema Arduino e integração do backend ao banco de dados relacional	|	ALTA	|	
-|S2 - RNF - LW |	**Backend - Tela de Cadastro**	|	Criação do Backend da página de Cadastro	|	ALTA	|	
+|S1 RNF - EU  |	**Protótipo Figma - Wireframe**	|	Protótipo das telas do app no Figma	|	ALTA	|	
+|S1 RNF - PD |	**Protótipo de telas - ExpoGo**		|	Protótipo de telas no ExpoGo utilizando React Native |	ALTA	|
+|S1 RNF - IC |	**Organização - Github**	|	Início de documentação e início da implantação das regras CI/CD			|	ALTA	|
+|S1 RNF - IT |	**Pesquisa sobre Acelerômetros**	|	Pesquisa e comparação entre os Acelerômetros	para adquirir o mais adequado para o projeto	|	ALTA	|
+|S1 RNF - LW |	**BD - Criação Banco de Dados**	|	Criação Banco de dados Relacional		|	ALTA	|
+|S2 RNF - EU  |	**Frontend - Telas de Cadastro e Inicial**	|	Criação do Frontend telas de cadastro e inicial |	ALTA	|	
+|S2 RNF - PD |	**Requisições de teste com o backend**		|	Realizar requisições de teste com o backend |	ALTA	|
+|S2 RNF - IC |	**Aplicação de Regras CI/CD**	|	Continuação de documentação e início da implantação das regras CI/CD			|	ALTA	|
+|S2 RNF - IT |	**BD - Conexão Arduino e Backend**	|	Conexão entre o sistema Arduino e integração do backend ao banco de dados relacional	|	ALTA	|	
+|S2 RNF - LW |	**Backend - Tela de Cadastro**	|	Criação do Backend da página de Cadastro	|	ALTA	|	
 
 
 
