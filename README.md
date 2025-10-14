@@ -102,56 +102,18 @@ Product Backlog :
    
 |item  | Funcionalidade                     | Descrição                                                                                   | Prioridade |
 |----------|------------------------------------|---------------------------------------------------------------------------------------------|------------|
-|RNF - EU  |	**Protótipo Figma - Wireframe**	|	Protótipo das telas do app no Figma	|	ALTA	|	
-|RNF - PD |	**Protótipo de telas - ExpoGo**		|	Protótipo de telas no ExpoGo utilizando React Native |	ALTA	|
-|RNF - IE |	**Organização - Github**	|	Início de documentação e início da implantação das regras CI/CD			|	ALTA	|
-|RNF - |	**Backlog Priorizado**		|	Criar backlog priorizado por Sprints				|	ALTA	|
-|	|**Wireframe do Aplicativo**	|		Criar estrutura básica do wireframe			|	ALTA	|
-|RF	|**Protótipo das páginas**		|	Desenvolver páginas de Home, Início, Cadastro e Menu		|	ALTA	|
-|RNF	|**Jornada do Usuário**		|	Documentar requisito solicitado pelo professor (Jornada do Usuário)|	ALTA	|
-|RF	|**Página Configuração de Emergência**| 	Criar página para configuração de contatos de emergência	|	ALTA	|
-|RNF	|**Desenvolvimento da Logo**	|	Criar identidade visual do aplicativo				|	MÉDIA	|
-|RNF	|**Modelagem do Banco de Dados**	|	Criar UML do banco de dados					|	ALTA	|
-|RNF	|**Implementação MongoDB**		|	Configurar MongoDB em ambiente de nuvem				|	ALTA	|
-|RNF	|**Análise de Sensores**		|	Levantar pontos positivos/negativos MPU6050 e MPU9250		|	ALTA	|
-|RNF	|**Montagem do Circuito**		|	Montar circuito ESP32 + acelerômetro				|	ALTA	|
-|RNF	|**Teste de Alimentação**		|	Testar alimentação do sensor via 3.3V				|	ALTA	|
-|RNF	|**Comunicação I2C**		|		Verificar comunicação I2C entre ESP32 e sensor		|	ALTA	|
-|RNF	|**Ajuste Endereçamento**		|	Ajustar endereçamento I2C do sensor				|	ALTA	|
-|RNF	|**Ambiente de Desenvolvimento**	|	Configurar Arduino IDE/PlatformIO				|	ALTA	|
-|RF	|**Sketch Base ESP32**		|	Criar sketch base para o ESP32					|	ALTA	|
-|RF	|**Importar Biblioteca**		|	Importar e configurar biblioteca do sensor			|	ALTA	|
-|RF	|**Leitura Dados Acelerômetro**	|	Validar leitura de dados crus do acelerômetro (ax, ay, az)	|	ALTA	|
-|RF	|**Leitura Dados Giroscópio**	|	Validar leitura de dados crus do giroscópio (gx, gy, gz)	|	ALTA	|
-|RNF	|**Esquema Elétrico**		|	Documentar esquema elétrico completo				|	MÉDIA	|
-|RF	|**Normalização de Dados**		|	Normalizar valores lidos (g's e °/s)				|	ALTA	|
-|RF	|**Calibração Acelerômetro**	|		Implementar calibração do acelerômetro			|	ALTA	|
-|RF	|**Calibração Giroscópio**		|	Implementar calibração do giroscópio				|	ALTA	|
-|RNF	|**Log Serial Debug**		|	Criar log serial para debug dos dados				|	MÉDIA	|
-|RNF	|**Vídeo Validação Movimento**	|	Gravar vídeo de teste de movimento para validação		|	MÉDIA	|
-|RF	|**Cálculo Magnitude Aceleração**	|	Implementar cálculo da magnitude da aceleração			|	ALTA	|
-|RF	|**Definir Thresholds**		|	Definir thresholds iniciais para detecção de queda		|	ALTA	|
-|RF	|**Detecção Pico Aceleração**	|	Criar função para identificar pico de aceleração		|	ALTA	|
-|RF	|**Detecção Ausência Movimento**	|	Implementar detecção de ausência de movimento pós-pico		|	ALTA	|
-|RF	|**Classificação Queda**		|	Combinar regras simples para classificar queda			|	ALTA	|
-|RF	|**Teste Thresholds**		|	Testar diferentes thresholds (2.5g, 3g, 3.5g)			|	ALTA	|
-|RF	|**Validação Movimentos Normais**	|	Validar com simulação de movimentos normais (andar, sentar)	|	ALTA	|
-|RNF	|**Resultados Calibração**		|	Documentar os resultados da calibração				|	MÉDIA	|
-|RF	|**Conexão Wi-Fi**			|	Configurar conexão do ESP32 com rede Wi-Fi local		|	ALTA	|
-|RF	|**Reconexão Automática**		|	Implementar rotina de reconexão automática			|	ALTA	|
-|RF	|**Envio HTTP POST**		|		Criar envio básico via HTTP POST para servidor de testes|	ALTA	|
-|RF	|**Payload JSON**			|	Criar payload JSON com dados do evento				|	ALTA	|
-|RF	|**Validação Envio Tempo Real**	|	Validar envio em tempo real (Serial + servidor)			|	ALTA	|
-|RNF	|**Endpoint API**			|	Documentar endpoint usado para envio				|	MÉDIA	|
-|RF	|**Simulação Quedas Reais**		|	Simular quedas reais (deixar objeto cair com sensor)		|	ALTA	|
-|RF	|**Coleta Dados Cenários**		|	Coletar dados de diferentes cenários (queda vs movimento normal)|	ALTA	|
-|RF	|**Validação Falsos Positivos**	|	Validar taxa de falsos positivos				|	ALTA	|
-|RF	|**Validação Falsos Negativos**	|	Validar taxa de falsos negativos				|	ALTA	|
-|RNF	|**Estabilidade Conexão**		|	Testar estabilidade da conexão Wi-Fi (> 1h)			|	ALTA	|
-|RNF	|**Métricas Performance**		|	Documentar métricas iniciais de performance			|	MÉDIA	|
-|RNF	|**Estrutura JSON**			|	Documentar estrutura do JSON enviado ao backend			|	MÉDIA	|
-|RNF	|**Aprendizados e Melhorias**	|	Registrar aprendizados e melhorias futuras			|	MÉDIA	|
-|RNF	|**Relatório Final Sprint** 	|		Entregar relatório final (vídeo + documentação)		|	ALTA	|
+|S1 - RNF - EU  |	**Protótipo Figma - Wireframe**	|	Protótipo das telas do app no Figma	|	ALTA	|	
+|S1 - RNF - PD |	**Protótipo de telas - ExpoGo**		|	Protótipo de telas no ExpoGo utilizando React Native |	ALTA	|
+|S1 - RNF - IC |	**Organização - Github**	|	Início de documentação e início da implantação das regras CI/CD			|	ALTA	|
+|S1 - RNF - IT |	**Pesquisa sobre Acelerômetros**	|	Pesquisa e comparação entre os Acelerômetros	para adquirir o mais adequado para o projeto	|	ALTA	|
+|S1 - RNF - LW |	**BD - Criação Banco de Dados**	|	Criação Banco de dados Relacional		|	ALTA	|
+|S2 - RNF - EU  |	**Frontend - Telas de Cadastro e Inicial**	|	Criação do Frontend telas de cadastro e inicial |	ALTA	|	
+|S2 - RNF - PD |	**Requisições de teste com o backend**		|	Realizar requisições de teste com o backend |	ALTA	|
+|S2 - RNF - IC |	**Aplicação de Regras CI/CD**	|	Continuação de documentação e início da implantação das regras CI/CD			|	ALTA	|
+|S2 - RNF - IT |	**BD - Conexão Arduino e Backend**	|	Conexão entre o sistema Arduino e integração do backend ao banco de dados relacional	|	ALTA	|	
+|S2 - RNF - LW |	**Backend - Tela de Cadastro**	|	Criação do Backend da página de Cadastro	|	ALTA	|	
+
+
 
   </div>
 </div>
