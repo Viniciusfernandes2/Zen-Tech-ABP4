@@ -5,8 +5,7 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web",
-    "test": "echo \"No tests implemented\" && exit 0"
+    "web": "expo start --web"
   },
   "dependencies": {
     "expo": "~53.0.22",
@@ -23,6 +22,7 @@
     "@react-navigation/native": "*",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-safe-area-context": "5.4.0",
+    "react-native-geolocation-service": "*",
     "@react-native-community/geolocation": "*",
     "@react-native-async-storage/async-storage": "2.1.2"
   },
