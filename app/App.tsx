@@ -5,6 +5,7 @@ import { Image } from 'react-native';
 import Home from './pages/Home';
 import Home1 from './pages/Home1';
 import Principal from './pages/Principal';
+import Login from './pages/Login';
 import Cadastro from './pages/Cadastro';
 import CadastroCuidador from './pages/CadastroCuidador';
 import Menu from './pages/Menu';
@@ -59,6 +60,11 @@ export default function App() {
           name="Principal" 
           component={Principal} 
           options={{ title: 'Bem-vindo' }}
+        />
+        <Stack.Screen 
+          name="Login" 
+          component={Login} 
+          options={{ title: 'Login' }}
         />
         <Stack.Screen 
           name="Cadastro" 

@@ -13,11 +13,22 @@ const Principal = ({ navigation }: { navigation: any }) => {
         Seja bem vindo! Este aplicativo funciona como um alerta em caso de quedas.
         Ligado à pulseira, ela acionará a luz caso a queda aconteça e será registrada no aplicativo.
       </Text>
-      <TouchableOpacity 
-        style={styles.button}
-        onPress={() => navigation.navigate('Cadastro')}> 
-        <Text style={styles.buttonText}>Continuar</Text>
-      </TouchableOpacity>
+      
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity 
+          style={[styles.button, styles.cadastroButton]}
+          onPress={() => navigation.navigate('Cadastro')}
+        >
+          <Text style={styles.buttonText}>Cadastro</Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity 
+          style={[styles.button, styles.loginButton]}
+          onPress={() => navigation.navigate('Login')}
+        >
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -46,12 +57,21 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     lineHeight: 24,
   },
+  buttonContainer: {
+    width: '100%',
+    gap: 15,
+  },
   button: {
-    backgroundColor: '#3E8CE5',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
     width: '100%',
+  },
+  cadastroButton: {
+    backgroundColor: '#3E8CE5',
+  },
+  loginButton: {
+    backgroundColor: '#5fcf80',
   },
   buttonText: {
     color: 'white',
