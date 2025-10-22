@@ -7,10 +7,12 @@
     "strict": false,
     "skipLibCheck": true,
     "outDir": "dist",
-    "rootDir": "."
+    "rootDir": ".",
+    "types": ["node", "jest"]
   },
   "include": [
     "src",
-    "index.ts"
+    "index.ts",
+    "tests"
   ]
 }
