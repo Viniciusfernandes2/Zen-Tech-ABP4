@@ -13,7 +13,7 @@ Legenda IDs
 | IC | Integração e Entrega Contínua          |
 
 
-## Sprint 1 – IoT e Detecção Local
+## Sprint 2 – IoT e Detecção Local
 
 | ID       | Descrição                                                                                      | Autor               | Data     | Status  |
 |----------|------------------------------------------------------------------------------------------------|-------------------|----------|---------|
@@ -23,12 +23,18 @@ Legenda IDs
 | IC 026   | Continuação do Git actions          |  Edlaine Paula  | 13/10    | ✅      |
 | IC 027   | Replanejamentos tasks Sprint 1 e 2                                               |  Bruno Henrique    | 13/10    | ✅      |
 | LW 028   | CRUD e relação das tabelas     | Vinicius Barbosa     | 13/10    | ✅      |
-| LW 029   | Atualização Planilha de Avaliação e Trello    | Bruno Henrique     | 21/10    | ✅      |
-| PD 030   | Atualização modelagem Banco de Dados    | Vinicius Barbosa     | 21/10    | ✅      |
-| IT 031   | Comunicação do Arduino com endpoint    | Tiago Santini      | 21/10    | ✅      |
-| IT 032   | Pesquisa para compras das peças  | Luana Pinheiro      | 21/10    | ✅      |
-| LW 033   | Criação da tela de login    | Rodrigo De Andrade     | 21/10    | ✅      |
-| LW 034   | Atualizando Git CI/CD    | Edlaine Paula     | 21/10    | ✅      |
+| EU 029   | Reunião e nova Sprint review, escrita de novas tasks    | Bruno Henrique     | 17/10    | ✅      |
+| LW 030   | Criação dos Endpoints para o cadastro de Usuarios    | Vinicius Barbosa    | 17/10    | ✅      |
+| IT 031   | Soldagem dos Componentes e codigo embarcado ESP32    | Tiago Santini     | 17/10    | ✅      |
+| IE 032   | Atualização dos documentos do README    | Luana Pinheiro     | 17/10    | ✅      |
+| LW 033   | Novas telas Mobile de Logins e cadastro    | Rodrigo De Andrade     | 17/10    | ✅      |
+| IE 034   | GitActions e CI/CD    | Edlaine Paula      | 17/10    | ✅      |
+| LW 035   | Atualização Planilha de Avaliação e Trello    | Bruno Henrique     | 21/10    | ✅      |
+| PD 040   | Atualização modelagem Banco de Dados    | Vinicius Barbosa     | 21/10    | ✅      |
+| IT 039   | Comunicação do Arduino com endpoint    | Tiago Santini      | 21/10    | ✅      |
+| IT 037   | Pesquisa para compras das peças  | Luana Pinheiro      | 21/10    | ✅      |
+| LW 038   | Criação da tela de login    | Rodrigo De Andrade     | 21/10    | ✅      |
+| LW 036   | Atualizando Git CI/CD    | Edlaine Paula     | 21/10    | ✅      |
 
 
 
