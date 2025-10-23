@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import router from './src/routes'; // importa o arquivo backend/routes/index.ts
+import router from './routes'; // importa o arquivo backend/routes/index.ts
 
 const app = express();
 
