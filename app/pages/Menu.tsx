@@ -10,9 +10,12 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const Menu = ({ navigation }: { navigation: any }) => {
+const Menu = ({ navigation, route }: { navigation: any; route: any }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const slideAnim = useState(new Animated.Value(-300))[0];
+
+  // Receber o idoso selecionado
+  const idosoSelecionado = route.params?.idosoSelecionado;
 
   const toggleMenu = () => {
     if (isMenuOpen) {
@@ -47,6 +50,22 @@ const Menu = ({ navigation }: { navigation: any }) => {
     }, 300);
   };
 
+  const calcularIdade = (dataNascimento: string) => {
+    const [dia, mes, ano] = dataNascimento.split('/');
+    const nascimento = new Date(parseInt(ano), parseInt(mes) - 1, parseInt(dia));
+    const hoje = new Date();
+    let idade = hoje.getFullYear() - nascimento.getFullYear();
+    const mesAtual = hoje.getMonth();
+    const diaAtual = hoje.getDate();
+    
+    if (mesAtual < nascimento.getMonth() || 
+        (mesAtual === nascimento.getMonth() && diaAtual < nascimento.getDate())) {
+      idade--;
+    }
+    
+    return idade;
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#3E8CE5" barStyle="light-content" />
@@ -68,6 +87,16 @@ const Menu = ({ navigation }: { navigation: any }) => {
         <Text style={styles.subtitle}>
           Monitoramento inteligente para sua segurança e bem-estar.
         </Text>
+        
+        {/* Seção do idoso selecionado */}
+        {idosoSelecionado && (
+          <View style={styles.idosoInfo}>
+            <Text style={styles.idosoNome}>{idosoSelecionado.nome}</Text>
+            <Text style={styles.idosoIdade}>
+              {calcularIdade(idosoSelecionado.dataNascimento)} anos
+            </Text>
+          </View>
+        )}
         
         <View style={styles.featureGrid}>
           <TouchableOpacity 
@@ -200,6 +229,25 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     color: '#666',
     lineHeight: 22,
+  },
+  idosoInfo: {
+    backgroundColor: '#e3f2fd',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 20,
+    alignItems: 'center',
+    borderLeftWidth: 4,
+    borderLeftColor: '#2196f3',
+  },
+  idosoNome: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#1976d2',
+    marginBottom: 5,
+  },
+  idosoIdade: {
+    fontSize: 16,
+    color: '#1976d2',
   },
   featureGrid: {
     flexDirection: 'row',

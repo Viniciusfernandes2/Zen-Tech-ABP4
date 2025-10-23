@@ -16,6 +16,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 const Login = ({ navigation }: { navigation: any }) => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [mostrarSenha, setMostrarSenha] = useState(false);
 
   const handleLogin = () => {
     if (!email.trim() || !senha.trim()) {
@@ -32,7 +33,7 @@ const Login = ({ navigation }: { navigation: any }) => {
     Alert.alert('Sucesso', 'Login realizado com sucesso!', [
       {
         text: 'OK',
-        onPress: () => navigation.navigate('Menu')
+        onPress: () => navigation.navigate('IdososCadastrados') // Alterado para ir para IdososCadastrados
       }
     ]);
   };
@@ -65,17 +66,31 @@ const Login = ({ navigation }: { navigation: any }) => {
             keyboardType="email-address"
             autoCapitalize="none"
             autoComplete="email"
-            placeholderTextColor="#999"
+            placeholderTextColor="#666"
           />
 
-          <TextInput
-            style={styles.input}
-            placeholder="Senha"
-            value={senha}
-            onChangeText={setSenha}
-            secureTextEntry
-            placeholderTextColor="#999"
-          />
+          <View style={styles.senhaContainer}>
+            <TextInput
+              style={styles.senhaInput}
+              placeholder="Senha"
+              value={senha}
+              onChangeText={setSenha}
+              secureTextEntry={!mostrarSenha}
+              placeholderTextColor="#666"
+            />
+            <TouchableOpacity 
+              style={styles.eyeButton}
+              onPress={() => setMostrarSenha(!mostrarSenha)}
+            >
+              <Image 
+                source={mostrarSenha 
+                  ? require('../assets/eye-open.png') 
+                  : require('../assets/eye-closed.png')
+                }
+                style={styles.eyeIcon}
+              />
+            </TouchableOpacity>
+          </View>
 
           <TouchableOpacity style={styles.button} onPress={handleLogin}>
             <Text style={styles.buttonText}>Entrar</Text>
@@ -83,7 +98,7 @@ const Login = ({ navigation }: { navigation: any }) => {
 
           <TouchableOpacity 
             style={styles.registerButton}
-            onPress={() => navigation.navigate('Cadastro')}
+            onPress={() => navigation.navigate('CadastroCuidador')}
           >
             <Text style={styles.registerButtonText}>
               Não tem uma conta? Cadastre-se
@@ -126,13 +141,36 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: 'white',
-    borderWidth: 1,
-    borderColor: '#ddd',
+    borderWidth: 1.5,
+    borderColor: '#555',
     borderRadius: 10,
     padding: 15,
     marginBottom: 15,
     fontSize: 16,
-    color: '#333',
+    color: '#000',
+  },
+  senhaContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderWidth: 1.5,
+    borderColor: '#555',
+    borderRadius: 10,
+    marginBottom: 15,
+  },
+  senhaInput: {
+    flex: 1,
+    padding: 15,
+    fontSize: 16,
+    color: '#000',
+  },
+  eyeButton: {
+    padding: 8,
+    marginRight: 5,
+  },
+  eyeIcon: {
+    width: 24,
+    height: 24,
   },
   button: {
     backgroundColor: '#3E8CE5',

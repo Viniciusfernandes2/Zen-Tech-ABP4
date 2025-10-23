@@ -1,3 +1,4 @@
+// CadastroCuidador.tsx
 import React, { useState } from 'react';
 import { 
   Text, 
@@ -8,7 +9,8 @@ import {
   ScrollView,
   Alert,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  View
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -18,6 +20,8 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
   const [parentesco, setParentesco] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
+  const [senha, setSenha] = useState('');
+  const [mostrarSenha, setMostrarSenha] = useState(false);
 
   const formatarData = (text: string) => {
     const numbers = text.replace(/\D/g, '');
@@ -51,7 +55,7 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
   };
 
   const handleConfirmar = () => {
-    if (!nome.trim() || !dataNascimento.trim() || !parentesco.trim() || !email.trim() || !telefone.trim()) {
+    if (!nome.trim() || !dataNascimento.trim() || !parentesco.trim() || !email.trim() || !telefone.trim() || !senha.trim()) {
       Alert.alert('Atenção', 'Por favor, preencha todos os campos');
       return;
     }
@@ -72,13 +76,18 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
       return;
     }
 
+    if (senha.length < 6) {
+      Alert.alert('Atenção', 'A senha deve ter pelo menos 6 caracteres');
+      return;
+    }
+
     Alert.alert(
       'Confirmação',
-      'Dados do cuidador salvos com sucesso!',
+      'Cadastro realizado com sucesso!',
       [
         {
           text: 'OK',
-          onPress: () => navigation.navigate('Menu')
+          onPress: () => navigation.navigate('Login')
         }
       ]
     );
@@ -130,7 +139,6 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
             value={parentesco}
             onChangeText={setParentesco}
             placeholderTextColor="#999"
-            autoCorrect={false}
             clearButtonMode="while-editing"
           />
 
@@ -156,6 +164,29 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
             placeholderTextColor="#999"
             clearButtonMode="while-editing"
           />
+
+          <View style={styles.senhaContainer}>
+            <TextInput
+              style={styles.senhaInput}
+              placeholder="Senha *"
+              value={senha}
+              onChangeText={setSenha}
+              secureTextEntry={!mostrarSenha}
+              placeholderTextColor="#999"
+            />
+            <TouchableOpacity 
+              style={styles.eyeButton}
+              onPress={() => setMostrarSenha(!mostrarSenha)}
+            >
+              <Image 
+                source={mostrarSenha 
+                  ? require('../assets/eye-open.png') 
+                  : require('../assets/eye-closed.png')
+                }
+                style={styles.eyeIcon}
+              />
+            </TouchableOpacity>
+          </View>
 
           <Text style={styles.obrigatorio}>* Todos os campos são obrigatórios</Text>
 
@@ -214,7 +245,32 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     backgroundColor: 'white',
     fontSize: 16,
-    color: '#000', // Alterado para preto para melhor contraste
+    color: '#000',
+  },
+  senhaContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 10,
+    marginBottom: 15,
+    backgroundColor: 'white',
+  },
+  senhaInput: {
+    flex: 1,
+    height: 50,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    color: '#000',
+  },
+  eyeButton: {
+    padding: 8,
+    marginRight: 5, // Adicionado para mover o ícone mais para a esquerda
+  },
+  eyeIcon: {
+    width: 24,
+    height: 24,
   },
   obrigatorio: {
     width: '100%',

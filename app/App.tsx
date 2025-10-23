@@ -1,3 +1,4 @@
+// App.tsx
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -16,6 +17,7 @@ import BPM from './pages/BPM';
 import Emergencia from './pages/Emergencia';
 import ConfiguracaoEmergencia from './pages/ConfiguracaoEmergencia';
 import Perfil from './pages/Perfil';
+import IdososCadastrados from './pages/IdososCadastrados'; // Importar a nova tela
 
 const Stack = createStackNavigator();
 
@@ -76,10 +78,24 @@ export default function App() {
           component={CadastroCuidador} 
           options={{ title: 'Cadastro do Cuidador' }}
         />
+        {/* Nova tela de Idosos Cadastrados */}
+        <Stack.Screen 
+          name="IdososCadastrados" 
+          component={IdososCadastrados} 
+          options={{ 
+            title: 'Idosos Cadastrados',
+            headerLeft: () => null, // Remove o botão de voltar
+            gestureEnabled: false, // Desabilita o gesto de voltar
+          }}
+        />
         <Stack.Screen 
           name="Menu" 
           component={Menu} 
-          options={{ headerShown: false }}
+          options={{ 
+            headerShown: false,
+            headerLeft: () => null, // Remove o botão de voltar
+            gestureEnabled: false, // Desabilita o gesto de voltar
+          }}
         />
         <Stack.Screen 
           name="Pulseira" 

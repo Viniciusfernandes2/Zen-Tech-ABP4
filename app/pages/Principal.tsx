@@ -1,3 +1,4 @@
+// Principal.tsx
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
@@ -17,7 +18,7 @@ const Principal = ({ navigation }: { navigation: any }) => {
       <View style={styles.buttonContainer}>
         <TouchableOpacity 
           style={[styles.button, styles.cadastroButton]}
-          onPress={() => navigation.navigate('Cadastro')}
+          onPress={() => navigation.navigate('CadastroCuidador')}
         >
           <Text style={styles.buttonText}>Cadastro</Text>
         </TouchableOpacity>
