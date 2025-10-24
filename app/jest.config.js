@@ -1,9 +1,11 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
-  preset: 'jest-expo',
-  setupFilesAfterEnv: ['@testing-library/jest-native/extend-expect'],
+  preset: 'ts-jest',
+  testEnvironment: 'jsdom',
   transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest'
+    '^.+\\.(ts|tsx)$': ['ts-jest', { isolatedModules: true }],
   },
-  testMatch: ['**/tests/**/*.test.(ts|tsx)'],
+  transformIgnorePatterns: [
+    'node_modules/(?!(@react-native|react-native|@react-navigation)/)',
+  ],
 };
