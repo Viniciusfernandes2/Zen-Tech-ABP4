@@ -1,4 +1,3 @@
-// CadastroCuidador.tsx
 import React, { useState } from 'react';
 import { 
   Text, 
@@ -10,87 +9,83 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
-  View
+  View,
+  ActivityIndicator
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { registerUser } from '../services/registerUserService'; // 👈 importa sua função da service
 
 const CadastroCuidador = ({ navigation }: { navigation: any }) => {
   const [nome, setNome] = useState('');
   const [dataNascimento, setDataNascimento] = useState('');
-  const [parentesco, setParentesco] = useState('');
   const [email, setEmail] = useState('');
-  const [telefone, setTelefone] = useState('');
   const [senha, setSenha] = useState('');
   const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [loading, setLoading] = useState(false); // estado para mostrar o carregamento
 
+  // --- formatações ---
   const formatarData = (text: string) => {
     const numbers = text.replace(/\D/g, '');
-    
-    if (numbers.length <= 2) {
-      return numbers;
-    } else if (numbers.length <= 4) {
-      return `${numbers.slice(0, 2)}/${numbers.slice(2)}`;
-    } else {
-      return `${numbers.slice(0, 2)}/${numbers.slice(2, 4)}/${numbers.slice(4, 8)}`;
-    }
+    if (numbers.length <= 2) return numbers;
+    if (numbers.length <= 4) return `${numbers.slice(0, 2)}/${numbers.slice(2)}`;
+    return `${numbers.slice(0, 2)}/${numbers.slice(2, 4)}/${numbers.slice(4, 8)}`;
   };
 
   const formatarTelefone = (text: string) => {
     const numbers = text.replace(/\D/g, '');
-    
     if (numbers.length <= 10) {
-      return numbers
-        .replace(/(\d{2})(\d{0,4})(\d{0,4})/, '($1) $2-$3')
-        .replace(/-$/, '');
+      return numbers.replace(/(\d{2})(\d{0,4})(\d{0,4})/, '($1) $2-$3').replace(/-$/, '');
     } else {
-      return numbers
-        .replace(/(\d{2})(\d{0,5})(\d{0,4})/, '($1) $2-$3')
-        .replace(/-$/, '');
+      return numbers.replace(/(\d{2})(\d{0,5})(\d{0,4})/, '($1) $2-$3').replace(/-$/, '');
     }
   };
 
-  const validarEmail = (email: string) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-  };
+  const validarEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  const handleConfirmar = () => {
-    if (!nome.trim() || !dataNascimento.trim() || !parentesco.trim() || !email.trim() || !telefone.trim() || !senha.trim()) {
+  // --- função de cadastro integrada com a API ---
+  const handleConfirmar = async () => {
+    if (!nome.trim() || !dataNascimento.trim() || !email.trim() || !senha.trim()) {
       Alert.alert('Atenção', 'Por favor, preencha todos os campos');
       return;
     }
-
     if (!validarEmail(email)) {
       Alert.alert('Atenção', 'Por favor, insira um email válido');
       return;
     }
-
     if (dataNascimento.length < 10) {
       Alert.alert('Atenção', 'Por favor, insira uma data de nascimento válida (DD/MM/AAAA)');
       return;
     }
-
-    const telefoneLimpo = telefone.replace(/\D/g, '');
-    if (telefoneLimpo.length < 10) {
-      Alert.alert('Atenção', 'Por favor, insira um telefone válido');
-      return;
-    }
-
     if (senha.length < 6) {
       Alert.alert('Atenção', 'A senha deve ter pelo menos 6 caracteres');
       return;
     }
 
-    Alert.alert(
-      'Confirmação',
-      'Cadastro realizado com sucesso!',
-      [
-        {
-          text: 'OK',
-          onPress: () => navigation.navigate('Login')
-        }
-      ]
-    );
+    setLoading(true);
+
+    try {
+      // 👇 Aqui está a chamada ao seu service
+      const response = await registerUser({
+        nome_completo: nome,
+        data_nascimento: dataNascimento,
+        email,
+        senha
+      });
+
+      console.log('Usuário cadastrado:', response);
+
+      Alert.alert(
+        'Sucesso',
+        'Cadastro realizado com sucesso!',
+        [{ text: 'OK', onPress: () => navigation.navigate('Login') }]
+      );
+
+    } catch (error: any) {
+      console.error('Erro no cadastro:', error);
+      Alert.alert('Erro', error.message || 'Falha ao cadastrar. Tente novamente.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -118,8 +113,6 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
             value={nome}
             onChangeText={setNome}
             placeholderTextColor="#999"
-            autoCorrect={false}
-            clearButtonMode="while-editing"
           />
 
           <TextInput
@@ -130,16 +123,6 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
             maxLength={10}
             keyboardType="numeric"
             placeholderTextColor="#999"
-            clearButtonMode="while-editing"
-          />
-
-          <TextInput
-            style={styles.input}
-            placeholder="Parentesco *"
-            value={parentesco}
-            onChangeText={setParentesco}
-            placeholderTextColor="#999"
-            clearButtonMode="while-editing"
           />
 
           <TextInput
@@ -149,20 +132,7 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
-            autoComplete="email"
             placeholderTextColor="#999"
-            clearButtonMode="while-editing"
-          />
-
-          <TextInput
-            style={styles.input}
-            placeholder="Telefone *"
-            value={telefone}
-            onChangeText={(text) => setTelefone(formatarTelefone(text))}
-            maxLength={15}
-            keyboardType="phone-pad"
-            placeholderTextColor="#999"
-            clearButtonMode="while-editing"
           />
 
           <View style={styles.senhaContainer}>
@@ -179,9 +149,10 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
               onPress={() => setMostrarSenha(!mostrarSenha)}
             >
               <Image 
-                source={mostrarSenha 
-                  ? require('../assets/eye-open.png') 
-                  : require('../assets/eye-closed.png')
+                source={
+                  mostrarSenha 
+                    ? require('../assets/eye-open.png') 
+                    : require('../assets/eye-closed.png')
                 }
                 style={styles.eyeIcon}
               />
@@ -194,8 +165,13 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
             style={styles.button}
             onPress={handleConfirmar}
             activeOpacity={0.8}
+            disabled={loading}
           >
-            <Text style={styles.buttonText}>Confirmar</Text>
+            {loading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>Confirmar</Text>
+            )}
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -203,6 +179,7 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
   );
 };
 
+// --- estilos (mantidos os seus) ---
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -266,7 +243,7 @@ const styles = StyleSheet.create({
   },
   eyeButton: {
     padding: 8,
-    marginRight: 5, // Adicionado para mover o ícone mais para a esquerda
+    marginRight: 5,
   },
   eyeIcon: {
     width: 24,
@@ -288,10 +265,7 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 10,
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 3,
