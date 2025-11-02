@@ -37,7 +37,7 @@ Legenda:
 <div>
 <span  id="backlogs">
 <h2>
-Backlog da Spint 1:
+Backlog da Spint 2:
 </h2>
   <div align="center">
    
@@ -68,7 +68,7 @@ Backlog da Spint 1:
 <br>
 
 <div>
-  <h2>Burndown Sprint 01</h2>
+  <h2>Burndown Sprint 02</h2>
   <img alt="Burndown---Sprint-1-(2)" src="./imagens/sprint2_burndow.png">
 </div>
 
