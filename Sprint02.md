@@ -41,23 +41,32 @@ Backlog da Sprint 2:
 </h2>
   <div align="center">
    
-|item  | Funcionalidade                     | Descrição                                                                                   | Prioridade |
-|----------|------------------------------------|---------------------------------------------------------------------------------------------|------------|
-| RF01 | **Protótipo das páginas**           | Desenvolver páginas de Home, Início, Cadastro e Menu | ALTA
-| RF02| **Página Configuração de Emergência**              | Criar página para configuração de contatos de emergência.                     | ALTA       |
-| RF03 | **Wireframe do Aplicativo**                  | Criar estrutura básica do wireframe.                     | ALTA       |
-|RNF01	|**Criação do repositório Github**			|Criar repositório principal e repositório para gestão de tasks		|ALTA	|
-|RNF02	|**Documentação do Readme**				|Atualizar página do Readme do Github com documentação do projeto	|ALTA	|
-|RNF03	|**Levantamento de requisitos**			|Elaborar requisitos e tasks para as 3 Sprints				|ALTA	|
-|RNF04	|**Backlog Priorizado**				|Criar backlog priorizado por Sprints					|ALTA	|
-|RNF05	|**Jornada do Usuário**				|Documentar requisito solicitado pelo professor (Jornada do Usuário)	|ALTA	|
-|RNF06	|**Desenvolvimento da Logo**			|Criar identidade visual do aplicativo					|MEDIA	|
-|RNF07	|**Modelagem do Banco de Dados**			|Criar UML do banco de dados						|ALTA	|
-|RNF08	|**Implementação do Banco**				|Configurar o Banco em ambiente de nuvem				|ALTA	|
-|RNF09	|**Análise de Sensores**				|Levantar pontos positivos/negativos MPU6050 e MPU9250			|ALTA	|
-|RNF10	|**Montagem do Circuito**				|Montar circuito ESP32 + acelerômetro					|ALTA	|
-|RNF11	|**Simulação Hardware**				|Simulação do funcionamento do sistema com a ESP32					|ALTA	|	
-|RNF12	|**Priorização MoSCoW**				|Mapa de expectativas (MoSCoW)					|MÉDIA	|
+| item         | Funcionalidade                     | Descrição                                                                                   | Prioridade |
+|--------------|------------------------------------|---------------------------------------------------------------------------------------------|------------|
+| RF01    | **Soldagem do acelerômetro**           | Soldagem do sensor MPU6050 no circuito                                                     | Alta       |
+| RF02    | **Codificação embarcada**              | Soldagem dos componentes e programação da ESP32                                            | Alta       |
+| RF03    | **Comunicação com endpoint**           | Comunicação entre Arduino e endpoint                                                       | Alta       |
+| RF04 | **Integração ESP32 e Backend**         | Correção da comunicação e envio dos eixos                                                  | Alta       |
+| RF05    | **Montagem com Display I2C**           | Montagem do circuito com display I2C e codificação                                         | Alta       |
+| RF06    | **Pesquisa de componentes**            | Levantamento de peças necessárias para montagem                                            | Alta       |
+| RF07    | **CRUD e relacionamento**              | Implementação de CRUD e relações entre tabelas no banco de dados                           | Alta       |
+| RF08    | **Endpoints de usuários**              | Criação dos endpoints para cadastro de usuários                                            | Alta       |
+| RF09   | **Modelagem do banco de dados**        | Atualização da modelagem do banco                                                          | Alta       |
+| RF10    | **CRUD de usuários e assistidos**      | Criação do CRUD completo para usuários e assistidos                                        | Alta       |
+| RF11    | **Telas mobile**                       | Criação de telas de login e cadastro no app mobile                                         | Alta       |
+| RF12    | **Tela de login**                      | Desenvolvimento da tela de login                                                           | Alta       |
+| RF13    | **Página de idosos cadastrados**       | Criação da interface de visualização de idosos cadastrados                                 | Alta       |
+| RNF01 | **Git Actions**                        | Continuação da configuração de automações com GitHub Actions                               | Alta       |
+| RNF01l| **CI/CD**                              | Implementação de integração e entrega contínua                                             | Alta       |
+| RNF01| **Atualização CI/CD**                  | Ajustes e melhorias no pipeline de CI/CD                                                   | Alta       |
+| RNF02| **Testes unitários**                   | Correção e execução de testes com JEST                                                     | Alta       |
+| RNF03| **Atualização do README**              | Revisão e atualização dos documentos no README                                             | Alta       |
+| RNF04| **Backlog no README**                  | Atualização do Product Backlog no README                                                   | Alta       |
+| RNF05| **Avaliação e Trello**                 | Atualização da planilha de avaliação e organização no Trello                               | Média      |
+| RNF06| **Replanejamento de Sprints**          | Reorganização das tasks das Sprints 1 e 2                                                  | Alta       |
+| RF14    | **Mapeamento de localização**          | Inserção do mapeamento de localização no sistema                                           | Alta       |
+| RNF07| **Sprint Review e novas tasks**        | Realização da Sprint Review e definição de novas tarefas                                   | Alta       |
+
 	
   </div>
 </div>
