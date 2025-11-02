@@ -37,7 +37,7 @@ Legenda:
 <div>
 <span  id="backlogs">
 <h2>
-Backlog da Spint 1:
+Backlog da Sprint 1:
 </h2>
   <div align="center">
    
