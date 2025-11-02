@@ -12,11 +12,12 @@ import {
   Platform
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Cadastro = ({ navigation }: { navigation: any }) => {
   const [nome, setNome] = useState('');
   const [dataNascimento, setDataNascimento] = useState('');
-  const [endereco, setEndereco] = useState('');
+  const [observacao, setObservacao] = useState('');
   const [telefone1, setTelefone1] = useState('');
   const [telefone2, setTelefone2] = useState('');
 
@@ -46,8 +47,8 @@ const Cadastro = ({ navigation }: { navigation: any }) => {
     }
   };
 
-  const handleConfirmar = () => {
-    if (!nome.trim() || !dataNascimento.trim() || !endereco.trim() || !telefone1.trim()) {
+  const handleConfirmar = async () => {
+    if (!nome.trim() || !dataNascimento.trim() || !telefone1.trim()) {
       Alert.alert('Atenção', 'Por favor, preencha todos os campos obrigatórios');
       return;
     }
@@ -63,7 +64,29 @@ const Cadastro = ({ navigation }: { navigation: any }) => {
       return;
     }
 
-    navigation.navigate('CadastroCuidador');
+    try {
+      // Criar objeto do idoso
+      const novoIdoso = {
+        id: Date.now().toString(),
+        nome: nome.trim(),
+        dataNascimento: dataNascimento,
+        observacao: observacao.trim(),
+        telefone1: telefone1,
+        telefone2: telefone2 || '',
+      };
+
+      // Salvar no AsyncStorage
+      const idososExistentes = await AsyncStorage.getItem('@idosos_cadastrados');
+      let idososArray = idososExistentes ? JSON.parse(idososExistentes) : [];
+      idososArray.push(novoIdoso);
+      await AsyncStorage.setItem('@idosos_cadastrados', JSON.stringify(idososArray));
+
+      // Navegar para a tela de idosos cadastrados
+      navigation.navigate('IdososCadastrados');
+    } catch (error) {
+      Alert.alert('Erro', 'Não foi possível salvar os dados do idoso');
+      console.error('Erro ao salvar idoso:', error);
+    }
   };
 
   return (
@@ -83,18 +106,18 @@ const Cadastro = ({ navigation }: { navigation: any }) => {
             style={styles.logo}
           />
           <Text style={styles.title}>Cadastro do Idoso</Text>
-          <Text style={styles.subtitle}>Preencha seus dados pessoais</Text>
+          <Text style={styles.subtitle}>Preencha os dados pessoais</Text>
 
           <TextInput
             style={styles.input}
             placeholder="Nome Completo *"
             value={nome}
             onChangeText={setNome}
-            placeholderTextColor="#999"
+            placeholderTextColor="#666"
             autoCorrect={false}
-            clearButtonMode="while-editing" // Só para iOS
+            clearButtonMode="while-editing"
           />
-
+ 
           <TextInput
             style={styles.input}
             placeholder="Data de Nascimento (DD/MM/AAAA) *"
@@ -102,19 +125,19 @@ const Cadastro = ({ navigation }: { navigation: any }) => {
             onChangeText={(text) => setDataNascimento(formatarData(text))}
             maxLength={10}
             keyboardType="numeric"
-            placeholderTextColor="#999"
+            placeholderTextColor="#666"
             clearButtonMode="while-editing"
           />
 
           <TextInput
             style={[styles.input, styles.multilineInput]}
-            placeholder="Endereço Completo *"
-            value={endereco}
-            onChangeText={setEndereco}
+            placeholder="Observação"
+            value={observacao}
+            onChangeText={setObservacao}
             multiline
             numberOfLines={3}
             textAlignVertical="top"
-            placeholderTextColor="#999"
+            placeholderTextColor="#666"
           />
 
           <TextInput
@@ -124,7 +147,7 @@ const Cadastro = ({ navigation }: { navigation: any }) => {
             onChangeText={(text) => setTelefone1(formatarTelefone(text))}
             maxLength={15}
             keyboardType="phone-pad"
-            placeholderTextColor="#999"
+            placeholderTextColor="#666"
             clearButtonMode="while-editing"
           />
 
@@ -135,7 +158,7 @@ const Cadastro = ({ navigation }: { navigation: any }) => {
             onChangeText={(text) => setTelefone2(formatarTelefone(text))}
             maxLength={15}
             keyboardType="phone-pad"
-            placeholderTextColor="#999"
+            placeholderTextColor="#666"
             clearButtonMode="while-editing"
           />
 
@@ -187,16 +210,14 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   input: {
-    width: '100%',
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    marginBottom: 15,
     backgroundColor: 'white',
+    borderWidth: 1.5,
+    borderColor: '#555',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 15,
     fontSize: 16,
-    color: '#000', // Alterado para preto para melhor contraste
+    color: '#000',
   },
   multilineInput: {
     height: 80,

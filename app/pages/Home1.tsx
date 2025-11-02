@@ -40,13 +40,13 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     marginTop: 20,
-    fontSize: 18,
+    fontSize: 25,
     color: '#333',
     fontWeight: '600',
   },
   subText: {
     marginTop: 10,
-    fontSize: 14,
+    fontSize: 16,
     color: '#666',
   },
 });

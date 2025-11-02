@@ -12,12 +12,14 @@ import {
   ScrollView
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({ navigation }: { navigation: any }) => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [mostrarSenha, setMostrarSenha] = useState(false);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email.trim() || !senha.trim()) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos');
       return;
@@ -28,13 +30,31 @@ const Login = ({ navigation }: { navigation: any }) => {
       return;
     }
 
-    // Simulação de login bem-sucedido
-    Alert.alert('Sucesso', 'Login realizado com sucesso!', [
-      {
-        text: 'OK',
-        onPress: () => navigation.navigate('Menu')
+    try {
+      // Buscar dados do cuidador salvos
+      const cuidadorSalvo = await AsyncStorage.getItem('@cuidador_data');
+      
+      if (cuidadorSalvo) {
+        const cuidador = JSON.parse(cuidadorSalvo);
+        
+        // Verificar credenciais
+        if (email === cuidador.email && senha === cuidador.senha) {
+          Alert.alert('Sucesso', 'Login realizado com sucesso!', [
+            {
+              text: 'OK',
+              onPress: () => navigation.navigate('IdososCadastrados')
+            }
+          ]);
+        } else {
+          Alert.alert('Erro', 'Email ou senha incorretos');
+        }
+      } else {
+        Alert.alert('Erro', 'Nenhum cuidador cadastrado encontrado. Por favor, faça o cadastro primeiro.');
       }
-    ]);
+    } catch (error) {
+      console.error('Erro ao fazer login:', error);
+      Alert.alert('Erro', 'Erro ao fazer login. Tente novamente.');
+    }
   };
 
   const validarEmail = (email: string) => {
@@ -65,17 +85,31 @@ const Login = ({ navigation }: { navigation: any }) => {
             keyboardType="email-address"
             autoCapitalize="none"
             autoComplete="email"
-            placeholderTextColor="#999"
+            placeholderTextColor="#666"
           />
 
-          <TextInput
-            style={styles.input}
-            placeholder="Senha"
-            value={senha}
-            onChangeText={setSenha}
-            secureTextEntry
-            placeholderTextColor="#999"
-          />
+          <View style={styles.senhaContainer}>
+            <TextInput
+              style={styles.senhaInput}
+              placeholder="Senha"
+              value={senha}
+              onChangeText={setSenha}
+              secureTextEntry={!mostrarSenha}
+              placeholderTextColor="#666"
+            />
+            <TouchableOpacity 
+              style={styles.eyeButton}
+              onPress={() => setMostrarSenha(!mostrarSenha)}
+            >
+              <Image 
+                source={mostrarSenha 
+                  ? require('../assets/eye-closed.png')
+                  : require('../assets/eye-open.png') 
+                }
+                style={styles.eyeIcon}
+              />
+            </TouchableOpacity>
+          </View>
 
           <TouchableOpacity style={styles.button} onPress={handleLogin}>
             <Text style={styles.buttonText}>Entrar</Text>
@@ -83,7 +117,7 @@ const Login = ({ navigation }: { navigation: any }) => {
 
           <TouchableOpacity 
             style={styles.registerButton}
-            onPress={() => navigation.navigate('Cadastro')}
+            onPress={() => navigation.navigate('CadastroCuidador')}
           >
             <Text style={styles.registerButtonText}>
               Não tem uma conta? Cadastre-se
@@ -119,20 +153,43 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 20,
     textAlign: 'center',
     marginBottom: 40,
     color: '#666',
   },
   input: {
     backgroundColor: 'white',
-    borderWidth: 1,
-    borderColor: '#ddd',
+    borderWidth: 1.5,
+    borderColor: '#555',
     borderRadius: 10,
     padding: 15,
     marginBottom: 15,
     fontSize: 16,
-    color: '#333',
+    color: '#000',
+  },
+  senhaContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderWidth: 1.5,
+    borderColor: '#555',
+    borderRadius: 10,
+    marginBottom: 15,
+  },
+  senhaInput: {
+    flex: 1,
+    padding: 15,
+    fontSize: 16,
+    color: '#000',
+  },
+  eyeButton: {
+    padding: 8,
+    marginRight: 5,
+  },
+  eyeIcon: {
+    width: 30,
+    height: 30,
   },
   button: {
     backgroundColor: '#3E8CE5',

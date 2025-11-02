@@ -8,16 +8,20 @@ import {
   ScrollView,
   Alert,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  View
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { registerUser } from '../services/registerUserService';
 
 const CadastroCuidador = ({ navigation }: { navigation: any }) => {
-  const [nome, setNome] = useState('');
-  const [dataNascimento, setDataNascimento] = useState('');
-  const [parentesco, setParentesco] = useState('');
+  const [nome_completo, setNomeCompleto] = useState('');
+  const [data_nascimento, setDataNascimento] = useState('');
   const [email, setEmail] = useState('');
   const [telefone, setTelefone] = useState('');
+  const [senha, setSenha] = useState('');
+  const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const formatarData = (text: string) => {
     const numbers = text.replace(/\D/g, '');
@@ -50,8 +54,14 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
     return regex.test(email);
   };
 
-  const handleConfirmar = () => {
-    if (!nome.trim() || !dataNascimento.trim() || !parentesco.trim() || !email.trim() || !telefone.trim()) {
+  const converterDataParaBackend = (data: string) => {
+    // Converte de DD/MM/AAAA para AAAA-MM-DD
+    const [dia, mes, ano] = data.split('/');
+    return `${ano}-${mes}-${dia}`;
+  };
+
+  const handleConfirmar = async () => {
+    if (!nome_completo.trim() || !data_nascimento.trim() || !email.trim() || !telefone.trim() || !senha.trim()) {
       Alert.alert('Atenção', 'Por favor, preencha todos os campos');
       return;
     }
@@ -61,7 +71,7 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
       return;
     }
 
-    if (dataNascimento.length < 10) {
+    if (data_nascimento.length < 10) {
       Alert.alert('Atenção', 'Por favor, insira uma data de nascimento válida (DD/MM/AAAA)');
       return;
     }
@@ -72,16 +82,40 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
       return;
     }
 
-    Alert.alert(
-      'Confirmação',
-      'Dados do cuidador salvos com sucesso!',
-      [
-        {
-          text: 'OK',
-          onPress: () => navigation.navigate('Menu')
-        }
-      ]
-    );
+    if (senha.length < 6) {
+      Alert.alert('Atenção', 'A senha deve ter pelo menos 6 caracteres');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const dadosUsuario = {
+        nome_completo: nome_completo.trim(),
+        data_nascimento: converterDataParaBackend(data_nascimento),
+        telefone: telefone,
+        email: email.trim().toLowerCase(),
+        senha: senha
+      };
+
+      const resultado = await registerUser(dadosUsuario);
+      
+      Alert.alert(
+        'Sucesso',
+        'Cadastro realizado com sucesso!',
+        [
+          {
+            text: 'OK',
+            onPress: () => navigation.navigate('Login')
+          }
+        ]
+      );
+    } catch (error: any) {
+      Alert.alert('Erro', error.message || 'Não foi possível realizar o cadastro.');
+      console.error('Erro ao cadastrar usuário:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -106,9 +140,9 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
           <TextInput
             style={styles.input}
             placeholder="Nome Completo *"
-            value={nome}
-            onChangeText={setNome}
-            placeholderTextColor="#999"
+            value={nome_completo}
+            onChangeText={setNomeCompleto}
+            placeholderTextColor="#666"
             autoCorrect={false}
             clearButtonMode="while-editing"
           />
@@ -116,21 +150,22 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
           <TextInput
             style={styles.input}
             placeholder="Data de Nascimento (DD/MM/AAAA) *"
-            value={dataNascimento}
+            value={data_nascimento}
             onChangeText={(text) => setDataNascimento(formatarData(text))}
             maxLength={10}
             keyboardType="numeric"
-            placeholderTextColor="#999"
+            placeholderTextColor="#666"
             clearButtonMode="while-editing"
           />
 
           <TextInput
             style={styles.input}
-            placeholder="Parentesco *"
-            value={parentesco}
-            onChangeText={setParentesco}
-            placeholderTextColor="#999"
-            autoCorrect={false}
+            placeholder="Telefone *"
+            value={telefone}
+            onChangeText={(text) => setTelefone(formatarTelefone(text))}
+            maxLength={15}
+            keyboardType="phone-pad"
+            placeholderTextColor="#666"
             clearButtonMode="while-editing"
           />
 
@@ -142,29 +177,44 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
             keyboardType="email-address"
             autoCapitalize="none"
             autoComplete="email"
-            placeholderTextColor="#999"
+            placeholderTextColor="#666"
             clearButtonMode="while-editing"
           />
 
-          <TextInput
-            style={styles.input}
-            placeholder="Telefone *"
-            value={telefone}
-            onChangeText={(text) => setTelefone(formatarTelefone(text))}
-            maxLength={15}
-            keyboardType="phone-pad"
-            placeholderTextColor="#999"
-            clearButtonMode="while-editing"
-          />
+          <View style={styles.senhaContainer}>
+            <TextInput
+              style={styles.senhaInput}
+              placeholder="Senha *"
+              value={senha}
+              onChangeText={setSenha}
+              secureTextEntry={!mostrarSenha}
+              placeholderTextColor="#666"
+            />
+            <TouchableOpacity 
+              style={styles.eyeButton}
+              onPress={() => setMostrarSenha(!mostrarSenha)}
+            >
+              <Image 
+                source={mostrarSenha 
+                  ? require('../assets/eye-closed.png')
+                  : require('../assets/eye-open.png') 
+                }
+                style={styles.eyeIcon}
+              />
+            </TouchableOpacity>
+          </View>
 
           <Text style={styles.obrigatorio}>* Todos os campos são obrigatórios</Text>
 
           <TouchableOpacity
-            style={styles.button}
+            style={[styles.button, loading && styles.buttonDisabled]}
             onPress={handleConfirmar}
             activeOpacity={0.8}
+            disabled={loading}
           >
-            <Text style={styles.buttonText}>Confirmar</Text>
+            <Text style={styles.buttonText}>
+              {loading ? 'Cadastrando...' : 'Confirmar'}
+            </Text>
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -179,8 +229,8 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 20,
-    paddingTop: 40,
-    paddingBottom: 40,
+    paddingTop: 20,
+    paddingBottom: 30,
     flexGrow: 1,
     justifyContent: 'center',
   },
@@ -198,30 +248,51 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 20,
     textAlign: 'center',
     marginBottom: 30,
     color: '#666',
     lineHeight: 22,
   },
   input: {
-    width: '100%',
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    marginBottom: 15,
     backgroundColor: 'white',
+    borderWidth: 1.5,
+    borderColor: '#555',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 15,
     fontSize: 16,
-    color: '#000', // Alterado para preto para melhor contraste
+    color: '#000',
+  },
+  senhaContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderWidth: 1.5,
+    borderColor: '#555',
+    borderRadius: 10,
+    marginBottom: 15,
+  },
+  senhaInput: {
+    flex: 1,
+    padding: 15,
+    fontSize: 16,
+    color: '#000',
+  },
+  eyeButton: {
+    padding: 8,
+    marginRight: 5,
+  },
+  eyeIcon: {
+    width: 30,
+    height: 30,
   },
   obrigatorio: {
     width: '100%',
     textAlign: 'left',
     fontSize: 14,
     color: '#666',
-    marginBottom: 20,
+    marginBottom: 10,
     fontStyle: 'italic',
   },
   button: {
@@ -230,7 +301,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     width: '100%',
-    marginTop: 10,
+    marginTop: 0,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -239,6 +310,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 3,
+  },
+  buttonDisabled: {
+    backgroundColor: '#9E9E9E',
   },
   buttonText: {
     color: 'white',
