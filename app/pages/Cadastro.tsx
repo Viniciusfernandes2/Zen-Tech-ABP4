@@ -113,11 +113,11 @@ const Cadastro = ({ navigation }: { navigation: any }) => {
             placeholder="Nome Completo *"
             value={nome}
             onChangeText={setNome}
-            placeholderTextColor="#999"
+            placeholderTextColor="#666"
             autoCorrect={false}
             clearButtonMode="while-editing"
           />
-
+ 
           <TextInput
             style={styles.input}
             placeholder="Data de Nascimento (DD/MM/AAAA) *"
@@ -125,19 +125,19 @@ const Cadastro = ({ navigation }: { navigation: any }) => {
             onChangeText={(text) => setDataNascimento(formatarData(text))}
             maxLength={10}
             keyboardType="numeric"
-            placeholderTextColor="#999"
+            placeholderTextColor="#666"
             clearButtonMode="while-editing"
           />
 
           <TextInput
             style={[styles.input, styles.multilineInput]}
-            placeholder="Observação *"
+            placeholder="Observação"
             value={observacao}
             onChangeText={setObservacao}
             multiline
             numberOfLines={3}
             textAlignVertical="top"
-            placeholderTextColor="#999"
+            placeholderTextColor="#666"
           />
 
           <TextInput
@@ -147,7 +147,7 @@ const Cadastro = ({ navigation }: { navigation: any }) => {
             onChangeText={(text) => setTelefone1(formatarTelefone(text))}
             maxLength={15}
             keyboardType="phone-pad"
-            placeholderTextColor="#999"
+            placeholderTextColor="#666"
             clearButtonMode="while-editing"
           />
 
@@ -158,7 +158,7 @@ const Cadastro = ({ navigation }: { navigation: any }) => {
             onChangeText={(text) => setTelefone2(formatarTelefone(text))}
             maxLength={15}
             keyboardType="phone-pad"
-            placeholderTextColor="#999"
+            placeholderTextColor="#666"
             clearButtonMode="while-editing"
           />
 
@@ -210,14 +210,12 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   input: {
-    width: '100%',
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    marginBottom: 15,
     backgroundColor: 'white',
+    borderWidth: 1.5,
+    borderColor: '#555',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 15,
     fontSize: 16,
     color: '#000',
   },

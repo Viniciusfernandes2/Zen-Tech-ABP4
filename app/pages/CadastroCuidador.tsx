@@ -9,53 +9,79 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
-  View,
-  ActivityIndicator
+  View
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { registerUser } from '../services/registerUserService'; // 👈 importa sua função da service
+import { registerUser } from '../services/registerUserService';
 
 const CadastroCuidador = ({ navigation }: { navigation: any }) => {
-  const [nome, setNome] = useState('');
-  const [dataNascimento, setDataNascimento] = useState('');
+  const [nome_completo, setNomeCompleto] = useState('');
+  const [data_nascimento, setDataNascimento] = useState('');
   const [email, setEmail] = useState('');
+  const [telefone, setTelefone] = useState('');
   const [senha, setSenha] = useState('');
   const [mostrarSenha, setMostrarSenha] = useState(false);
-  const [loading, setLoading] = useState(false); // estado para mostrar o carregamento
+  const [loading, setLoading] = useState(false);
 
-  // --- formatações ---
   const formatarData = (text: string) => {
     const numbers = text.replace(/\D/g, '');
-    if (numbers.length <= 2) return numbers;
-    if (numbers.length <= 4) return `${numbers.slice(0, 2)}/${numbers.slice(2)}`;
-    return `${numbers.slice(0, 2)}/${numbers.slice(2, 4)}/${numbers.slice(4, 8)}`;
+    
+    if (numbers.length <= 2) {
+      return numbers;
+    } else if (numbers.length <= 4) {
+      return `${numbers.slice(0, 2)}/${numbers.slice(2)}`;
+    } else {
+      return `${numbers.slice(0, 2)}/${numbers.slice(2, 4)}/${numbers.slice(4, 8)}`;
+    }
   };
 
   const formatarTelefone = (text: string) => {
     const numbers = text.replace(/\D/g, '');
+    
     if (numbers.length <= 10) {
-      return numbers.replace(/(\d{2})(\d{0,4})(\d{0,4})/, '($1) $2-$3').replace(/-$/, '');
+      return numbers
+        .replace(/(\d{2})(\d{0,4})(\d{0,4})/, '($1) $2-$3')
+        .replace(/-$/, '');
     } else {
-      return numbers.replace(/(\d{2})(\d{0,5})(\d{0,4})/, '($1) $2-$3').replace(/-$/, '');
+      return numbers
+        .replace(/(\d{2})(\d{0,5})(\d{0,4})/, '($1) $2-$3')
+        .replace(/-$/, '');
     }
   };
 
-  const validarEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const validarEmail = (email: string) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
 
-  // --- função de cadastro integrada com a API ---
+  const converterDataParaBackend = (data: string) => {
+    // Converte de DD/MM/AAAA para AAAA-MM-DD
+    const [dia, mes, ano] = data.split('/');
+    return `${ano}-${mes}-${dia}`;
+  };
+
   const handleConfirmar = async () => {
-    if (!nome.trim() || !dataNascimento.trim() || !email.trim() || !senha.trim()) {
+    if (!nome_completo.trim() || !data_nascimento.trim() || !email.trim() || !telefone.trim() || !senha.trim()) {
       Alert.alert('Atenção', 'Por favor, preencha todos os campos');
       return;
     }
+
     if (!validarEmail(email)) {
       Alert.alert('Atenção', 'Por favor, insira um email válido');
       return;
     }
-    if (dataNascimento.length < 10) {
+
+    if (data_nascimento.length < 10) {
       Alert.alert('Atenção', 'Por favor, insira uma data de nascimento válida (DD/MM/AAAA)');
       return;
     }
+
+    const telefoneLimpo = telefone.replace(/\D/g, '');
+    if (telefoneLimpo.length < 10) {
+      Alert.alert('Atenção', 'Por favor, insira um telefone válido');
+      return;
+    }
+
     if (senha.length < 6) {
       Alert.alert('Atenção', 'A senha deve ter pelo menos 6 caracteres');
       return;
@@ -64,25 +90,29 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
     setLoading(true);
 
     try {
-      // 👇 Aqui está a chamada ao seu service
-      const response = await registerUser({
-        nome_completo: nome,
-        data_nascimento: dataNascimento,
-        email,
-        senha
-      });
+      const dadosUsuario = {
+        nome_completo: nome_completo.trim(),
+        data_nascimento: converterDataParaBackend(data_nascimento),
+        telefone: telefone,
+        email: email.trim().toLowerCase(),
+        senha: senha
+      };
 
-      console.log('Usuário cadastrado:', response);
-
+      const resultado = await registerUser(dadosUsuario);
+      
       Alert.alert(
         'Sucesso',
         'Cadastro realizado com sucesso!',
-        [{ text: 'OK', onPress: () => navigation.navigate('Login') }]
+        [
+          {
+            text: 'OK',
+            onPress: () => navigation.navigate('Login')
+          }
+        ]
       );
-
     } catch (error: any) {
-      console.error('Erro no cadastro:', error);
-      Alert.alert('Erro', error.message || 'Falha ao cadastrar. Tente novamente.');
+      Alert.alert('Erro', error.message || 'Não foi possível realizar o cadastro.');
+      console.error('Erro ao cadastrar usuário:', error);
     } finally {
       setLoading(false);
     }
@@ -110,19 +140,33 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
           <TextInput
             style={styles.input}
             placeholder="Nome Completo *"
-            value={nome}
-            onChangeText={setNome}
-            placeholderTextColor="#999"
+            value={nome_completo}
+            onChangeText={setNomeCompleto}
+            placeholderTextColor="#666"
+            autoCorrect={false}
+            clearButtonMode="while-editing"
           />
 
           <TextInput
             style={styles.input}
             placeholder="Data de Nascimento (DD/MM/AAAA) *"
-            value={dataNascimento}
+            value={data_nascimento}
             onChangeText={(text) => setDataNascimento(formatarData(text))}
             maxLength={10}
             keyboardType="numeric"
-            placeholderTextColor="#999"
+            placeholderTextColor="#666"
+            clearButtonMode="while-editing"
+          />
+
+          <TextInput
+            style={styles.input}
+            placeholder="Telefone *"
+            value={telefone}
+            onChangeText={(text) => setTelefone(formatarTelefone(text))}
+            maxLength={15}
+            keyboardType="phone-pad"
+            placeholderTextColor="#666"
+            clearButtonMode="while-editing"
           />
 
           <TextInput
@@ -132,7 +176,9 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
-            placeholderTextColor="#999"
+            autoComplete="email"
+            placeholderTextColor="#666"
+            clearButtonMode="while-editing"
           />
 
           <View style={styles.senhaContainer}>
@@ -142,17 +188,16 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
               value={senha}
               onChangeText={setSenha}
               secureTextEntry={!mostrarSenha}
-              placeholderTextColor="#999"
+              placeholderTextColor="#666"
             />
             <TouchableOpacity 
               style={styles.eyeButton}
               onPress={() => setMostrarSenha(!mostrarSenha)}
             >
               <Image 
-                source={
-                  mostrarSenha 
-                    ? require('../assets/eye-open.png') 
-                    : require('../assets/eye-closed.png')
+                source={mostrarSenha 
+                  ? require('../assets/eye-closed.png')
+                  : require('../assets/eye-open.png') 
                 }
                 style={styles.eyeIcon}
               />
@@ -162,16 +207,14 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
           <Text style={styles.obrigatorio}>* Todos os campos são obrigatórios</Text>
 
           <TouchableOpacity
-            style={styles.button}
+            style={[styles.button, loading && styles.buttonDisabled]}
             onPress={handleConfirmar}
             activeOpacity={0.8}
             disabled={loading}
           >
-            {loading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.buttonText}>Confirmar</Text>
-            )}
+            <Text style={styles.buttonText}>
+              {loading ? 'Cadastrando...' : 'Confirmar'}
+            </Text>
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -179,7 +222,6 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
   );
 };
 
-// --- estilos (mantidos os seus) ---
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -187,8 +229,8 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 20,
-    paddingTop: 40,
-    paddingBottom: 40,
+    paddingTop: 20,
+    paddingBottom: 30,
     flexGrow: 1,
     justifyContent: 'center',
   },
@@ -206,38 +248,34 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 20,
     textAlign: 'center',
     marginBottom: 30,
     color: '#666',
     lineHeight: 22,
   },
   input: {
-    width: '100%',
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    marginBottom: 15,
     backgroundColor: 'white',
+    borderWidth: 1.5,
+    borderColor: '#555',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 15,
     fontSize: 16,
     color: '#000',
   },
   senhaContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    width: '100%',
-    borderWidth: 1,
-    borderColor: '#ddd',
+    backgroundColor: 'white',
+    borderWidth: 1.5,
+    borderColor: '#555',
     borderRadius: 10,
     marginBottom: 15,
-    backgroundColor: 'white',
   },
   senhaInput: {
     flex: 1,
-    height: 50,
-    paddingHorizontal: 15,
+    padding: 15,
     fontSize: 16,
     color: '#000',
   },
@@ -246,15 +284,15 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   eyeIcon: {
-    width: 24,
-    height: 24,
+    width: 30,
+    height: 30,
   },
   obrigatorio: {
     width: '100%',
     textAlign: 'left',
     fontSize: 14,
     color: '#666',
-    marginBottom: 20,
+    marginBottom: 10,
     fontStyle: 'italic',
   },
   button: {
@@ -263,12 +301,18 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     width: '100%',
-    marginTop: 10,
+    marginTop: 0,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 3,
+  },
+  buttonDisabled: {
+    backgroundColor: '#9E9E9E',
   },
   buttonText: {
     color: 'white',

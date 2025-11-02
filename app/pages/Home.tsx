@@ -16,6 +16,7 @@ const Home = ({ navigation }: { navigation: any }) => {
       <Image source={require('../assets/pulseira-icon-sos.png')} style={styles.logo} />
       <Text style={styles.title}>BioAlert</Text>
       <Text style={styles.subtitle}>Monitoramento Inteligente de Queda de Idoso</Text>
+      <Text style={styles.version}>Versão 1.0.1</Text>
     </SafeAreaView>
   );
 }
@@ -40,9 +41,16 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 18,
     color: 'white',
     textAlign: 'center',
+    opacity: 0.9,
+  },
+  version: {
+    position: 'absolute',
+    bottom: 70,
+    color: 'white',
+    fontSize: 18,
     opacity: 0.9,
   },
 });
