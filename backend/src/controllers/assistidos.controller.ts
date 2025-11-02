@@ -1,16 +1,26 @@
 import { Request, Response } from 'express';
 import { supabaseAdmin } from '../lib/supabase';
+import { User } from '@supabase/supabase-js'; 
 
 export async function criarAssistido(req: Request, res: Response) {
   try {
     const { nome, data_nascimento, observacoes } = req.body;
     if (!nome) return res.status(400).json({ erro: 'Informe o nome do assistido.' });
 
+    // Bruno Menezes 01.11.2025 : Corrigindo coluna nome para nome_completo na tabela assistidos
+   
+    /*const { data, error } = await supabaseAdmin
+      .from('assistidos')
+      .insert({nome, data_nascimento, observacoes })
+      .select()
+      .single();*/
+
     const { data, error } = await supabaseAdmin
       .from('assistidos')
-      .insert({ nome, data_nascimento, observacoes })
+      .insert({nome_completo: nome, data_nascimento, observacoes })
       .select()
       .single();
+      // Fim da correção
 
     if (error) return res.status(400).json({ erro: 'Falha ao criar assistido', detalhe: error.message });
     return res.status(201).json({ mensagem: 'Assistido criado', assistido: data });
@@ -27,7 +37,7 @@ export async function listarAssistidosDoCuidador(req: Request, res: Response) {
     if (!idAuth && email) {
       const { data: users, error } = await supabaseAdmin.auth.admin.listUsers();
       if (error) return res.status(400).json({ erro: 'Falha ao consultar Auth', detalhe: error.message });
-      const found = users.users.find(u => u.email?.toLowerCase() === email.toLowerCase());
+      const found = users.users.find((u: User) => u.email?.toLowerCase() === email.toLowerCase());
       if (!found) return res.status(404).json({ erro: 'E-mail não encontrado no Auth.' });
       idAuth = found.id;
     }

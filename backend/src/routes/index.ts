@@ -5,6 +5,7 @@ import { criarCuidador } from '../controllers/usuarios.controller';
 import { criarAssistido, listarAssistidosDoCuidador, buscarAssistido, meusAssistidos } from '../controllers/assistidos.controller';
 import { vincularCuidadorIdoso } from '../controllers/vinculos.controller';
 import { requireSupabaseUser } from '../middlewares/auth';
+import espRoutes from './esp32/connection';
 
 const router = Router();
 router.use(cors({ origin: true }));
@@ -29,6 +30,9 @@ router.get('/assistidos/:id', buscarAssistido);
 
 // rota autenticada (precisa do JWT de login)
 router.get('/meus-assistidos', requireSupabaseUser, meusAssistidos);
+
+// Bruno Menezes 01.11.2025: Rotas para ESP32
+router.use('/esp', espRoutes);
 
 export default router;
 
