@@ -86,6 +86,7 @@ Legenda:
 - [-] **Não iniciado**
 
 A apresentação da Sprint 1 em vídeo por ser acessada por [aqui!](https://www.youtube.com/watch?v=f40Za_Fj7MA) 
+<p>A apresentação da Sprint 2 em vídeo por ser acessada por [aqui!]()</p>
 
 <br>
 
