@@ -8,14 +8,6 @@ export async function criarAssistido(req: Request, res: Response) {
     const { nome_completo, data_nascimento, observacoes, telefone_1, telefone_2 } = req.body;
     if (!nome_completo) return res.status(400).json({ erro: 'Informe o nome do assistido.' });
 
-    // Bruno Menezes 01.11.2025 : Corrigindo coluna nome para nome_completo na tabela assistidos
-   
-    /*const { data, error } = await supabaseAdmin
-      .from('assistidos')
-      .insert({nome, data_nascimento, observacoes })
-      .select()
-      .single();*/
-
     const { data, error } = await supabaseAdmin
       .from('assistidos')
       .insert({nome_completo, data_nascimento, observacoes, telefone_1, telefone_2 })

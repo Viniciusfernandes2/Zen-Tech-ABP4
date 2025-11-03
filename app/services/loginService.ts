@@ -1,0 +1,18 @@
+import api from "../api/axios";
+
+interface LoginData {
+  email: string;
+  senha: string;
+}
+
+export async function loginUser(data: LoginData) {
+  try {
+    const response = await api.post('/cuidadores/login', data);
+    return response.data;
+  } catch (error: any) {
+    if (error.response) {
+      throw new Error(error.response.data.erro || 'Erro ao fazer login');
+    }
+    throw new Error('Erro de conexão com o servidor');
+  }
+}

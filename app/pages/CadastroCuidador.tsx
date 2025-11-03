@@ -12,6 +12,7 @@ import {
   View
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { registerUser } from '../services/registerUserService';
 
 const CadastroCuidador = ({ navigation }: { navigation: any }) => {
@@ -21,6 +22,7 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
   const [telefone, setTelefone] = useState('');
   const [senha, setSenha] = useState('');
   const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [mostrarConfirmarSenha, setMostrarConfirmarSenha] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const formatarData = (text: string) => {
@@ -54,13 +56,24 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
     return regex.test(email);
   };
 
+  const validarDataNascimento = (data: string) => {
+    if (data.length < 10) return false;
+    
+    const [dia, mes, ano] = data.split('/');
+    const dataObj = new Date(`${ano}-${mes}-${dia}`);
+    const hoje = new Date();
+    const idade = hoje.getFullYear() - dataObj.getFullYear();
+    
+    return idade >= 18 && idade <= 120;
+  };
+
   const converterDataParaBackend = (data: string) => {
-    // Converte de DD/MM/AAAA para AAAA-MM-DD
     const [dia, mes, ano] = data.split('/');
     return `${ano}-${mes}-${dia}`;
   };
 
   const handleConfirmar = async () => {
+    // Validações básicas
     if (!nome_completo.trim() || !data_nascimento.trim() || !email.trim() || !telefone.trim() || !senha.trim()) {
       Alert.alert('Atenção', 'Por favor, preencha todos os campos');
       return;
@@ -73,6 +86,11 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
 
     if (data_nascimento.length < 10) {
       Alert.alert('Atenção', 'Por favor, insira uma data de nascimento válida (DD/MM/AAAA)');
+      return;
+    }
+
+    if (!validarDataNascimento(data_nascimento)) {
+      Alert.alert('Atenção', 'Você deve ter pelo menos 18 anos para se cadastrar');
       return;
     }
 
@@ -93,13 +111,28 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
       const dadosUsuario = {
         nome_completo: nome_completo.trim(),
         data_nascimento: converterDataParaBackend(data_nascimento),
-        telefone: telefone,
+        telefone: telefoneLimpo,
         email: email.trim().toLowerCase(),
         senha: senha
       };
 
-      console.log ('Passou 2' + dadosUsuario);
+      console.log('Enviando dados para cadastro:', dadosUsuario);
+      
+      // Registrar na API
       const resultado = await registerUser(dadosUsuario);
+      
+      // Salvar dados localmente para login
+      const cuidadorData = {
+        id: resultado.id || Date.now().toString(),
+        nome_completo: nome_completo.trim(),
+        email: email.trim().toLowerCase(),
+        senha: senha,
+        telefone: telefoneLimpo,
+        data_nascimento: data_nascimento
+      };
+      
+      await AsyncStorage.setItem('@cuidador_data', JSON.stringify(cuidadorData));
+      console.log('Dados salvos localmente:', cuidadorData);
       
       Alert.alert(
         'Sucesso',
@@ -112,8 +145,8 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
         ]
       );
     } catch (error: any) {
-      Alert.alert('Erro', error.message || 'Não foi possível realizar o cadastro.');
-      console.error('Erro ao cadastrar usuário:', error);
+      console.error('Erro completo no cadastro:', error);
+      Alert.alert('Erro', error.message || 'Não foi possível realizar o cadastro. Tente novamente.');
     } finally {
       setLoading(false);
     }
@@ -145,7 +178,7 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
             onChangeText={setNomeCompleto}
             placeholderTextColor="#666"
             autoCorrect={false}
-            clearButtonMode="while-editing"
+            autoCapitalize="words"
           />
 
           <TextInput
@@ -156,7 +189,6 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
             maxLength={10}
             keyboardType="numeric"
             placeholderTextColor="#666"
-            clearButtonMode="while-editing"
           />
 
           <TextInput
@@ -167,7 +199,6 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
             maxLength={15}
             keyboardType="phone-pad"
             placeholderTextColor="#666"
-            clearButtonMode="while-editing"
           />
 
           <TextInput
@@ -179,7 +210,6 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
             autoCapitalize="none"
             autoComplete="email"
             placeholderTextColor="#666"
-            clearButtonMode="while-editing"
           />
 
           <View style={styles.senhaContainer}>
@@ -206,6 +236,7 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
           </View>
 
           <Text style={styles.obrigatorio}>* Todos os campos são obrigatórios</Text>
+          <Text style={styles.observacao}>A senha deve ter pelo menos 6 caracteres</Text>
 
           <TouchableOpacity
             style={[styles.button, loading && styles.buttonDisabled]}
@@ -215,6 +246,15 @@ const CadastroCuidador = ({ navigation }: { navigation: any }) => {
           >
             <Text style={styles.buttonText}>
               {loading ? 'Cadastrando...' : 'Confirmar'}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.loginButton}
+            onPress={() => navigation.navigate('Login')}
+          >
+            <Text style={styles.loginButtonText}>
+              Já tem uma conta? Faça login
             </Text>
           </TouchableOpacity>
         </ScrollView>
@@ -249,7 +289,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   subtitle: {
-    fontSize: 20,
+    fontSize: 16,
     textAlign: 'center',
     marginBottom: 30,
     color: '#666',
@@ -257,8 +297,8 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: 'white',
-    borderWidth: 1.5,
-    borderColor: '#555',
+    borderWidth: 1,
+    borderColor: '#ddd',
     borderRadius: 10,
     padding: 15,
     marginBottom: 15,
@@ -269,8 +309,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'white',
-    borderWidth: 1.5,
-    borderColor: '#555',
+    borderWidth: 1,
+    borderColor: '#ddd',
     borderRadius: 10,
     marginBottom: 15,
   },
@@ -285,15 +325,19 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   eyeIcon: {
-    width: 30,
-    height: 30,
+    width: 24,
+    height: 24,
   },
   obrigatorio: {
-    width: '100%',
-    textAlign: 'left',
     fontSize: 14,
     color: '#666',
-    marginBottom: 10,
+    marginBottom: 5,
+    fontStyle: 'italic',
+  },
+  observacao: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 20,
     fontStyle: 'italic',
   },
   button: {
@@ -301,16 +345,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 10,
     alignItems: 'center',
-    width: '100%',
-    marginTop: 0,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3,
+    marginBottom: 15,
   },
   buttonDisabled: {
     backgroundColor: '#9E9E9E',
@@ -319,6 +354,15 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  loginButton: {
+    alignItems: 'center',
+    padding: 10,
+  },
+  loginButtonText: {
+    color: '#3E8CE5',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 
