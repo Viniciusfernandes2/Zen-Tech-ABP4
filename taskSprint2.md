@@ -35,12 +35,6 @@ Legenda IDs
 | IT 037   | Pesquisa para compras das peças  | Luana Pinheiro      | 21/10    | ✅      |
 | LW 038   | Criação da tela de login    | Rodrigo De Andrade     | 21/10    | ✅      |
 | LW 036   | Atualizando Git CI/CD    | Edlaine Paula     | 21/10    | ✅      |
-| IT 037   | Correção da comunicação entre a ESP32 e Backend e envios dos eixos    | Tiago Santini     | 23/10    | ✅      |
-| IT 038   | Montagem do circuito com Display i2c e codificação    | Bruno Henrique     | 23/10    | ✅      |
-| IE 039   | Correção dos testes unitarios com JEST    | Edlaine Paula     | 23/10    | ✅      |
-| LW 040   | Criação do CRUD usuario e assistidos e apoio ao time    | Vinicius Barbosa     | 23/10    | ✅      |
-| LW 041   | Criação da pagina de idosos cadastrados    | Rodrigo De Andrade     | 23/10    | ✅      |
-
 
 
 

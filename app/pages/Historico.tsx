@@ -1,18 +1,51 @@
-import React from 'react';
+// Historico.tsx
+import React, { useState, useEffect } from 'react';
 import { 
   View, 
   Text, 
   StyleSheet, 
   ScrollView,
-  SafeAreaView 
+  ActivityIndicator,
+  RefreshControl,
+  Alert 
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context'; // Importação corrigida
+import { getHistoricoQuedas, Queda } from '../services/historicoService';
 
 const Historico = () => {
-  const quedas = [
-    { id: '1', data: '15/03/2024', horario: '14:30' },
-    { id: '2', data: '10/03/2024', horario: '09:15' },
-    { id: '3', data: '05/03/2024', horario: '16:45' },
-  ];
+  const [quedas, setQuedas] = useState<Queda[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const carregarHistorico = async () => {
+    try {
+      const dados = await getHistoricoQuedas();
+      setQuedas(dados);
+    } catch (error: any) {
+      Alert.alert('Erro', 'Falha ao carregar histórico de quedas');
+      console.error('Erro ao carregar histórico:', error);
+    }
+  };
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await carregarHistorico();
+    setRefreshing(false);
+  };
+
+  useEffect(() => {
+    const inicializar = async () => {
+      setLoading(true);
+      await carregarHistorico();
+      setLoading(false);
+    };
+
+    inicializar();
+
+    // Atualizar a cada 30 segundos
+    const interval = setInterval(carregarHistorico, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const formatarData = (data: string) => {
     const [dia, mes, ano] = data.split('/');
@@ -20,7 +53,7 @@ const Historico = () => {
   };
 
   // Componente para renderizar cada linha da tabela
-  const TableRow = ({ queda, index }: { queda: any; index: number }) => (
+  const TableRow = ({ queda, index }: { queda: Queda; index: number }) => (
     <View 
       style={[
         styles.tableRow,
@@ -33,6 +66,17 @@ const Historico = () => {
       <Text style={styles.horarioCell}>
         {queda.horario}
       </Text>
+      <Text style={styles.aceleracaoCell}>
+        {queda.total.toFixed(2)} m/s²
+      </Text>
+    </View>
+  );
+
+  // Componente para o estado de carregamento
+  const LoadingState = () => (
+    <View style={styles.emptyState}>
+      <ActivityIndicator size="large" color="#3E8CE5" />
+      <Text style={styles.emptyStateText}>Carregando histórico...</Text>
     </View>
   );
 
@@ -53,6 +97,7 @@ const Historico = () => {
     <View style={styles.tableHeader}>
       <Text style={styles.headerCell}>Data</Text>
       <Text style={styles.headerCell}>Horário</Text>
+      <Text style={styles.headerCell}>Aceleração</Text>
     </View>
   );
 
@@ -66,13 +111,36 @@ const Historico = () => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
+      <ScrollView 
+        contentContainerStyle={styles.scrollContent}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={['#3E8CE5']}
+            tintColor="#3E8CE5"
+          />
+        }
+      >
         <View style={styles.headerContainer}>
           <Text style={styles.title}>Histórico de Quedas</Text>
           <Text style={styles.subtitle}>
             Registro completo de todas as quedas detectadas
           </Text>
+        </View>
+
+        <View style={styles.statsContainer}>
+          <View style={styles.statCard}>
+            <Text style={styles.statNumber}>{quedas.length}</Text>
+            <Text style={styles.statLabel}>Total de Quedas</Text>
+          </View>
+          <View style={styles.statCard}>
+            <Text style={styles.statNumber}>
+              {quedas.length > 0 ? formatarData(quedas[0].data) : '--'}
+            </Text>
+            <Text style={styles.statLabel}>Última Queda</Text>
+          </View>
         </View>
 
         <View style={styles.tableContainer}>
@@ -82,7 +150,9 @@ const Historico = () => {
             style={styles.tableBody}
             showsVerticalScrollIndicator={false}
           >
-            {quedas.length > 0 ? (
+            {loading ? (
+              <LoadingState />
+            ) : quedas.length > 0 ? (
               quedas.map((queda, index) => (
                 <TableRow key={queda.id} queda={queda} index={index} />
               ))
@@ -91,13 +161,16 @@ const Historico = () => {
             )}
           </ScrollView>
 
-          <TableFooter />
+          {!loading && quedas.length > 0 && <TableFooter />}
         </View>
 
         <View style={styles.legend}>
           <Text style={styles.legendText}>
             💡 As quedas são detectadas automaticamente pela pulseira e 
             registradas com data e hora exatas.
+          </Text>
+          <Text style={styles.legendText}>
+            📡 Dados atualizados automaticamente a cada 30 segundos.
           </Text>
         </View>
       </ScrollView>
@@ -116,7 +189,7 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   headerContainer: {
-    marginBottom: 30,
+    marginBottom: 20,
   },
   title: {
     fontSize: 28,
@@ -131,6 +204,38 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#666',
     lineHeight: 22,
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 25,
+  },
+  statCard: {
+    flex: 1,
+    backgroundColor: 'white',
+    padding: 15,
+    borderRadius: 12,
+    marginHorizontal: 5,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  statNumber: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#3E8CE5',
+    marginBottom: 5,
+  },
+  statLabel: {
+    fontSize: 12,
+    color: '#666',
+    textAlign: 'center',
   },
   tableContainer: {
     backgroundColor: 'white',
@@ -150,11 +255,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#3E8CE5',
     paddingVertical: 16,
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
   },
   headerCell: {
     flex: 1,
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
     color: 'white',
     textAlign: 'center',
@@ -164,8 +269,8 @@ const styles = StyleSheet.create({
   },
   tableRow: {
     flexDirection: 'row',
-    paddingVertical: 14,
-    paddingHorizontal: 15,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
   },
@@ -177,15 +282,22 @@ const styles = StyleSheet.create({
   },
   dataCell: {
     flex: 1,
-    fontSize: 15,
+    fontSize: 13,
     color: '#333',
     textAlign: 'center',
     fontWeight: '500',
   },
   horarioCell: {
     flex: 1,
-    fontSize: 15,
+    fontSize: 13,
     color: '#666',
+    textAlign: 'center',
+    fontWeight: '500',
+  },
+  aceleracaoCell: {
+    flex: 1,
+    fontSize: 13,
+    color: '#e74c3c',
     textAlign: 'center',
     fontWeight: '500',
   },
@@ -227,6 +339,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#1976d2',
     lineHeight: 20,
+    marginBottom: 5,
   },
 });
 
