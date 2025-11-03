@@ -18,7 +18,7 @@ const Principal = ({ navigation }: { navigation: any }) => {
       <View style={styles.buttonContainer}>
         <TouchableOpacity 
           style={[styles.button, styles.cadastroButton]}
-          onPress={() => navigation.navigate('CadastroCuidador')}
+          onPress={() => navigation.navigate('Cadastro')}
         >
           <Text style={styles.buttonText}>Cadastro</Text>
         </TouchableOpacity>

@@ -1,4 +1,3 @@
-// IdososCadastrados.tsx
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -22,7 +21,7 @@ interface Idoso {
 
 const IdososCadastrados = ({ navigation }: { navigation: any }) => {
   const [idosos, setIdosos] = useState<Idoso[]>([]);
-  const [nomeCuidador, setNomeCuidador] = useState('Maria');
+  const [nomeCuidador, setNomeCuidador] = useState('');
 
   useEffect(() => {
     carregarIdosos();
@@ -42,9 +41,12 @@ const IdososCadastrados = ({ navigation }: { navigation: any }) => {
 
   const carregarNomeCuidador = async () => {
     try {
-      const cuidador = await AsyncStorage.getItem('@cuidador_nome');
-      if (cuidador) {
-        setNomeCuidador(cuidador);
+      const cuidadorSalvo = await AsyncStorage.getItem('@cuidador_data');
+      if (cuidadorSalvo) {
+        const cuidador = JSON.parse(cuidadorSalvo);
+        // Pegar apenas o primeiro nome (antes do primeiro espaço)
+        const primeiroNome = cuidador.nome.split(' ')[0];
+        setNomeCuidador(primeiroNome);
       }
     } catch (error) {
       console.error('Erro ao carregar nome do cuidador:', error);
@@ -80,7 +82,7 @@ const IdososCadastrados = ({ navigation }: { navigation: any }) => {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* Header com saudação */}
         <View style={styles.header}>
-          <Text style={styles.saudacao}>Olá, {nomeCuidador}</Text>
+          <Text style={styles.saudacao}>Olá, {nomeCuidador || 'Cuidador'}</Text>
           <Text style={styles.subtitle}>
             Selecione um idoso para monitorar
           </Text>

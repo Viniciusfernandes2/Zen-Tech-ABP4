@@ -12,7 +12,7 @@ import {
   Platform
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { registerUser } from '../services/registerCuidService';
 
 const Cadastro = ({ navigation }: { navigation: any }) => {
   const [nome, setNome] = useState('');
@@ -20,6 +20,7 @@ const Cadastro = ({ navigation }: { navigation: any }) => {
   const [observacao, setObservacao] = useState('');
   const [telefone1, setTelefone1] = useState('');
   const [telefone2, setTelefone2] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const formatarData = (text: string) => {
     const numbers = text.replace(/\D/g, '');
@@ -47,6 +48,11 @@ const Cadastro = ({ navigation }: { navigation: any }) => {
     }
   };
 
+  const converterDataParaBackend = (data: string) => {
+    const [dia, mes, ano] = data.split('/');
+    return `${ano}-${mes}-${dia}`;
+  };
+
   const handleConfirmar = async () => {
     if (!nome.trim() || !dataNascimento.trim() || !telefone1.trim()) {
       Alert.alert('Atenção', 'Por favor, preencha todos os campos obrigatórios');
@@ -64,28 +70,34 @@ const Cadastro = ({ navigation }: { navigation: any }) => {
       return;
     }
 
+    setLoading(true);
+
     try {
-      // Criar objeto do idoso
-      const novoIdoso = {
-        id: Date.now().toString(),
-        nome: nome.trim(),
-        dataNascimento: dataNascimento,
-        observacao: observacao.trim(),
-        telefone1: telefone1,
-        telefone2: telefone2 || '',
+      const RegisterData = {
+        nome_completo: nome.trim(),
+        data_nascimento: converterDataParaBackend(dataNascimento),
+        telefone_1: telefone1,
+        observacoes: observacao.trim(),
+        telefone_2: telefone2 || '',
       };
 
-      // Salvar no AsyncStorage
-      const idososExistentes = await AsyncStorage.getItem('@idosos_cadastrados');
-      let idososArray = idososExistentes ? JSON.parse(idososExistentes) : [];
-      idososArray.push(novoIdoso);
-      await AsyncStorage.setItem('@idosos_cadastrados', JSON.stringify(idososArray));
-
-      // Navegar para a tela de idosos cadastrados
-      navigation.navigate('IdososCadastrados');
-    } catch (error) {
-      Alert.alert('Erro', 'Não foi possível salvar os dados do idoso');
-      console.error('Erro ao salvar idoso:', error);
+      const resultado = await registerUser(RegisterData);
+      
+      Alert.alert(
+        'Sucesso',
+        'Cadastro realizado com sucesso!',
+        [
+          {
+            text: 'OK',
+            onPress: () => navigation.navigate('IdososCadastrados')
+          }
+        ]
+      );
+    } catch (error: any) {
+      Alert.alert('Erro', error.message || 'Não foi possível realizar o cadastro.');
+      console.error('Erro ao cadastrar idoso:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -113,11 +125,11 @@ const Cadastro = ({ navigation }: { navigation: any }) => {
             placeholder="Nome Completo *"
             value={nome}
             onChangeText={setNome}
-            placeholderTextColor="#999"
+            placeholderTextColor="#666"
             autoCorrect={false}
             clearButtonMode="while-editing"
           />
-
+ 
           <TextInput
             style={styles.input}
             placeholder="Data de Nascimento (DD/MM/AAAA) *"
@@ -125,19 +137,19 @@ const Cadastro = ({ navigation }: { navigation: any }) => {
             onChangeText={(text) => setDataNascimento(formatarData(text))}
             maxLength={10}
             keyboardType="numeric"
-            placeholderTextColor="#999"
+            placeholderTextColor="#666"
             clearButtonMode="while-editing"
           />
 
           <TextInput
             style={[styles.input, styles.multilineInput]}
-            placeholder="Observação *"
+            placeholder="Observação"
             value={observacao}
             onChangeText={setObservacao}
             multiline
             numberOfLines={3}
             textAlignVertical="top"
-            placeholderTextColor="#999"
+            placeholderTextColor="#666"
           />
 
           <TextInput
@@ -147,7 +159,7 @@ const Cadastro = ({ navigation }: { navigation: any }) => {
             onChangeText={(text) => setTelefone1(formatarTelefone(text))}
             maxLength={15}
             keyboardType="phone-pad"
-            placeholderTextColor="#999"
+            placeholderTextColor="#666"
             clearButtonMode="while-editing"
           />
 
@@ -158,18 +170,21 @@ const Cadastro = ({ navigation }: { navigation: any }) => {
             onChangeText={(text) => setTelefone2(formatarTelefone(text))}
             maxLength={15}
             keyboardType="phone-pad"
-            placeholderTextColor="#999"
+            placeholderTextColor="#666"
             clearButtonMode="while-editing"
           />
 
           <Text style={styles.obrigatorio}>* Campos obrigatórios</Text>
 
           <TouchableOpacity
-            style={styles.button}
+            style={[styles.button, loading && styles.buttonDisabled]}
             onPress={handleConfirmar}
             activeOpacity={0.8}
+            disabled={loading}
           >
-            <Text style={styles.buttonText}>Continuar</Text>
+            <Text style={styles.buttonText}>
+              {loading ? 'Cadastrando...' : 'Continuar'}
+            </Text>
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -210,14 +225,12 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   input: {
-    width: '100%',
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 10,
-    paddingHorizontal: 15,
-    marginBottom: 15,
     backgroundColor: 'white',
+    borderWidth: 1.5,
+    borderColor: '#555',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 15,
     fontSize: 16,
     color: '#000',
   },
@@ -249,6 +262,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 3,
+  },
+  buttonDisabled: {
+    backgroundColor: '#9E9E9E',
   },
   buttonText: {
     color: 'white',

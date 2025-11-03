@@ -12,13 +12,14 @@ import {
   ScrollView
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({ navigation }: { navigation: any }) => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email.trim() || !senha.trim()) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos');
       return;
@@ -29,13 +30,31 @@ const Login = ({ navigation }: { navigation: any }) => {
       return;
     }
 
-    // Simulação de login bem-sucedido
-    Alert.alert('Sucesso', 'Login realizado com sucesso!', [
-      {
-        text: 'OK',
-        onPress: () => navigation.navigate('IdososCadastrados') // Alterado para ir para IdososCadastrados
+    try {
+      // Buscar dados do cuidador salvos
+      const cuidadorSalvo = await AsyncStorage.getItem('@cuidador_data');
+      
+      if (cuidadorSalvo) {
+        const cuidador = JSON.parse(cuidadorSalvo);
+        
+        // Verificar credenciais
+        if (email === cuidador.email && senha === cuidador.senha) {
+          Alert.alert('Sucesso', 'Login realizado com sucesso!', [
+            {
+              text: 'OK',
+              onPress: () => navigation.navigate('IdososCadastrados')
+            }
+          ]);
+        } else {
+          Alert.alert('Erro', 'Email ou senha incorretos');
+        }
+      } else {
+        Alert.alert('Erro', 'Nenhum cuidador cadastrado encontrado. Por favor, faça o cadastro primeiro.');
       }
-    ]);
+    } catch (error) {
+      console.error('Erro ao fazer login:', error);
+      Alert.alert('Erro', 'Erro ao fazer login. Tente novamente.');
+    }
   };
 
   const validarEmail = (email: string) => {
@@ -84,8 +103,8 @@ const Login = ({ navigation }: { navigation: any }) => {
             >
               <Image 
                 source={mostrarSenha 
-                  ? require('../assets/eye-open.png') 
-                  : require('../assets/eye-closed.png')
+                  ? require('../assets/eye-closed.png')
+                  : require('../assets/eye-open.png') 
                 }
                 style={styles.eyeIcon}
               />
@@ -134,7 +153,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 20,
     textAlign: 'center',
     marginBottom: 40,
     color: '#666',
@@ -169,8 +188,8 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   eyeIcon: {
-    width: 24,
-    height: 24,
+    width: 30,
+    height: 30,
   },
   button: {
     backgroundColor: '#3E8CE5',

@@ -3,9 +3,10 @@ import { supabaseAdmin } from '../lib/supabase';
 import { User } from '@supabase/supabase-js'; 
 
 export async function criarAssistido(req: Request, res: Response) {
+  console.log (req.body);
   try {
-    const { nome, data_nascimento, observacoes } = req.body;
-    if (!nome) return res.status(400).json({ erro: 'Informe o nome do assistido.' });
+    const { nome_completo, data_nascimento, observacoes, telefone_1, telefone_2 } = req.body;
+    if (!nome_completo) return res.status(400).json({ erro: 'Informe o nome do assistido.' });
 
     // Bruno Menezes 01.11.2025 : Corrigindo coluna nome para nome_completo na tabela assistidos
    
@@ -17,7 +18,7 @@ export async function criarAssistido(req: Request, res: Response) {
 
     const { data, error } = await supabaseAdmin
       .from('assistidos')
-      .insert({nome_completo: nome, data_nascimento, observacoes })
+      .insert({nome_completo, data_nascimento, observacoes, telefone_1, telefone_2 })
       .select()
       .single();
       // Fim da correção

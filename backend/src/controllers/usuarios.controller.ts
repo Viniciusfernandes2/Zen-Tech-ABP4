@@ -3,9 +3,12 @@ import { supabaseAdmin } from '../lib/supabase';
 
 export async function criarCuidador(req: Request, res: Response) {
 
+  console.log("req.body: " , req.body);
+  console.log('Chegamos aqui');
+
   try {
-    const { nome, data_nascimento, email, senha, telefone } = req.body;
-    if (!email || !senha || !nome) {
+    const { nome_completo, data_nascimento, email, senha, telefone } = req.body;
+    if (!email || !senha || !nome_completo) {
       return res.status(400).json({ erro: 'Informe email, senha e nome.' });
     }
 
@@ -17,7 +20,7 @@ export async function criarCuidador(req: Request, res: Response) {
       return res.status(400).json({ erro: 'Falha ao criar usuário no Auth', detalhe: authError?.message });
     }
 
-    console.log('nome            -> ' + nome);
+    console.log('nome            -> ' + nome_completo);
     console.log('data_nascimento -> ' + data_nascimento);
     console.log('email           -> ' + email);
     console.log('senha           -> ' + senha);
@@ -34,7 +37,7 @@ export async function criarCuidador(req: Request, res: Response) {
 
     const { data: perfil, error: perfilError } = await supabaseAdmin
       .from('usuarios')
-      .insert({ auth_user_id: authData.user.id, nome_completo: nome, data_nascimento, email, senha_hash: senha, telefone})
+      .insert({ auth_user_id: authData.user.id, nome_completo, data_nascimento, email, senha_hash: senha, telefone})
       .select()
       .single();
 
