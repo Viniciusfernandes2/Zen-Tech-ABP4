@@ -75,8 +75,8 @@ Todas as entregas serão realizadas conforme os prazos acordados com o cliente. 
 | Sprint | Previsão de Entrega | Status | Relatório | Tasks |
 | ------ | -------------------- | ------ | --------- |-------|
 |   1    | 📅 07/10/2025        | :white_check_mark:| [:round_pushpin: Ver Relatório](./Sprint01.md) |[:round_pushpin: Ver Relatório](./taskSprint1.md) |
-|   2    | 📅 04/11/2025        |:construction: | [:round_pushpin: Ver Relatório](./Sprint02.md) | [:round_pushpin: Ver Relatório](./taskSprint2.md)|
-|   3    | 📅 25/11/2025        | [-]| [:round_pushpin: Ver Relatório]() | [:round_pushpin: Ver Relatório]()|
+|   2    | 📅 04/11/2025        |:white_check_mark: | [:round_pushpin: Ver Relatório](./Sprint02.md) | [:round_pushpin: Ver Relatório](./taskSprint2.md)|
+|   3    | 📅 25/11/2025        | :construction:| [:round_pushpin: Ver Relatório]() | [:round_pushpin: Ver Relatório]()|
 
 </div>
 
@@ -85,10 +85,9 @@ Legenda:
 - :construction: **Em Progresso**
 - [-] **Não iniciado**
 
-A apresentação da Sprint 1 em vídeo por ser acessada por [aqui!](https://www.youtube.com/watch?v=f40Za_Fj7MA) 
-<p>A apresentação da Sprint 2 em vídeo por ser acessada por [aqui!]()</p>
+A apresentação da Sprint 1 em vídeo por ser acessada por [aqui!](https://www.youtube.com/watch?v=f40Za_Fj7MA) <br>
+A apresentação da Sprint 2 em vídeo por ser acessada por [aqui!](https://www.youtube.com/watch?v=wLTZEGiM2kk)
 
-<br>
 
 ##### [🔝 Voltar ao topo ](#topo)
 
