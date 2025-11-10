@@ -40,6 +40,17 @@ Legenda IDs
 | IE 039   | Correção dos testes unitarios com JEST    | Edlaine Paula     | 23/10    | ✅      |
 | LW 040   | Criação do CRUD usuario e assistidos e apoio ao time    | Vinicius Barbosa     | 23/10    | ✅      |
 | LW 041   | Criação da pagina de idosos cadastrados    | Rodrigo De Andrade     | 23/10    | ✅      |
+| IE 042   | Testes Unitarios    | Edlaine    | 06/11    | ✅      |
+| IT 043   | Conexão Wifi e Backend da ESP32 p1   | Tiago    | 06/11   | ✅      |
+| IT 044   | Conexão Wifi e backend da ESP32 p2    | Bruno     | 06/11    | ✅      |
+| PD 045   | Criação teste de Queda e montando estrututa do JSON para receber a queda    | Rodrigo     | 06/11    | ✅      |
+| LW 046   | Telas de Historico de queda e controllers de Queda    | Rodrigo    | 10/11    | ✅      |
+| IT 047   | Controller de queda e cadastro do historico no supabase    | Bruno    | 10/11   | ✅      |
+| LW 048   | Desenvolvimento do backend da Localização   | Edlaine     | 10/11    | ✅      |
+| IE 049   | Testes de Cadastros e Login   | Luana     |  10/11    | ✅      |
+| PD 050   | Gerando Docker   | Tiago     | 10/11   | ✅      |
+| IT 051   | Estudo e Entendimento para gerar o APK    | Vinicius     |  10/11    | ✅      |
+
 
 
 
