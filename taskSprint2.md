@@ -50,6 +50,14 @@ Legenda IDs
 | IE 049   | Testes de Cadastros e Login   | Luana     |  10/11    | ✅      |
 | PD 050   | Gerando Docker   | Tiago     | 10/11   | ✅      |
 | IT 051   | Estudo e Entendimento para gerar o APK    | Vinicius     |  10/11    | ✅      |
+| IT 052   | Troca do IP na ESP32 via broadcast para idenficar qualquer backend    |  Bruno     | 12/11    | ✅      |
+| PD 053   | Autenticação de Login    | Rodrigo    | 12/11   | ✅      |
+| LW 054   | Correção login e criação do controller dispositivo   | Vinicius     |  12/11    | ✅      |
+| PD 055   | Instalação do Docker na maquina e iniciando imagem  | Tiago     | 12/11   | ✅      |
+| IE 056   | Testes unitarios de novas funcionalidades   | Edlaine     | 12/11    | ✅      |
+| IE 057   | Revisão GitHub Actions CI/CD   | Luana     |  12/11    | ✅      |
+
+
 
 
 
