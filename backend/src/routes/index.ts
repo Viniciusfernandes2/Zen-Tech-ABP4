@@ -1,68 +1,78 @@
 import { Router } from 'express';
 import cors from 'cors';
 import { supabaseAdmin } from '../lib/supabase';
-import {
-  registrarDispositivo,
-  vincularDispositivo
-} from "../controllers/dipositivo.Controller";
-
+import { deviceAuth } from '../middlewares/deviceAuth';
+import { requireSupabaseUser } from '../middlewares/auth';
 
 // Controllers
 import { loginUsuario } from '../controllers/login.controller';
-import { 
-  criarUsuario, 
-  listarUsuarios, 
-  buscarUsuario, 
-  atualizarUsuario, 
-  deletarUsuario 
+
+import {
+  getMeuPerfil,
+  atualizarMeuPerfil,
+  deletarMinhaConta
 } from '../controllers/usuarios.controller';
-import { 
-  criarAssistido, 
-  listarAssistidosDoCuidador, 
-  buscarAssistido, 
-  meusAssistidos 
+
+import {
+  criarAssistido,
+  meusAssistidos,
+  buscarAssistido
 } from '../controllers/assistidos.controller';
-import { vincularCuidadorIdoso } from '../controllers/vinculos.controller';
-import { requireSupabaseUser } from '../middlewares/auth';
+
+import {
+  vincularCuidadorIdoso,
+  desvincularCuidador
+} from '../controllers/vinculos.controller';
+
+import {
+  registrarDispositivo,
+  parearDispositivo,
+  registrarEventoDispositivo,
+  heartbeatDispositivo
+} from '../controllers/dipositivo.Controller';
 
 const router = Router();
 router.use(cors({ origin: true }));
 
-// 🩺 Rota de saúde - testar se o servidor responde
-router.get('/health', (_, res) => res.json({ ok: true, name: 'Bio Alert API' }));
+// 🩺 Health check
+router.get('/health', (_req, res) => {
+  res.json({
+    ok: true,
+    name: 'Bio Alert API',
+    timestamp: new Date().toISOString()
+  });
+});
 
-// 🧠 Rota pra testar conexão com banco
+// 🧠 Database debug
 router.get('/debug/db', async (_req, res) => {
   const { error } = await supabaseAdmin.from('usuarios').select('id').limit(1);
-  if (error) return res.status(500).json({ ok: false, db: false, error: error.message });
+  if (error) {
+    return res.status(500).json({ ok: false, db: false, error: error.message });
+  }
   return res.json({ ok: true, db: true });
 });
 
-// 🔐 Login
+// 🔐 Auth
 router.post('/login', loginUsuario);
 
-// 👤 Rotas de Usuário (CRUD)
-router.post('/usuarios', criarUsuario);         // CREATE
-router.get('/usuarios', listarUsuarios);        // READ (todos)
-router.get('/usuarios/:id', buscarUsuario);     // READ (um)
-router.put('/usuarios/:id', atualizarUsuario);  // UPDATE
-router.delete('/usuarios/:id', deletarUsuario); // DELETE
+// 👤 Rotas do usuário autenticado
+router.get('/usuarios/me', requireSupabaseUser, getMeuPerfil);
+router.patch('/usuarios/me', requireSupabaseUser, atualizarMeuPerfil);
+router.delete('/usuarios/me', requireSupabaseUser, deletarMinhaConta);
 
-// 👥 Rotas de Assistidos
-router.post('/assistidos', criarAssistido);
-router.get('/assistidos', listarAssistidosDoCuidador);
-router.get('/assistidos/:id', buscarAssistido);
+// 👥 Assistidos
+router.post('/assistidos', requireSupabaseUser, criarAssistido);
+router.get('/assistidos/meus', requireSupabaseUser, meusAssistidos);
+router.get('/assistidos/:id', requireSupabaseUser, buscarAssistido);
 
-// 🔗 Vincular Cuidador e Idoso
-router.post('/vinculos', vincularCuidadorIdoso);
+// 🔗 Vínculos (compartilhamento e desvincular)
+router.post('/vinculos', requireSupabaseUser, vincularCuidadorIdoso);
+router.delete('/vinculos/:assistido_id', requireSupabaseUser, desvincularCuidador);
 
-// 🔒 Rota autenticada
-router.get('/meus-assistidos', requireSupabaseUser, meusAssistidos);
-
-// ⚙️ Rotas do ESP32
-router.post("/registrar", registrarDispositivo);
-router.post("/vincular", vincularDispositivo);
+// ⚙️ Rotas do dispositivo (ESP32)
+router.post('/device/register', registrarDispositivo); // primeiro contato da ESP
+router.post('/device/pair', requireSupabaseUser, parearDispositivo); // app vincula device ao assistido
+router.post('/device/event', deviceAuth, registrarEventoDispositivo); // queda
+router.post('/device/heartbeat', deviceAuth, heartbeatDispositivo);   // ping
 
 export default router;
-
-
