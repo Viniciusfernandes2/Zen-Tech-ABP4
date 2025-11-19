@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: 'http://192.168.1.34:3000/api', // Ou seu endereço de produção
+  baseURL: 'https://deploy-bioalert.onrender.com', // Ou seu endereço de produção
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',

@@ -1,3 +1,4 @@
+// Menu.tsx
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -8,9 +9,11 @@ import {
   StatusBar,
   ScrollView,
   Alert,
+  BackHandler,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface Idoso {
   id: string;
@@ -24,31 +27,96 @@ interface Idoso {
 const Menu = ({ navigation, route }: { navigation: any; route: any }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [idosoSelecionado, setIdosoSelecionado] = useState<Idoso | null>(null);
+  const [usuarioLogado, setUsuarioLogado] = useState(false);
   const slideAnim = useState(new Animated.Value(-300))[0];
+  const isFocused = useIsFocused();
 
-  // Receber e gerenciar o idoso selecionado
+  // Verificar autenticação ao carregar a tela
+  useEffect(() => {
+    verificarAutenticacao();
+    
+    // Configurar handler para botão voltar do Android
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      () => {
+        if (isMenuOpen) {
+          toggleMenu();
+          return true;
+        }
+        // Não permitir voltar para login - só através do logout
+        return true;
+      }
+    );
+
+    return () => backHandler.remove();
+  }, [isMenuOpen]);
+
+  // Verificar autenticação quando a tela recebe foco
   useFocusEffect(
     React.useCallback(() => {
+      verificarAutenticacao();
+      
       const idoso = route.params?.idosoSelecionado;
       console.log('Idoso recebido no Menu:', idoso);
       
       if (idoso) {
         setIdosoSelecionado(idoso);
       } else {
-        // Se não recebeu idoso, tentar carregar do AsyncStorage ou mostrar alerta
+        // Se não recebeu idoso e está autenticado, tentar carregar do AsyncStorage
+        carregarIdosoSalvo();
+      }
+      
+      return () => {
+        // Cleanup se necessário
+      };
+    }, [route.params?.idosoSelecionado])
+  );
+
+  const verificarAutenticacao = async () => {
+    try {
+      const userLoggedIn = await AsyncStorage.getItem('@user_logged_in');
+      const currentUser = await AsyncStorage.getItem('@current_user');
+      
+      if (userLoggedIn === 'true' && currentUser) {
+        setUsuarioLogado(true);
+      } else {
+        // Se não está autenticado, redirecionar para login
+        setUsuarioLogado(false);
         Alert.alert(
-          'Nenhum Idoso Selecionado',
-          'Por favor, selecione um idoso na tela anterior.',
+          'Acesso Negado',
+          'Por favor, faça login para acessar esta funcionalidade.',
           [
             {
-              text: 'Voltar',
-              onPress: () => navigation.navigate('IdososCadastrados')
+              text: 'OK',
+              onPress: () => navigation.navigate('Login')
             }
           ]
         );
       }
-    }, [route.params?.idosoSelecionado])
-  );
+    } catch (error) {
+      console.error('Erro ao verificar autenticação:', error);
+      navigation.navigate('Login');
+    }
+  };
+
+  const carregarIdosoSalvo = async () => {
+    try {
+      const idosoSalvo = await AsyncStorage.getItem('@idoso_selecionado');
+      if (idosoSalvo) {
+        setIdosoSelecionado(JSON.parse(idosoSalvo));
+      }
+    } catch (error) {
+      console.error('Erro ao carregar idoso salvo:', error);
+    }
+  };
+
+  const salvarIdosoSelecionado = async (idoso: Idoso) => {
+    try {
+      await AsyncStorage.setItem('@idoso_selecionado', JSON.stringify(idoso));
+    } catch (error) {
+      console.error('Erro ao salvar idoso selecionado:', error);
+    }
+  };
 
   const toggleMenu = () => {
     if (isMenuOpen) {
@@ -80,7 +148,6 @@ const Menu = ({ navigation, route }: { navigation: any; route: any }) => {
   const handleNavigation = (screen: string) => {
     toggleMenu();
     
-    // Passar o idoso selecionado para a próxima tela
     setTimeout(() => {
       if (idosoSelecionado) {
         navigation.navigate(screen, { idosoSelecionado });
@@ -90,7 +157,7 @@ const Menu = ({ navigation, route }: { navigation: any; route: any }) => {
           'Nenhum idoso selecionado. Por favor, selecione um idoso primeiro.',
           [
             {
-              text: 'OK',
+              text: 'Selecionar Idoso',
               onPress: () => navigation.navigate('IdososCadastrados')
             }
           ]
@@ -124,6 +191,42 @@ const Menu = ({ navigation, route }: { navigation: any; route: any }) => {
     navigation.navigate('IdososCadastrados');
   };
 
+  const handleLogout = async () => {
+    Alert.alert(
+      'Sair',
+      'Tem certeza que deseja sair da aplicação?',
+      [
+        {
+          text: 'Cancelar',
+          style: 'cancel'
+        },
+        {
+          text: 'Sair',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              // Limpar dados de sessão
+              await AsyncStorage.multiRemove([
+                '@user_logged_in',
+                '@current_user',
+                '@idoso_selecionado'
+              ]);
+              
+              // Redirecionar para login
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Login' }],
+              });
+            } catch (error) {
+              console.error('Erro ao fazer logout:', error);
+              navigation.navigate('Login');
+            }
+          }
+        }
+      ]
+    );
+  };
+
   const featureCards = [
     { title: 'Pulseira', screen: 'Pulseira', icon: '⌚', color: '#3E8CE5' },
     { title: 'Frequência Cardíaca', screen: 'BPM', icon: '❤️', color: '#e74c3c' },
@@ -142,13 +245,24 @@ const Menu = ({ navigation, route }: { navigation: any; route: any }) => {
         'Por favor, selecione um idoso primeiro.',
         [
           {
-            text: 'OK',
+            text: 'Selecionar Idoso',
             onPress: () => navigation.navigate('IdososCadastrados')
           }
         ]
       );
     }
   };
+
+  // Se não está autenticado, não renderiza o conteúdo
+  if (!usuarioLogado) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <View style={styles.loadingContainer}>
+          <Text style={styles.loadingText}>Verificando autenticação...</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -195,6 +309,9 @@ const Menu = ({ navigation, route }: { navigation: any; route: any }) => {
         ) : (
           <View style={styles.noIdoso}>
             <Text style={styles.noIdosoText}>Nenhum idoso selecionado</Text>
+            <Text style={styles.noIdosoSubtext}>
+              Para acessar as funcionalidades, selecione um idoso cadastrado
+            </Text>
             <TouchableOpacity 
               style={styles.selectIdosoButton}
               onPress={handleVoltarIdosos}
@@ -204,39 +321,41 @@ const Menu = ({ navigation, route }: { navigation: any; route: any }) => {
           </View>
         )}
         
-        {/* Grid de funcionalidades */}
-        <Text style={styles.featuresTitle}>Funcionalidades</Text>
-        <View style={styles.featureGrid}>
-          {featureCards.map((feature, index) => (
-            <TouchableOpacity 
-              key={index}
-              style={[styles.featureCard, { backgroundColor: feature.color }]}
-              onPress={() => navigateToFeature(feature.screen)}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.featureIcon}>{feature.icon}</Text>
-              <Text style={styles.featureText}>{feature.title}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        {/* Status do sistema */}
+        {/* Grid de funcionalidades - Só mostra se tiver idoso selecionado */}
         {idosoSelecionado && (
-          <View style={styles.statusContainer}>
-            <Text style={styles.statusTitle}>Status do Sistema</Text>
-            <View style={styles.statusItem}>
-              <View style={[styles.statusIndicator, styles.statusOnline]} />
-              <Text style={styles.statusText}>Pulseira conectada</Text>
+          <>
+            <Text style={styles.featuresTitle}>Funcionalidades</Text>
+            <View style={styles.featureGrid}>
+              {featureCards.map((feature, index) => (
+                <TouchableOpacity 
+                  key={index}
+                  style={[styles.featureCard, { backgroundColor: feature.color }]}
+                  onPress={() => navigateToFeature(feature.screen)}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.featureIcon}>{feature.icon}</Text>
+                  <Text style={styles.featureText}>{feature.title}</Text>
+                </TouchableOpacity>
+              ))}
             </View>
-            <View style={styles.statusItem}>
-              <View style={[styles.statusIndicator, styles.statusOnline]} />
-              <Text style={styles.statusText}>Monitoramento ativo</Text>
+
+            {/* Status do sistema */}
+            <View style={styles.statusContainer}>
+              <Text style={styles.statusTitle}>Status do Sistema</Text>
+              <View style={styles.statusItem}>
+                <View style={[styles.statusIndicator, styles.statusOnline]} />
+                <Text style={styles.statusText}>Pulseira conectada</Text>
+              </View>
+              <View style={styles.statusItem}>
+                <View style={[styles.statusIndicator, styles.statusOnline]} />
+                <Text style={styles.statusText}>Monitoramento ativo</Text>
+              </View>
+              <View style={styles.statusItem}>
+                <View style={[styles.statusIndicator, styles.statusOk]} />
+                <Text style={styles.statusText}>Sinais vitais normais</Text>
+              </View>
             </View>
-            <View style={styles.statusItem}>
-              <View style={[styles.statusIndicator, styles.statusOk]} />
-              <Text style={styles.statusText}>Sinais vitais normais</Text>
-            </View>
-          </View>
+          </>
         )}
       </ScrollView>
 
@@ -291,10 +410,7 @@ const Menu = ({ navigation, route }: { navigation: any; route: any }) => {
             
             <TouchableOpacity
               style={styles.menuItem}
-              onPress={() => {
-                toggleMenu();
-                navigation.navigate('Login');
-              }}
+              onPress={handleLogout}
             >
               <Text style={styles.menuItemIcon}>🚪</Text>
               <Text style={styles.menuItemText}>Sair</Text>
@@ -319,6 +435,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+  },
+  loadingText: {
+    fontSize: 18,
+    color: '#666',
   },
   header: {
     flexDirection: 'row',
@@ -417,7 +543,7 @@ const styles = StyleSheet.create({
   },
   noIdoso: {
     backgroundColor: '#fff3cd',
-    padding: 20,
+    padding: 25,
     borderRadius: 16,
     marginBottom: 30,
     alignItems: 'center',
@@ -425,15 +551,22 @@ const styles = StyleSheet.create({
     borderLeftColor: '#ffc107',
   },
   noIdosoText: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#856404',
-    marginBottom: 15,
+    marginBottom: 10,
     textAlign: 'center',
+  },
+  noIdosoSubtext: {
+    fontSize: 16,
+    color: '#856404',
+    textAlign: 'center',
+    marginBottom: 20,
+    lineHeight: 22,
   },
   selectIdosoButton: {
     backgroundColor: '#ffc107',
-    paddingHorizontal: 20,
+    paddingHorizontal: 25,
     paddingVertical: 12,
     borderRadius: 8,
   },

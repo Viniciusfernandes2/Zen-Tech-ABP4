@@ -1,4 +1,3 @@
-// services/historicoService.ts
 import api from "../api/axios";
 
 export interface Queda {
