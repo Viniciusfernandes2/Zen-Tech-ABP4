@@ -7,12 +7,15 @@ interface LoginData {
 
 export async function loginUser(data: LoginData) {
   try {
-    const response = await api.post('/cuidadores/login', data);
+    // ROTA CORRETA DO BACKEND
+    const response = await api.post('/login', data);
+
     return response.data;
+
   } catch (error: any) {
     if (error.response) {
-      throw new Error(error.response.data.erro || 'Erro ao fazer login');
+      throw new Error(error.response.data.erro || "Erro ao fazer login");
     }
-    throw new Error('Erro de conexão com o servidor');
+    throw new Error("Erro de conexão com o servidor");
   }
 }

@@ -1,35 +1,22 @@
-import api from "../api/axios";
+// src/services/historicoService.ts
+import api from '../api/axios';
 
 export interface Queda {
-  id: string;
-  data: string;
-  horario: string;
-  x: number;
-  y: number;
-  z: number;
-  total: number;
+  id: number;
+  created_at: string;
+  event_id?: string;
+  source_timestamp?: string;
+  event_type?: string;
+  eixo_x?: number;
+  eixo_y?: number;
+  eixo_z?: number;
+  totalacc?: number;
+  raw_payload?: any;
+  dispositivo_id?: string;
 }
 
-export async function getHistoricoQuedas(): Promise<Queda[]> {
-  try {
-    const response = await api.get('/queda/historico');
-    return response.data;
-  } catch (error: any) {
-    if (error.response) {
-      throw new Error(error.response.data.erro || 'Erro ao buscar histórico de quedas');
-    }
-    throw new Error('Erro de conexão com o servidor');
-  }
-}
-
-export async function getUltimaQueda(): Promise<Queda | null> {
-  try {
-    const response = await api.get('/queda/ultima');
-    return response.data;
-  } catch (error: any) {
-    if (error.response && error.response.status === 404) {
-      return null;
-    }
-    throw new Error('Erro ao buscar última queda');
-  }
+export async function getHistoricoQuedas(assistidoId: string, page = 1, pageSize = 50) {
+  const resp = await api.get(`/assistidos/${assistidoId}/quedas?page=${page}&pageSize=${pageSize}`);
+  // backend responde { page, pageSize, items: quedas }
+  return resp.data.items ?? resp.data;
 }
