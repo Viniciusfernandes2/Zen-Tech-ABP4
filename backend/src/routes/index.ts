@@ -1,9 +1,8 @@
 import { Router } from 'express';
 import cors from 'cors';
 import { supabaseAdmin } from '../lib/supabase';
-import { criarCuidador } from '../controllers/usuarios.controller';
+import { criarUsuario } from '../controllers/usuarios.controller';
 import { criarAssistido, listarAssistidosDoCuidador, buscarAssistido, meusAssistidos } from '../controllers/assistidos.controller';
-import { vincularCuidadorIdoso } from '../controllers/vinculos.controller';
 import { requireSupabaseUser } from '../middlewares/auth';
 
 const router = Router();
@@ -20,9 +19,8 @@ router.get('/debug/db', async (_req, res) => {
 });
 
 // CRUD / fluxo principal
-router.post('/cuidadores', criarCuidador);
+router.post('/usuarios', criarUsuario);
 router.post('/assistidos', criarAssistido);
-router.post('/vinculos', vincularCuidadorIdoso);
 
 router.get('/assistidos', listarAssistidosDoCuidador);
 router.get('/assistidos/:id', buscarAssistido);
