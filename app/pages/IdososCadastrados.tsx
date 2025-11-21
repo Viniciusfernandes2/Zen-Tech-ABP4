@@ -34,6 +34,7 @@ const IdososCadastrados = ({ navigation }: { navigation: any }) => {
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [codigoInput, setCodigoInput] = useState('');
+  const [nomeCuidador, setNomeCuidador] = useState('');
 
   const carregarIdosos = useCallback(async () => {
     setLoading(true);
@@ -53,9 +54,23 @@ const IdososCadastrados = ({ navigation }: { navigation: any }) => {
     }
   }, []);
 
+  const carregarNomeCuidador = async () => {
+    try {
+      const cuidadorSalvo = await AsyncStorage.getItem('@cuidador_data');
+      if (cuidadorSalvo) {
+        const cuidador = JSON.parse(cuidadorSalvo);
+        const primeiroNome = cuidador.nome.split(' ')[0];
+        setNomeCuidador(primeiroNome);
+      }
+    } catch (error) {
+      console.error('Erro ao carregar nome do cuidador:', error);
+    }
+  };
+
   useFocusEffect(
     useCallback(() => {
       carregarIdosos();
+      carregarNomeCuidador();
     }, [carregarIdosos])
   );
 
@@ -72,16 +87,34 @@ const IdososCadastrados = ({ navigation }: { navigation: any }) => {
 
   const calcularIdade = (dataNascimento: string) => {
     try {
-      const [dia, mes, ano] = dataNascimento.split('/');
-      const nascimento = new Date(parseInt(ano), parseInt(mes) - 1, parseInt(dia));
+      let nascimento: Date;
+      
+      // Verifica se a data está no formato AAAA-MM-DD (da API)
+      if (dataNascimento.includes('-')) {
+        const [ano, mes, dia] = dataNascimento.split('-');
+        nascimento = new Date(parseInt(ano), parseInt(mes) - 1, parseInt(dia));
+      } 
+      // Verifica se está no formato DD/MM/AAAA (do cadastro local)
+      else if (dataNascimento.includes('/')) {
+        const [dia, mes, ano] = dataNascimento.split('/');
+        nascimento = new Date(parseInt(ano), parseInt(mes) - 1, parseInt(dia));
+      }
+      // Se não for nenhum dos formatos conhecidos, retorna 0
+      else {
+        return 0;
+      }
+
       const hoje = new Date();
       let idade = hoje.getFullYear() - nascimento.getFullYear();
+      
+      // Ajusta a idade se ainda não fez aniversário este ano
       if (
         hoje.getMonth() < nascimento.getMonth() ||
         (hoje.getMonth() === nascimento.getMonth() && hoje.getDate() < nascimento.getDate())
       ) {
         idade--;
       }
+      
       return idade;
     } catch {
       return 0;
@@ -96,7 +129,6 @@ const IdososCadastrados = ({ navigation }: { navigation: any }) => {
 
     try {
       await vincularPorCodigo(codigoInput.trim());
-
       Alert.alert('Sucesso', 'Idoso vinculado com sucesso!');
       setModalVisible(false);
       setCodigoInput('');
@@ -160,10 +192,15 @@ const IdososCadastrados = ({ navigation }: { navigation: any }) => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#3E8CE5']} />
         }
       >
-        <Text style={styles.headerTitle}>Idosos Cadastrados</Text>
-        <Text style={styles.headerSub}>Selecione ou vincule idosos ao seu perfil.</Text>
+        {/* Header com saudação */}
+        <View style={styles.header}>
+          <Text style={styles.saudacao}>Olá, {nomeCuidador || 'Cuidador'}</Text>
+          <Text style={styles.subtitle}>
+            Selecione um idoso para monitorar
+          </Text>
+        </View>
 
-        {/* BOTÃO PARA VINCULAR POR CÓDIGO */}
+        {/* Botão para vincular por código */}
         <TouchableOpacity
           style={styles.linkBtn}
           onPress={() => setModalVisible(true)}
@@ -171,117 +208,264 @@ const IdososCadastrados = ({ navigation }: { navigation: any }) => {
           <Text style={styles.linkBtnText}>Você já tem um idoso cadastrado? Vincular por código</Text>
         </TouchableOpacity>
 
-        {/* LISTA */}
         {idosos.length === 0 ? (
-          <View style={styles.emptyBox}>
-            <Text style={styles.emptyTitle}>Nenhum idoso encontrado</Text>
-            <Text style={styles.emptySub}>
-              Adicione um novo idoso ou vincule-se usando o código.
-            </Text>
-            <TouchableOpacity
-              style={styles.addBtn}
-              onPress={() => navigation.navigate('Cadastro')}
-            >
-              <Text style={styles.addBtnText}>Cadastrar novo idoso</Text>
-            </TouchableOpacity>
+          <View style={styles.emptyState}>
+            <View style={styles.emptyStateCard}>
+              <Text style={styles.emptyStateTitle}>Nenhum idoso cadastrado</Text>
+              <Text style={styles.emptyStateSubtitle}>
+                Adicione um idoso para começar o monitoramento
+              </Text>
+              <TouchableOpacity 
+                style={styles.emptyStateButton}
+                onPress={() => navigation.navigate('Cadastro')}
+              >
+                <Text style={styles.emptyStateButtonText}>Adicionar Idoso</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         ) : (
-          <>
+          <View style={styles.idososList}>
             {idosos.map((idoso) => (
               <TouchableOpacity
                 key={idoso.id}
-                style={styles.card}
+                style={styles.idosoCard}
                 onPress={() => selecionarIdoso(idoso)}
               >
-                <Text style={styles.cardName}>{idoso.nome_completo}</Text>
-
-                {idoso.data_nascimento && (
-                  <Text style={styles.cardAge}>
-                    {calcularIdade(idoso.data_nascimento)} anos
-                  </Text>
-                )}
-
-                {idoso.codigo_compartilhamento && (
-                  <Text style={styles.cardCode}>
-                    Código: {idoso.codigo_compartilhamento}
-                  </Text>
-                )}
-
-                <Text style={styles.cardInfo}>{idoso.telefone_1 || '—'}</Text>
+                <View style={styles.idosoHeader}>
+                  <View style={styles.avatar}>
+                    <Text style={styles.avatarText}>
+                      {idoso.nome_completo.split(' ').map(n => n[0]).join('').toUpperCase()}
+                    </Text>
+                  </View>
+                  <View style={styles.idosoInfo}>
+                    <Text style={styles.idosoNome}>{idoso.nome_completo}</Text>
+                    {idoso.data_nascimento && (
+                      <Text style={styles.idosoIdade}>
+                        {calcularIdade(idoso.data_nascimento)} anos
+                      </Text>
+                    )}
+                    {idoso.codigo_compartilhamento && (
+                      <Text style={styles.cardCode}>
+                        Código: {idoso.codigo_compartilhamento}
+                      </Text>
+                    )}
+                  </View>
+                </View>
               </TouchableOpacity>
             ))}
-
-            {/* BOTÃO FLUTUANTE */}
-            <TouchableOpacity
-              style={styles.floatingBtn}
-              onPress={() => navigation.navigate('Cadastro')}
-            >
-              <Text style={styles.floatingText}>+</Text>
-            </TouchableOpacity>
-          </>
+          </View>
         )}
       </ScrollView>
+
+      {/* Botão flutuante de adicionar - Só aparece quando há idosos */}
+      {idosos.length > 0 && (
+        <TouchableOpacity 
+          style={styles.floatingButton}
+          onPress={() => navigation.navigate('Cadastro')}
+        >
+          <Text style={styles.floatingButtonText}>+</Text>
+        </TouchableOpacity>
+      )}
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f5f5f5' },
-  scrollContent: { padding: 20, paddingBottom: 100 },
-  headerTitle: { fontSize: 26, fontWeight: 'bold', color: '#333' },
-  headerSub: { fontSize: 15, color: '#666', marginBottom: 20 },
-
-  linkBtn: {
-    backgroundColor: '#E3F2FD',
-    padding: 14,
-    borderRadius: 10,
-    marginBottom: 20,
-    borderLeftWidth: 4,
-    borderLeftColor: '#3E8CE5',
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
   },
-  linkBtnText: { color: '#1976D2', fontSize: 15, fontWeight: '600' },
-
-  card: {
-    backgroundColor: '#fff',
-    padding: 18,
-    borderRadius: 12,
-    marginBottom: 15,
-    borderWidth: 1,
-    borderColor: '#eee',
+  scrollContent: {
+    flexGrow: 1,
+    padding: 20,
+    paddingBottom: 100,
   },
-  cardName: { fontSize: 20, fontWeight: '700', color: '#333' },
-  cardAge: { fontSize: 14, color: '#777', marginTop: 4 },
-  cardInfo: { fontSize: 14, color: '#555', marginTop: 7 },
-  cardCode: { marginTop: 6, fontSize: 14, fontWeight: '700', color: '#3E8CE5' },
-
-  emptyBox: { padding: 40, alignItems: 'center' },
-  emptyTitle: { fontSize: 22, fontWeight: 'bold', marginBottom: 10 },
-  emptySub: { textAlign: 'center', fontSize: 15, color: '#666', marginBottom: 20 },
-  addBtn: {
-    backgroundColor: '#3E8CE5',
-    paddingVertical: 12,
+  header: {
+    marginBottom: 30,
+    paddingTop: 10,
+  },
+  saudacao: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#666',
+    lineHeight: 22,
+  },
+  emptyState: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 40,
+  },
+  emptyStateCard: {
+    backgroundColor: 'white',
+    padding: 30,
+    borderRadius: 16,
+    alignItems: 'center',
     width: '100%',
-    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+    borderWidth: 1,
+    borderColor: '#e8e8e8',
   },
-  addBtnText: { color: '#fff', textAlign: 'center', fontWeight: 'bold' },
-
-  floatingBtn: {
-    position: 'absolute',
-    bottom: 30,
-    right: 25,
+  emptyStateTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#333',
+    textAlign: 'center',
+  },
+  emptyStateSubtitle: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    lineHeight: 22,
+    marginBottom: 25,
+  },
+  emptyStateButton: {
+    backgroundColor: '#3E8CE5',
+    paddingHorizontal: 30,
+    paddingVertical: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    width: '100%',
+  },
+  emptyStateButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  idososList: {
+    marginBottom: 20,
+  },
+  idosoCard: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 16,
+    marginBottom: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
+    borderWidth: 1,
+    borderColor: '#e8e8e8',
+  },
+  idosoHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  avatar: {
     width: 60,
     height: 60,
     borderRadius: 30,
     backgroundColor: '#3E8CE5',
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 5,
+    marginRight: 15,
   },
-  floatingText: { color: '#fff', fontSize: 32, fontWeight: 'bold' },
-
-  loadingBox: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  loadingText: { marginTop: 10, color: '#666' },
-
+  avatarText: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  idosoInfo: {
+    flex: 1,
+  },
+  idosoNome: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 4,
+  },
+  idosoIdade: {
+    fontSize: 16,
+    color: '#666',
+    fontWeight: '500',
+  },
+  idosoStatus: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#f0f0f0',
+  },
+  statusIndicator: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#5fcf80',
+    marginRight: 8,
+  },
+  statusText: {
+    fontSize: 14,
+    color: '#666',
+    fontWeight: '500',
+  },
+  floatingButton: {
+    position: 'absolute',
+    right: 20,
+    bottom: 70,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#3E8CE5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  floatingButtonText: {
+    color: 'white',
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginTop: 0,
+  },
+  linkBtn: {
+    backgroundColor: '#E3F2FD',
+    padding: 20,
+    borderRadius: 16,
+    marginBottom: 20,
+    borderLeftWidth: 4,
+    borderLeftColor: '#3E8CE5',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  linkBtnText: {
+    color: '#1976D2',
+    fontSize: 15,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  cardCode: {
+    marginTop: 6,
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#3E8CE5',
+  },
+  loadingBox: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  loadingText: {
+    marginTop: 10,
+    color: '#666',
+  },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.45)',
@@ -291,28 +475,54 @@ const styles = StyleSheet.create({
   modalBox: {
     backgroundColor: '#fff',
     padding: 25,
-    borderRadius: 14,
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
     elevation: 6,
   },
-  modalTitle: { fontSize: 22, fontWeight: 'bold', color: '#333', marginBottom: 5 },
-  modalSubtitle: { fontSize: 15, color: '#777', marginBottom: 20 },
+  modalTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 5,
+  },
+  modalSubtitle: {
+    fontSize: 15,
+    color: '#666',
+    marginBottom: 20,
+    lineHeight: 20,
+  },
   modalInput: {
     borderWidth: 1,
     borderColor: '#ddd',
-    padding: 12,
+    padding: 15,
     borderRadius: 10,
     fontSize: 16,
     marginBottom: 20,
+    backgroundColor: '#f9f9f9',
   },
   modalBtn: {
     backgroundColor: '#3E8CE5',
-    padding: 14,
+    padding: 16,
     borderRadius: 10,
     alignItems: 'center',
+    marginBottom: 10,
   },
-  modalBtnText: { color: '#fff', fontSize: 17, fontWeight: '700' },
-  modalCancelBtn: { marginTop: 14, alignItems: 'center' },
-  modalCancelText: { color: '#777', fontSize: 15 },
+  modalBtnText: {
+    color: '#fff',
+    fontSize: 17,
+    fontWeight: '700',
+  },
+  modalCancelBtn: {
+    alignItems: 'center',
+    padding: 10,
+  },
+  modalCancelText: {
+    color: '#666',
+    fontSize: 15,
+  },
 });
 
 export default IdososCadastrados;

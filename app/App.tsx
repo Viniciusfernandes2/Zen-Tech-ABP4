@@ -8,7 +8,9 @@ import { Image } from 'react-native';
 import Login from './pages/Login';
 import Cadastro from './pages/Cadastro';
 import CadastroCuidador from './pages/CadastroCuidador';
-
+import Home from './pages/Home';
+import Home1 from './pages/Home1';
+import Principal from './pages/Principal';
 import IdososCadastrados from './pages/IdososCadastrados';
 import Menu from './pages/Menu';
 import Pulseira from './pages/Pulseira';
@@ -29,19 +31,22 @@ export default function App() {
   }, []);
 
   return (
-    <NavigationContainer ref={navRef}>
-      <Stack.Navigator
-        initialRouteName="Login"
+    <NavigationContainer>  
+      <Stack.Navigator 
+        initialRouteName="Home"
         screenOptions={{
-          headerStyle: { backgroundColor: '#3E8CE5', height: 120 },
+          headerStyle: { 
+            backgroundColor: '#3E8CE5', 
+            height: 120 
+          },
           headerTintColor: 'white',
-          headerTitleStyle: {
+          headerTitleStyle: { 
             fontWeight: 'bold',
             fontSize: 20,
           },
           headerRight: () => (
-            <Image
-              source={require('./assets/pulseira-icon-sos.png')}
+            <Image 
+              source={require('./assets/pulseira-icon-sos.png')} 
               style={{
                 width: 60,
                 height: 60,
@@ -49,8 +54,27 @@ export default function App() {
               }}
             />
           ),
-        }}
-      >
+        }}>
+        
+        {/* ----------------- HOME PRINCIPAL----------------- */}
+        <Stack.Screen 
+          name="Home" 
+          component={Home} 
+          options={{ headerShown: false }} 
+        />
+
+        {/* ----------------- HOME CARREGAMENTO ----------------- */}
+        <Stack.Screen 
+          name="Home1" 
+          component={Home1} 
+          options={{ headerShown: false }} 
+        />
+
+          <Stack.Screen 
+          name="Principal" 
+          component={Principal} 
+           options={{ headerShown: false }}
+        />
 
         {/* ----------------- LOGIN / CADASTRO ----------------- */}
         <Stack.Screen

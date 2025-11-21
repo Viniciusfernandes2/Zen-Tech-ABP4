@@ -24,7 +24,6 @@ const Pulseira = ({ navigation }: { navigation: any }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [pareando, setPareando] = useState<boolean>(false);
   const [codigo, setCodigo] = useState<string>('');
-  const [pairCode, setPairCode] = useState<string>('');
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const carregarAssistidoSelecionado = useCallback(async () => {
@@ -130,17 +129,14 @@ const Pulseira = ({ navigation }: { navigation: any }) => {
       if (isCurto) payload.codigo_curto = codigo.trim().toUpperCase();
       else payload.codigo_esp = codigo.trim();
 
-      if (pairCode.trim()) payload.pair_code = pairCode.trim();
-
       if (payload.codigo_curto) {
         await api.post('/device/pair', payload);
       } else {
-        await deviceService.parearDevice(payload.codigo_esp, payload.assistido_id, payload.pair_code);
+        await deviceService.parearDevice(payload.codigo_esp, payload.assistido_id);
       }
 
       Alert.alert('Sucesso', 'Pulseira pareada com sucesso!');
       setCodigo('');
-      setPairCode('');
       await carregarTudo();
 
     } catch (err: any) {
@@ -197,77 +193,90 @@ const Pulseira = ({ navigation }: { navigation: any }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.title}>Pulseira</Text>
-        <Text style={styles.subtitle}>Gerencie a pulseira vinculada ao idoso.</Text>
+      <ScrollView 
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.header}>
+          <Text style={styles.title}>Gerenciar Pulseira</Text>
+          <Text style={styles.subtitle}>Vincule e gerencie a pulseira do idoso</Text>
+        </View>
 
         {loading ? (
-          <View style={styles.center}>
-            <ActivityIndicator size="large" color="#3E8CE5" />
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#6366F1" />
+            <Text style={styles.loadingText}>Carregando informações...</Text>
           </View>
         ) : (
           <View style={styles.card}>
             {!deviceInfo ? (
               <>
-                <Text style={styles.noDeviceText}>
-                  Nenhuma pulseira vinculada a este idoso.
-                </Text>
+                <View style={styles.statusContainer}>
+                  <View style={[styles.statusDot, styles.statusUnpaired]} />
+                  <Text style={styles.statusText}>Pulseira não vinculada</Text>
+                </View>
 
-                <Text style={styles.labelSmall}>Código da pulseira:</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Ex: A9F3K1 ou código completo"
-                  value={codigo}
-                  onChangeText={setCodigo}
-                  autoCapitalize="characters"
-                />
-
-                <Text style={styles.labelSmall}>Pair code (opcional)</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Pair code"
-                  value={pairCode}
-                  onChangeText={setPairCode}
-                  secureTextEntry
-                />
-
-                <TouchableOpacity
-                  style={[styles.btn, pareando && styles.btnDisabled]}
-                  onPress={handleParear}
-                  disabled={pareando}
-                >
-                  <Text style={styles.btnText}>
-                    {pareando ? "Pareando..." : "Parear Pulseira"}
-                  </Text>
-                </TouchableOpacity>
+                <View style={styles.formContainer}>
+                  <Text style={styles.label}>Código da Pulseira</Text>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Digite o código da pulseira..."
+                    placeholderTextColor="#9CA3AF"
+                    value={codigo}
+                    onChangeText={setCodigo}
+                    autoCapitalize="characters"
+                  />
+                  
+                  <TouchableOpacity
+                    style={[styles.primaryButton, pareando && styles.buttonDisabled]}
+                    onPress={handleParear}
+                    disabled={pareando}
+                  >
+                    {pareando ? (
+                      <ActivityIndicator size="small" color="#FFFFFF" />
+                    ) : (
+                      <Text style={styles.primaryButtonText}>Vincular Pulseira</Text>
+                    )}
+                  </TouchableOpacity>
+                </View>
               </>
             ) : (
               <>
-                <View style={styles.infoRow}>
-                  <Text style={styles.labelSmall}>Código ESP:</Text>
-                  <Text style={styles.valueSmall}>{deviceInfo.codigo_esp}</Text>
+                <View style={styles.statusContainer}>
+                  <View style={[styles.statusDot, styles.statusPaired]} />
+                  <Text style={styles.statusText}>Pulseira Vinculada</Text>
                 </View>
 
-                <View style={styles.infoRow}>
-                  <Text style={styles.labelSmall}>Código Curto:</Text>
-                  <Text style={styles.valueSmall}>{deviceInfo.codigo_curto}</Text>
+                <View style={styles.deviceInfo}>
+                  <View style={styles.infoItem}>
+                    <Text style={styles.infoLabel}>Código ESP</Text>
+                    <Text style={styles.infoValue}>{deviceInfo.codigo_esp}</Text>
+                  </View>
+                  
+                  <View style={styles.infoItem}>
+                    <Text style={styles.infoLabel}>Código Curto</Text>
+                    <Text style={styles.infoValue}>{deviceInfo.codigo_curto}</Text>
+                  </View>
+                  
+                  <View style={styles.infoItem}>
+                    <Text style={styles.infoLabel}>Último Contato</Text>
+                    <Text style={styles.infoValue}>{deviceInfo.last_seen || "Não disponível"}</Text>
+                  </View>
                 </View>
 
-                <View style={styles.infoRow}>
-                  <Text style={styles.labelSmall}>Último contato:</Text>
-                  <Text style={styles.valueSmall}>{deviceInfo.last_seen || "—"}</Text>
-                </View>
-
-                <View style={styles.actions}>
-                  <TouchableOpacity style={styles.actionBtn} onPress={handleTestPing}>
-                    <Text style={styles.actionBtnText}>Testar comunicação</Text>
+                <View style={styles.actionsContainer}>
+                  <TouchableOpacity 
+                    style={styles.actionButton}
+                    onPress={handleTestPing}
+                  >
+                    <Text style={styles.actionButtonText}>Testar Comunicação</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                    style={[styles.actionBtn, { backgroundColor: "#d32f2f" }]}
+                    style={[styles.actionButton, styles.dangerButton]}
                     onPress={handleUnpair}
                   >
-                    <Text style={[styles.actionBtnText, { color: "#fff" }]}>
+                    <Text style={[styles.actionButtonText, styles.dangerButtonText]}>
                       Desvincular
                     </Text>
                   </TouchableOpacity>
@@ -282,70 +291,166 @@ const Pulseira = ({ navigation }: { navigation: any }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f5f5f5' },
-  scrollContent: { padding: 20, paddingBottom: 80 },
-  title: { fontSize: 28, fontWeight: '700', color: '#333', marginBottom: 6 },
-  subtitle: { color: '#666', marginBottom: 14 },
-  center: { alignItems: 'center', marginTop: 40 },
-  card: { backgroundColor: '#fff', padding: 16, borderRadius: 12, borderWidth: 1, borderColor: '#eee' },
-  noDeviceText: { color: '#666', marginBottom: 12 },
-
-  input: {
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    padding: 12,
-    borderRadius: 8,
-    marginTop: 8,
+  container: { 
+    flex: 1, 
+    backgroundColor: '#F8FAFC' 
   },
-
-  btn: {
-    backgroundColor: '#3E8CE5',
-    padding: 12,
-    borderRadius: 10,
-    marginTop: 12,
+  scrollContent: { 
+    padding: 20, 
+    paddingBottom: 40 
+  },
+  header: {
+    marginBottom: 24,
     alignItems: 'center',
   },
-  btnDisabled: {
-    backgroundColor: '#9E9E9E'
+  title: { 
+    fontSize: 32, 
+    fontWeight: '700', 
+    color: '#1E293B',
+    marginBottom: 8,
+    textAlign: 'center'
   },
-  btnText: {
-    color: '#fff',
-    fontWeight: '700'
+  subtitle: { 
+    color: '#64748B', 
+    fontSize: 16,
+    textAlign: 'center'
   },
-
-  infoRow: {
+  loadingContainer: { 
+    alignItems: 'center', 
+    justifyContent: 'center',
+    padding: 40
+  },
+  loadingText: {
+    marginTop: 12,
+    color: '#64748B',
+    fontSize: 14
+  },
+  card: { 
+    backgroundColor: '#FFFFFF', 
+    padding: 24, 
+    borderRadius: 16, 
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  statusContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 12
+    alignItems: 'center',
+    marginBottom: 24,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F1F5F9'
   },
-
-  labelSmall: {
-    fontSize: 13,
-    color: '#666'
+  statusDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    marginRight: 8
   },
-  valueSmall: {
-    fontSize: 15,
-    color: '#333',
+  statusPaired: {
+    backgroundColor: '#10B981'
+  },
+  statusUnpaired: {
+    backgroundColor: '#EF4444'
+  },
+  statusText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1E293B'
+  },
+  formContainer: {
+    marginTop: 8
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#374151',
+    marginBottom: 8
+  },
+  input: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    padding: 16,
+    borderRadius: 12,
+    fontSize: 16,
+    color: '#1E293B',
+    marginBottom: 20
+  },
+  primaryButton: {
+    backgroundColor: '#6366F1',
+    padding: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    shadowColor: '#6366F1',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+    elevation: 8,
+  },
+  buttonDisabled: {
+    backgroundColor: '#9CA3AF',
+    shadowOpacity: 0,
+  },
+  primaryButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
     fontWeight: '600'
   },
-
-  actions: {
+  deviceInfo: {
+    marginBottom: 8
+  },
+  infoItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F1F5F9'
   },
-  actionBtn: {
-    backgroundColor: '#3E8CE5',
-    padding: 12,
-    borderRadius: 8,
+  infoLabel: {
+    fontSize: 14,
+    color: '#64748B',
+    fontWeight: '500'
+  },
+  infoValue: {
+    fontSize: 14,
+    color: '#1E293B',
+    fontWeight: '600'
+  },
+  actionsContainer: {
+    marginTop: 24,
+    flexDirection: 'row',
+    gap: 12
+  },
+  actionButton: {
     flex: 1,
-    marginRight: 6,
-    alignItems: 'center'
+    backgroundColor: '#F8FAFC',
+    padding: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0'
   },
-  actionBtnText: {
-    color: '#fff',
-    fontWeight: '700'
+  dangerButton: {
+    backgroundColor: '#FEF2F2',
+    borderColor: '#FECACA'
+  },
+  actionButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#374151'
+  },
+  dangerButtonText: {
+    color: '#DC2626'
   }
 });
 
