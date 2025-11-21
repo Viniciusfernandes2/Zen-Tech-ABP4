@@ -1,296 +1,190 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
-  TextInput,
-  TouchableOpacity,
   StyleSheet,
+  TouchableOpacity,
   ScrollView,
-  Alert,
+  Alert
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { clearAuth } from '../api/axios';
+
+const USER_KEY = '@bioalert_user';
 
 const Perfil = ({ navigation }: { navigation: any }) => {
-  const [userData, setUserData] = useState({
-    nome: 'João Silva',
-    dataNascimento: '15/03/1950',
-    endereco: 'Rua das Flores, 123 - Jacareí/SP',
-    telefone1: '(12) 99999-9999',
-    telefone2: '(12) 88888-8888',
-  });
+  const [usuario, setUsuario] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  const [isEditing, setIsEditing] = useState(false); 
-
-  const handleSave = () => {
-    Alert.alert('Sucesso', 'Dados atualizados com sucesso!'); 
-    setIsEditing(false);
+  const carregarUsuario = async () => {
+    try {
+      const raw = await AsyncStorage.getItem(USER_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        setUsuario(parsed);
+      } else {
+        setUsuario(null);
+      }
+    } catch (error) {
+      console.log('[Perfil] erro ao carregar usuario', error);
+      setUsuario(null);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleEdit = () => {
-    setIsEditing(true); 
+  useEffect(() => {
+    carregarUsuario();
+  }, []);
+
+  const formatarData = (data: string) => {
+    if (!data) return '-';
+    try {
+      const [ano, mes, dia] = data.split('-');
+      return `${dia}/${mes}/${ano}`;
+    } catch {
+      return data;
+    }
   };
 
-  const handleCancel = () => {
-    setIsEditing(false);
+  const handleLogout = async () => {
+    Alert.alert('Sair', 'Deseja realmente sair da sua conta?', [
+      { text: 'Cancelar', style: 'cancel' },
+      {
+        text: 'Sair',
+        style: 'destructive',
+        onPress: async () => {
+          await clearAuth();
+          navigation.reset({ index: 0, routes: [{ name: 'Login' }] });
+        }
+      }
+    ]);
   };
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={{ textAlign: 'center', marginTop: 40 }}>Carregando...</Text>
+      </SafeAreaView>
+    );
+  }
+
+  if (!usuario) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={{ textAlign: 'center', marginTop: 40 }}>
+          Nenhuma informação encontrada.
+        </Text>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('Login')}
+        >
+          <Text style={styles.buttonText}>Fazer Login</Text>
+        </TouchableOpacity>
+      </SafeAreaView>
+    );
+  }
+
+  const inicial = usuario?.nome_completo
+    ? usuario.nome_completo[0].toUpperCase()
+    : '?';
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.title}>Meu Perfil</Text>
+      <ScrollView contentContainerStyle={styles.scroll}>
         
-        <View style={styles.profileHeader}>
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>JS</Text>
+        {/* AVATAR CINZA */}
+        <View style={styles.header}>
+          <View style={styles.avatarPlaceholder}>
+            <Text style={styles.avatarInitial}>{inicial}</Text>
           </View>
-          <Text style={styles.userName}>{userData.nome}</Text>
-          <Text style={styles.userAge}>73 anos</Text>
+          <Text style={styles.nome}>{usuario.nome_completo}</Text>
+          <Text style={styles.email}>{usuario.email}</Text>
         </View>
 
-        <View style={styles.form}>
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Nome Completo</Text>
-            <TextInput
-              style={styles.input}
-              value={userData.nome}
-              onChangeText={(text) => setUserData({...userData, nome: text})}
-              editable={isEditing}
-              placeholder="Nome completo"
-            />
-          </View>
+        {/* CARD DADOS */}
+        <View style={styles.card}>
+          <Text style={styles.label}>Nome Completo:</Text>
+          <Text style={styles.value}>{usuario.nome_completo}</Text>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Data de Nascimento</Text>
-            <TextInput
-              style={styles.input}
-              value={userData.dataNascimento}
-              onChangeText={(text) => setUserData({...userData, dataNascimento: text})}
-              editable={isEditing}
-              placeholder="DD/MM/AAAA"
-            />
-          </View>
+          <Text style={styles.label}>Email:</Text>
+          <Text style={styles.value}>{usuario.email}</Text>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Endereço</Text>
-            <TextInput
-              style={[styles.input, styles.multilineInput]}
-              value={userData.endereco}
-              onChangeText={(text) => setUserData({...userData, endereco: text})}
-              editable={isEditing}
-              multiline
-              numberOfLines={3}
-              placeholder="Endereço completo"
-            />
-          </View>
+          <Text style={styles.label}>Telefone:</Text>
+          <Text style={styles.value}>
+            {usuario.telefone ? usuario.telefone : '-'}
+          </Text>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Telefone Principal</Text>
-            <TextInput
-              style={styles.input}
-              value={userData.telefone1}
-              onChangeText={(text) => setUserData({...userData, telefone1: text})}
-              editable={isEditing}
-              placeholder="(00) 00000-0000"
-            />
-          </View>
-
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Telefone Secundário</Text>
-            <TextInput
-              style={styles.input}
-              value={userData.telefone2}
-              onChangeText={(text) => setUserData({...userData, telefone2: text})}
-              editable={isEditing}
-              placeholder="(00) 00000-0000"
-            />
-          </View>
+          <Text style={styles.label}>Data de Nascimento:</Text>
+          <Text style={styles.value}>
+            {formatarData(usuario.data_nascimento)}
+          </Text>
         </View>
 
-        {isEditing ? (
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity 
-              style={[styles.button, styles.cancelButton]} 
-              onPress={handleCancel}
-            >
-              <Text style={styles.cancelButtonText}>Cancelar</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={[styles.button, styles.saveButton]} 
-              onPress={handleSave}
-            >
-              <Text style={styles.saveButtonText}>Salvar</Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <TouchableOpacity 
-            style={styles.editButton} 
-            onPress={handleEdit}
-          >
-            <Text style={styles.editButtonText}>Editar Perfil</Text>
-          </TouchableOpacity>
-        )}
+        {/* BOTÃO SAIR */}
+        <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
+          <Text style={styles.logoutText}>Sair da Conta</Text>
+        </TouchableOpacity>
 
-        <View style={styles.infoBox}>
-          <Text style={styles.infoTitle}>Informações do Cuidador</Text>
-          <Text style={styles.infoText}>👤 Maria Silva</Text>
-          <Text style={styles.infoText}>📅 13/08/1978</Text>
-          <Text style={styles.infoText}>👥 Filha</Text>
-          <Text style={styles.infoText}>📧 mariasilva@email.com</Text>
-          <Text style={styles.infoText}>📞 (12)98111-1111</Text>
-          <TouchableOpacity 
-            style={styles.cuidadorButton}
-            onPress={() => navigation.navigate('CadastroCuidador')}
-          >
-            <Text style={styles.cuidadorButtonText}>Editar Cuidador</Text>
-          </TouchableOpacity>
-        </View>
+        <View style={{ height: 50 }} />
       </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  scrollContent: {
-    padding: 20,
-    paddingBottom: 40,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-    color: '#333',
-  },
-  profileHeader: {
-    alignItems: 'center',
-    marginBottom: 30,
-  },
-  avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: '#3E8CE5',
+  container: { flex: 1, backgroundColor: '#f5f5f5' },
+  scroll: { padding: 20, paddingBottom: 60 },
+  header: { alignItems: 'center', marginBottom: 30 },
+
+  // AVATAR CINZA COM A INICIAL
+  avatarPlaceholder: {
+    width: 110,
+    height: 110,
+    borderRadius: 60,
+    backgroundColor: '#ddd',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 12
   },
-  avatarText: {
-    color: 'white',
-    fontSize: 24,
-    fontWeight: 'bold',
+  avatarInitial: {
+    fontSize: 48,
+    fontWeight: '700',
+    color: '#666'
   },
-  userName: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 5,
-  },
-  userAge: {
-    fontSize: 16,
-    color: '#666',
-  },
-  form: {
-    marginBottom: 20,
-  },
-  inputGroup: {
-    marginBottom: 15,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 5,
-    color: '#333',
-  },
-  input: {
-    backgroundColor: 'white',
+
+  nome: { fontSize: 24, fontWeight: 'bold', color: '#333' },
+  email: { fontSize: 14, color: '#777', marginTop: 4 },
+
+  card: {
+    backgroundColor: '#fff',
+    padding: 18,
+    borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-    color: '#333',
+    borderColor: '#eee',
+    marginBottom: 30
   },
-  multilineInput: {
-    minHeight: 80,
-    textAlignVertical: 'top',
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  button: {
-    flex: 1,
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginHorizontal: 5,
-  },
-  editButton: {
-    backgroundColor: '#3E8CE5',
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  cancelButton: {
-    backgroundColor: '#f8f9fa',
-    borderWidth: 1,
-    borderColor: '#ddd',
-  },
-  saveButton: {
-    backgroundColor: '#5fcf80',
-  },
-  editButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  cancelButtonText: {
-    color: '#666',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  saveButtonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  infoBox: {
-    backgroundColor: '#e3f2fd',
-    padding: 20,
+  label: { fontSize: 14, color: '#777', marginTop: 10 },
+  value: { fontSize: 16, fontWeight: '600', color: '#333' },
+
+  logoutBtn: {
+    backgroundColor: '#d32f2f',
+    padding: 16,
     borderRadius: 10,
-    borderLeftWidth: 4,
-    borderLeftColor: '#2196f3',
+    alignItems: 'center'
   },
-  infoTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#1976d2',
-  },
-  infoText: {
-    fontSize: 16,
-    color: '#1976d2',
-    marginBottom: 5,
-    lineHeight: 22,
-  },
-  cuidadorButton: {
-    backgroundColor: '#2196f3',
-    padding: 10,
-    borderRadius: 6,
+  logoutText: { color: '#fff', fontWeight: '700', fontSize: 16 },
+
+  button: {
+    backgroundColor: '#3E8CE5',
+    padding: 14,
+    borderRadius: 10,
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 20
   },
-  cuidadorButtonText: {
-    color: 'white',
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
+  buttonText: { color: '#fff', fontWeight: '700' }
 });
 
 export default Perfil;

@@ -8,90 +8,66 @@ import {
   Alert,
   RefreshControl,
   ActivityIndicator,
+  Modal,
+  TextInput
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { meusAssistidosApi } from '../services/assistidosService';
+import { vincularPorCodigo } from '../services/vinculoService';
+import { useFocusEffect } from '@react-navigation/native';
+
+const ASSISTIDO_KEY = '@bioalert_assistido_selecionado';
 
 interface Idoso {
   id: string;
-  nome: string;
-  dataNascimento: string;
-  endereco: string;
-  telefone1: string;
-  telefone2?: string;
-  observacao?: string;
-  dataCadastro?: string;
+  nome_completo: string;
+  data_nascimento?: string;
+  telefone_1?: string;
+  codigo_compartilhamento?: string;
+  observacoes?: string;
 }
 
 const IdososCadastrados = ({ navigation }: { navigation: any }) => {
   const [idosos, setIdosos] = useState<Idoso[]>([]);
-  const [nomeCuidador, setNomeCuidador] = useState('');
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [codigoInput, setCodigoInput] = useState('');
 
-  // Carregar dados quando a tela receber foco
-  useFocusEffect(
-    useCallback(() => {
-      carregarDados();
-    }, [])
-  );
-
-  useEffect(() => {
-    carregarDados();
+  const carregarIdosos = useCallback(async () => {
+    setLoading(true);
+    try {
+      const resp = await meusAssistidosApi();
+      const lista = resp?.assistidos ?? resp ?? [];
+      if (Array.isArray(lista)) {
+        setIdosos(lista);
+        await AsyncStorage.setItem('@idosos_cadastrados', JSON.stringify(lista));
+      }
+    } catch (error) {
+      console.error('[IdososCadastrados] erro no backend', error);
+      const local = await AsyncStorage.getItem('@idosos_cadastrados');
+      setIdosos(local ? JSON.parse(local) : []);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  const carregarDados = async () => {
-    setLoading(true);
-    await Promise.all([carregarIdosos(), carregarNomeCuidador()]);
-    setLoading(false);
+  useFocusEffect(
+    useCallback(() => {
+      carregarIdosos();
+    }, [carregarIdosos])
+  );
+
+  const selecionarIdoso = async (idoso: Idoso) => {
+    await AsyncStorage.setItem(ASSISTIDO_KEY, JSON.stringify(idoso));
+    navigation.navigate('Menu', { assistido: idoso });
   };
 
-  const carregarIdosos = async () => {
-    try {
-      const idososSalvos = await AsyncStorage.getItem('@idosos_cadastrados');
-      console.log('Idosos carregados do AsyncStorage:', idososSalvos);
-      
-      if (idososSalvos) {
-        const idososParseados = JSON.parse(idososSalvos);
-        setIdosos(Array.isArray(idososParseados) ? idososParseados : []);
-      } else {
-        setIdosos([]);
-      }
-    } catch (error) {
-      console.error('Erro ao carregar idosos:', error);
-      Alert.alert('Erro', 'Não foi possível carregar a lista de idosos');
-      setIdosos([]);
-    }
-  };
-
-  const carregarNomeCuidador = async () => {
-    try {
-      const cuidadorSalvo = await AsyncStorage.getItem('@cuidador_data');
-      console.log('Dados do cuidador salvos:', cuidadorSalvo);
-      
-      if (cuidadorSalvo) {
-        const cuidador = JSON.parse(cuidadorSalvo);
-        console.log('Cuidador parseado:', cuidador);
-        
-        if (cuidador.nome_completo) {
-          const primeiroNome = cuidador.nome_completo.split(' ')[0];
-          setNomeCuidador(primeiroNome);
-        } else if (cuidador.nome) {
-          const primeiroNome = cuidador.nome.split(' ')[0];
-          setNomeCuidador(primeiroNome);
-        } else {
-          console.warn('Campo nome não encontrado no cuidador');
-          setNomeCuidador('Cuidador');
-        }
-      } else {
-        console.log('Nenhum cuidador encontrado no AsyncStorage');
-        setNomeCuidador('Cuidador');
-      }
-    } catch (error) {
-      console.error('Erro ao carregar nome do cuidador:', error);
-      setNomeCuidador('Cuidador');
-    }
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await carregarIdosos();
+    setRefreshing(false);
   };
 
   const calcularIdade = (dataNascimento: string) => {
@@ -100,117 +76,46 @@ const IdososCadastrados = ({ navigation }: { navigation: any }) => {
       const nascimento = new Date(parseInt(ano), parseInt(mes) - 1, parseInt(dia));
       const hoje = new Date();
       let idade = hoje.getFullYear() - nascimento.getFullYear();
-      const mesAtual = hoje.getMonth();
-      const diaAtual = hoje.getDate();
-      
-      if (mesAtual < nascimento.getMonth() || 
-          (mesAtual === nascimento.getMonth() && diaAtual < nascimento.getDate())) {
+      if (
+        hoje.getMonth() < nascimento.getMonth() ||
+        (hoje.getMonth() === nascimento.getMonth() && hoje.getDate() < nascimento.getDate())
+      ) {
         idade--;
       }
-      
       return idade;
-    } catch (error) {
-      console.error('Erro ao calcular idade:', error);
+    } catch {
       return 0;
     }
   };
 
-  const selecionarIdoso = (idoso: Idoso) => {
-    console.log('Idoso selecionado:', idoso);
-    navigation.navigate('Menu', { 
-      idosoSelecionado: idoso 
-    });
-  };
+  const handleVincular = async () => {
+    if (!codigoInput.trim()) {
+      Alert.alert('Erro', 'Digite um código válido.');
+      return;
+    }
 
-  const adicionarIdoso = () => {
-    navigation.navigate('Cadastro');
-  };
+    try {
+      await vincularPorCodigo(codigoInput.trim());
 
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await carregarDados();
-    setRefreshing(false);
-  };
-
-  const editarIdoso = (idoso: Idoso, index: number) => {
-    Alert.alert(
-      'Editar Idoso',
-      `O que deseja fazer com ${idoso.nome}?`,
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        { 
-          text: 'Editar', 
-          onPress: () => navigation.navigate('Cadastro', { idosoParaEditar: idoso })
-        },
-        { 
-          text: 'Remover', 
-          style: 'destructive',
-          onPress: () => removerIdoso(index)
-        }
-      ]
-    );
-  };
-
-  const removerIdoso = async (index: number) => {
-    const idoso = idosos[index];
-    
-    Alert.alert(
-      'Remover Idoso',
-      `Tem certeza que deseja remover ${idoso.nome}?`,
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        { 
-          text: 'Remover', 
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              const novosIdosos = idosos.filter((_, i) => i !== index);
-              await AsyncStorage.setItem('@idosos_cadastrados', JSON.stringify(novosIdosos));
-              setIdosos(novosIdosos);
-              Alert.alert('Sucesso', 'Idoso removido com sucesso');
-            } catch (error) {
-              Alert.alert('Erro', 'Não foi possível remover o idoso');
-            }
-          }
-        }
-      ]
-    );
-  };
-
-  // Função para limpar dados (apenas para desenvolvimento)
-  const limparDados = async () => {
-    Alert.alert(
-      'Limpar Dados',
-      'Deseja limpar todos os dados? (Apenas para desenvolvimento)',
-      [
-        { text: 'Cancelar', style: 'cancel' },
-        { 
-          text: 'Limpar', 
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await AsyncStorage.removeItem('@idosos_cadastrados');
-              await AsyncStorage.removeItem('@cuidador_data');
-              await AsyncStorage.removeItem('@user_logged_in');
-              await AsyncStorage.removeItem('@current_user');
-              setIdosos([]);
-              setNomeCuidador('Cuidador');
-              Alert.alert('Sucesso', 'Dados limpos com sucesso');
-            } catch (error) {
-              Alert.alert('Erro', 'Erro ao limpar dados');
-            }
-          }
-        }
-      ]
-    );
+      Alert.alert('Sucesso', 'Idoso vinculado com sucesso!');
+      setModalVisible(false);
+      setCodigoInput('');
+      carregarIdosos();
+    } catch (error: any) {
+      const msg =
+        error?.response?.data?.erro ||
+        error?.response?.data?.message ||
+        'Não foi possível vincular. Verifique o código.';
+      Alert.alert('Erro', msg);
+    }
   };
 
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
-        <View style={styles.loadingContainer}>
+        <View style={styles.loadingBox}>
           <ActivityIndicator size="large" color="#3E8CE5" />
-          <Text style={styles.loadingText}>Carregando idosos...</Text>
+          <Text style={styles.loadingText}>Carregando idosos…</Text>
         </View>
       </SafeAreaView>
     );
@@ -218,302 +123,196 @@ const IdososCadastrados = ({ navigation }: { navigation: any }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView 
+      {/* MODAL - VINCULAR POR CÓDIGO */}
+      <Modal visible={modalVisible} transparent animationType="slide">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalBox}>
+            <Text style={styles.modalTitle}>Vincular por Código</Text>
+            <Text style={styles.modalSubtitle}>
+              Insira o código fornecido por outro cuidador.
+            </Text>
+
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Digite o código"
+              value={codigoInput}
+              onChangeText={setCodigoInput}
+              autoCapitalize="characters"
+            />
+
+            <TouchableOpacity style={styles.modalBtn} onPress={handleVincular}>
+              <Text style={styles.modalBtnText}>Vincular</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => setModalVisible(false)}
+              style={styles.modalCancelBtn}
+            >
+              <Text style={styles.modalCancelText}>Cancelar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      <ScrollView
         contentContainerStyle={styles.scrollContent}
         refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            colors={['#3E8CE5']}
-            tintColor="#3E8CE5"
-          />
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={['#3E8CE5']} />
         }
       >
-        {/* Header com saudação */}
-        <View style={styles.header}>
-          <Text style={styles.saudacao}>Olá, {nomeCuidador}</Text>
-          <Text style={styles.subtitle}>
-            Selecione um idoso para monitorar
-          </Text>
-        </View>
+        <Text style={styles.headerTitle}>Idosos Cadastrados</Text>
+        <Text style={styles.headerSub}>Selecione ou vincule idosos ao seu perfil.</Text>
 
+        {/* BOTÃO PARA VINCULAR POR CÓDIGO */}
+        <TouchableOpacity
+          style={styles.linkBtn}
+          onPress={() => setModalVisible(true)}
+        >
+          <Text style={styles.linkBtnText}>Você já tem um idoso cadastrado? Vincular por código</Text>
+        </TouchableOpacity>
+
+        {/* LISTA */}
         {idosos.length === 0 ? (
-          <View style={styles.emptyState}>
-            <View style={styles.emptyStateCard}>
-              <Text style={styles.emptyStateTitle}>Nenhum idoso cadastrado</Text>
-              <Text style={styles.emptyStateSubtitle}>
-                Adicione um idoso para começar o monitoramento
-              </Text>
-              <TouchableOpacity 
-                style={styles.emptyStateButton}
-                onPress={adicionarIdoso}
-              >
-                <Text style={styles.emptyStateButtonText}>Adicionar Idoso</Text>
-              </TouchableOpacity>
-            </View>
+          <View style={styles.emptyBox}>
+            <Text style={styles.emptyTitle}>Nenhum idoso encontrado</Text>
+            <Text style={styles.emptySub}>
+              Adicione um novo idoso ou vincule-se usando o código.
+            </Text>
+            <TouchableOpacity
+              style={styles.addBtn}
+              onPress={() => navigation.navigate('Cadastro')}
+            >
+              <Text style={styles.addBtnText}>Cadastrar novo idoso</Text>
+            </TouchableOpacity>
           </View>
         ) : (
-          <View style={styles.idososList}>
-            <Text style={styles.listaTitle}>
-              {idosos.length} {idosos.length === 1 ? 'Idoso Cadastrado' : 'Idosos Cadastrados'}
-            </Text>
-            
-            {idosos.map((idoso, index) => (
+          <>
+            {idosos.map((idoso) => (
               <TouchableOpacity
-                key={idoso.id || `idoso-${index}`}
-                style={styles.idosoCard}
+                key={idoso.id}
+                style={styles.card}
                 onPress={() => selecionarIdoso(idoso)}
-                onLongPress={() => editarIdoso(idoso, index)}
-                delayLongPress={500}
               >
-                <View style={styles.idosoHeader}>
-                  <View style={styles.avatar}>
-                    <Text style={styles.avatarText}>
-                      {idoso.nome.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)}
-                    </Text>
-                  </View>
-                  <View style={styles.idosoInfo}>
-                    <Text style={styles.idosoNome}>{idoso.nome}</Text>
-                    <Text style={styles.idosoIdade}>
-                      {calcularIdade(idoso.dataNascimento)} anos
-                    </Text>
-                    <Text style={styles.idosoTelefone}>
-                      {idoso.telefone1}
-                    </Text>
-                  </View>
-                </View>
-                
-                <View style={styles.idosoDetails}>
-                  <Text style={styles.idosoEndereco} numberOfLines={1}>
-                    {idoso.endereco}
+                <Text style={styles.cardName}>{idoso.nome_completo}</Text>
+
+                {idoso.data_nascimento && (
+                  <Text style={styles.cardAge}>
+                    {calcularIdade(idoso.data_nascimento)} anos
                   </Text>
-                </View>
+                )}
 
-                <View style={styles.idosoStatus}>
-                  <View style={styles.statusIndicator} />
-                  <Text style={styles.statusText}>Pulseira conectada</Text>
-                </View>
+                {idoso.codigo_compartilhamento && (
+                  <Text style={styles.cardCode}>
+                    Código: {idoso.codigo_compartilhamento}
+                  </Text>
+                )}
 
-                <Text style={styles.editHint}>
-                  Pressione e segure para editar ou remover
-                </Text>
+                <Text style={styles.cardInfo}>{idoso.telefone_1 || '—'}</Text>
               </TouchableOpacity>
             ))}
-          </View>
+
+            {/* BOTÃO FLUTUANTE */}
+            <TouchableOpacity
+              style={styles.floatingBtn}
+              onPress={() => navigation.navigate('Cadastro')}
+            >
+              <Text style={styles.floatingText}>+</Text>
+            </TouchableOpacity>
+          </>
         )}
       </ScrollView>
-
-      {/* Botão flutuante de adicionar - Só aparece quando há idosos */}
-      {idosos.length > 0 && (
-        <TouchableOpacity 
-          style={styles.floatingButton}
-          onPress={adicionarIdoso}
-        >
-          <Text style={styles.floatingButtonText}>+</Text>
-        </TouchableOpacity>
-      )}
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  scrollContent: {
-    flexGrow: 1,
-    padding: 20,
-    paddingBottom: 100,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loadingText: {
-    marginTop: 10,
-    fontSize: 16,
-    color: '#666',
-  },
-  header: {
-    marginBottom: 30,
-    paddingTop: 10,
-  },
-  saudacao: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#666',
-    lineHeight: 22,
-  },
-  emptyState: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 40,
-  },
-  emptyStateCard: {
-    backgroundColor: 'white',
-    padding: 30,
-    borderRadius: 16,
-    alignItems: 'center',
-    width: '100%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-    borderWidth: 1,
-    borderColor: '#e8e8e8',
-  },
-  emptyStateTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#333',
-    textAlign: 'center',
-  },
-  emptyStateSubtitle: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
-    lineHeight: 22,
-    marginBottom: 25,
-  },
-  emptyStateButton: {
-    backgroundColor: '#3E8CE5',
-    paddingHorizontal: 30,
-    paddingVertical: 15,
+  container: { flex: 1, backgroundColor: '#f5f5f5' },
+  scrollContent: { padding: 20, paddingBottom: 100 },
+  headerTitle: { fontSize: 26, fontWeight: 'bold', color: '#333' },
+  headerSub: { fontSize: 15, color: '#666', marginBottom: 20 },
+
+  linkBtn: {
+    backgroundColor: '#E3F2FD',
+    padding: 14,
     borderRadius: 10,
-    alignItems: 'center',
+    marginBottom: 20,
+    borderLeftWidth: 4,
+    borderLeftColor: '#3E8CE5',
+  },
+  linkBtnText: { color: '#1976D2', fontSize: 15, fontWeight: '600' },
+
+  card: {
+    backgroundColor: '#fff',
+    padding: 18,
+    borderRadius: 12,
+    marginBottom: 15,
+    borderWidth: 1,
+    borderColor: '#eee',
+  },
+  cardName: { fontSize: 20, fontWeight: '700', color: '#333' },
+  cardAge: { fontSize: 14, color: '#777', marginTop: 4 },
+  cardInfo: { fontSize: 14, color: '#555', marginTop: 7 },
+  cardCode: { marginTop: 6, fontSize: 14, fontWeight: '700', color: '#3E8CE5' },
+
+  emptyBox: { padding: 40, alignItems: 'center' },
+  emptyTitle: { fontSize: 22, fontWeight: 'bold', marginBottom: 10 },
+  emptySub: { textAlign: 'center', fontSize: 15, color: '#666', marginBottom: 20 },
+  addBtn: {
+    backgroundColor: '#3E8CE5',
+    paddingVertical: 12,
     width: '100%',
+    borderRadius: 10,
   },
-  emptyStateButtonText: {
-    color: 'white',
+  addBtnText: { color: '#fff', textAlign: 'center', fontWeight: 'bold' },
+
+  floatingBtn: {
+    position: 'absolute',
+    bottom: 30,
+    right: 25,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#3E8CE5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5,
+  },
+  floatingText: { color: '#fff', fontSize: 32, fontWeight: 'bold' },
+
+  loadingBox: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  loadingText: { marginTop: 10, color: '#666' },
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.45)',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  modalBox: {
+    backgroundColor: '#fff',
+    padding: 25,
+    borderRadius: 14,
+    elevation: 6,
+  },
+  modalTitle: { fontSize: 22, fontWeight: 'bold', color: '#333', marginBottom: 5 },
+  modalSubtitle: { fontSize: 15, color: '#777', marginBottom: 20 },
+  modalInput: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    padding: 12,
+    borderRadius: 10,
     fontSize: 16,
-    fontWeight: 'bold',
-  },
-  idososList: {
     marginBottom: 20,
   },
-  listaTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
-    marginBottom: 15,
-  },
-  idosoCard: {
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 16,
-    marginBottom: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-    borderWidth: 1,
-    borderColor: '#e8e8e8',
-  },
-  idosoHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+  modalBtn: {
     backgroundColor: '#3E8CE5',
-    justifyContent: 'center',
+    padding: 14,
+    borderRadius: 10,
     alignItems: 'center',
-    marginRight: 15,
   },
-  avatarText: {
-    color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  idosoInfo: {
-    flex: 1,
-  },
-  idosoNome: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 4,
-  },
-  idosoIdade: {
-    fontSize: 16,
-    color: '#666',
-    fontWeight: '500',
-    marginBottom: 2,
-  },
-  idosoTelefone: {
-    fontSize: 14,
-    color: '#888',
-  },
-  idosoDetails: {
-    marginBottom: 12,
-  },
-  idosoEndereco: {
-    fontSize: 14,
-    color: '#666',
-    fontStyle: 'italic',
-  },
-  idosoStatus: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: '#f0f0f0',
-  },
-  statusIndicator: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: '#5fcf80',
-    marginRight: 8,
-  },
-  statusText: {
-    fontSize: 14,
-    color: '#666',
-    fontWeight: '500',
-  },
-  editHint: {
-    fontSize: 12,
-    color: '#999',
-    textAlign: 'center',
-    marginTop: 8,
-    fontStyle: 'italic',
-  },
-  floatingButton: {
-    position: 'absolute',
-    right: 20,
-    bottom: 70,
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#3E8CE5',
-    justifyContent: 'center',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 8,
-  },
-  floatingButtonText: {
-    color: 'white',
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginTop: 0,
-  },
+  modalBtnText: { color: '#fff', fontSize: 17, fontWeight: '700' },
+  modalCancelBtn: { marginTop: 14, alignItems: 'center' },
+  modalCancelText: { color: '#777', fontSize: 15 },
 });
 
 export default IdososCadastrados;

@@ -5,28 +5,21 @@ import { NavigationContainer, NavigationContainerRef } from '@react-navigation/n
 import { createStackNavigator } from '@react-navigation/stack';
 import { Image } from 'react-native';
 
-import Home from './pages/Home';
-import Home1 from './pages/Home1';
-import Principal from './pages/Principal';
 import Login from './pages/Login';
 import Cadastro from './pages/Cadastro';
 import CadastroCuidador from './pages/CadastroCuidador';
+
+import IdososCadastrados from './pages/IdososCadastrados';
 import Menu from './pages/Menu';
 import Pulseira from './pages/Pulseira';
 import Historico from './pages/Historico';
-import Localizacao from './pages/Localizacao';
-import BPM from './pages/BPM';
-import Emergencia from './pages/Emergencia';
-import ConfiguracaoEmergencia from './pages/ConfiguracaoEmergencia';
 import Perfil from './pages/Perfil';
-import IdososCadastrados from './pages/IdososCadastrados';
 
 import { setNavigationRef } from '../app/api/axios';
 
 const Stack = createStackNavigator();
 
 export default function App() {
-  // ⬇️ navigationRef usado pelo axios para redirecionar (quando token expira)
   const navRef = useRef<NavigationContainerRef<any>>(null);
 
   useEffect(() => {
@@ -38,7 +31,7 @@ export default function App() {
   return (
     <NavigationContainer ref={navRef}>
       <Stack.Navigator
-        initialRouteName="Home"
+        initialRouteName="Login"
         screenOptions={{
           headerStyle: { backgroundColor: '#3E8CE5', height: 120 },
           headerTintColor: 'white',
@@ -58,29 +51,12 @@ export default function App() {
           ),
         }}
       >
-        {/* ---------- ROTAS ---------- */}
-        <Stack.Screen
-          name="Home"
-          component={Home}
-          options={{ headerShown: false }}
-        />
 
-        <Stack.Screen
-          name="Home1"
-          component={Home1}
-          options={{ headerShown: false }}
-        />
-
-        <Stack.Screen
-          name="Principal"
-          component={Principal}
-          options={{ title: 'Bem-vindo' }}
-        />
-
+        {/* ----------------- LOGIN / CADASTRO ----------------- */}
         <Stack.Screen
           name="Login"
           component={Login}
-          options={{ title: 'Login' }}
+          options={{ headerShown: false }}
         />
 
         <Stack.Screen
@@ -95,6 +71,7 @@ export default function App() {
           options={{ title: 'Cadastro do Cuidador' }}
         />
 
+        {/* ----------------- IDOSOS ----------------- */}
         <Stack.Screen
           name="IdososCadastrados"
           component={IdososCadastrados}
@@ -105,57 +82,37 @@ export default function App() {
           }}
         />
 
+        {/* ----------------- MENU ----------------- */}
         <Stack.Screen
           name="Menu"
           component={Menu}
           options={{
             headerShown: false,
-            headerLeft: () => null,
             gestureEnabled: false,
           }}
         />
 
+        {/* ----------------- PULSEIRA ----------------- */}
         <Stack.Screen
           name="Pulseira"
           component={Pulseira}
-          options={{ title: 'Status da Pulseira' }}
+          options={{ title: 'Pulseira' }}
         />
 
+        {/* ----------------- HISTÓRICO ----------------- */}
         <Stack.Screen
           name="Historico"
           component={Historico}
           options={{ title: 'Histórico de Quedas' }}
         />
 
-        <Stack.Screen
-          name="Localizacao"
-          component={Localizacao}
-          options={{ title: 'Localização' }}
-        />
-
-        <Stack.Screen
-          name="BPM"
-          component={BPM}
-          options={{ title: 'Batimentos Cardíacos' }}
-        />
-
-        <Stack.Screen
-          name="Emergencia"
-          component={Emergencia}
-          options={{ title: 'Emergência' }}
-        />
-
-        <Stack.Screen
-          name="ConfiguracaoEmergencia"
-          component={ConfiguracaoEmergencia}
-          options={{ title: 'Configuração de Emergência' }}
-        />
-
+        {/* ----------------- PERFIL ----------------- */}
         <Stack.Screen
           name="Perfil"
           component={Perfil}
           options={{ title: 'Meu Perfil' }}
         />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
