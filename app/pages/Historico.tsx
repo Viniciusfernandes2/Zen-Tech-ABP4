@@ -1,3 +1,4 @@
+// src/screens/Historico.tsx
 import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
@@ -54,18 +55,51 @@ const Historico = ({ navigation }: { navigation: any }) => {
       }
 
       const resp = await getHistoricoQuedas(selected.id);
+      // resp pode ter { items } ou a lista direto
+      const listaRaw = resp?.items ?? resp ?? [];
 
-      const lista =
-        resp?.eventos ??
-        resp?.historico ??
-        resp?.data ??
-        resp ??
-        [];
+      // mapear para o formato que a UI espera
+      const lista: Evento[] = (Array.isArray(listaRaw) ? listaRaw : []).map((x: any) => {
+        // determinar data
+        const criado =
+          x.criado_em ??
+          x.created_at ??
+          x.source_timestamp ??
+          x.createdAt ??
+          x.created_at_iso ??
+          null;
+
+        // determinar tipo
+        const tipo = x.tipo ?? x.event_type ?? x.eventType ?? 'evento';
+
+        // mensagem - prioriza raw_payload.msg, raw_payload.message, x.mensagem, x.message
+        let mensagem = x.mensagem ?? x.message ?? null;
+        if (!mensagem && x.raw_payload) {
+          try {
+            if (typeof x.raw_payload === 'string') {
+              mensagem = x.raw_payload;
+            } else if (x.raw_payload.mensagem) {
+              mensagem = x.raw_payload.mensagem;
+            } else if (x.raw_payload.message) {
+              mensagem = x.raw_payload.message;
+            } else {
+              mensagem = JSON.stringify(x.raw_payload);
+            }
+          } catch {
+            mensagem = null;
+          }
+        }
+
+        return {
+          id: String(x.id ?? x.event_id ?? Math.random().toString(36).slice(2)),
+          tipo,
+          mensagem,
+          criado_em: criado ?? new Date().toISOString(),
+        };
+      });
 
       // ordenar por data decrescente
-      const ordenado = [...lista].sort((a, b) =>
-        new Date(b.criado_em).getTime() - new Date(a.criado_em).getTime()
-      );
+      const ordenado = lista.sort((a, b) => new Date(b.criado_em).getTime() - new Date(a.criado_em).getTime());
 
       setEventos(ordenado);
     } catch (e: any) {

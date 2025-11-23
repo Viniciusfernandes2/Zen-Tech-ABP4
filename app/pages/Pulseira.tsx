@@ -1,3 +1,4 @@
+// src/screens/Pulseira.tsx
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
@@ -12,9 +13,8 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import * as deviceService from '../services/deviceService';
-import { meusAssistidosApi } from '../services/assistidosService';
 import api from '../api/axios';
+import { getDeviceByAssistido, unpairDeviceApi } from '../services/deviceService';
 
 const ASSISTIDO_KEY = '@bioalert_assistido_selecionado';
 
@@ -26,6 +26,9 @@ const Pulseira = ({ navigation }: { navigation: any }) => {
   const [codigo, setCodigo] = useState<string>('');
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
+  // ============================================================
+  // Carregar assistido selecionado
+  // ============================================================
   const carregarAssistidoSelecionado = useCallback(async () => {
     try {
       const raw = await AsyncStorage.getItem(ASSISTIDO_KEY);
@@ -42,49 +45,29 @@ const Pulseira = ({ navigation }: { navigation: any }) => {
     }
   }, []);
 
-  const buscarDispositivoPorAssistido = useCallback(async (assistidoId?: string) => {
-    if (!assistidoId) return null;
-
-    const s: any = deviceService;
-
-    const candidates: any[] = [
-      s.getDeviceByAssistido,
-      s.buscarDispositivoPorAssistido,
-      s.getByAssistido,
-      s.buscarPorIdoso,
-      s.buscarPorAssistido
-    ];
-
-    for (const fn of candidates) {
-      if (typeof fn === 'function') {
-        try {
-          const resp = await fn(assistidoId);
-          const device = resp?.dispositivo ?? resp?.device ?? resp?.data ?? resp;
-          return Array.isArray(device) ? device[0] || null : device;
-        } catch { }
-      }
+  // ============================================================
+  // Buscar dispositivo associado ao assistido
+  // ============================================================
+  const carregarDispositivo = useCallback(async (assistidoId?: string) => {
+    if (!assistidoId) {
+      setDeviceInfo(null);
+      return;
     }
 
     try {
-      const resp = await meusAssistidosApi();
-      const lista = resp?.assistidos ?? resp ?? [];
-      if (Array.isArray(lista)) {
-        const a = lista.find((x: any) => String(x.id) === String(assistidoId));
-        if (a) {
-          const d = a.dispositivo ?? a.dispositivos ?? a.device ?? null;
-          return Array.isArray(d) ? d[0] : d;
-        }
-      }
-    } catch { }
-
-    try {
-      const resp = await api.get(`/devices/assistido/${assistidoId}`);
-      return resp?.data ?? null;
-    } catch { }
-
-    return null;
+      const dev = await getDeviceByAssistido(assistidoId);
+      // getDeviceByAssistido retorna "dispositivo" ou null
+      setDeviceInfo(dev || null);
+    } catch (e) {
+      // Se houver erro no backend, mantemos null (o front já mostra fallback)
+      console.warn('[Pulseira] erro ao buscar dispositivo', e);
+      setDeviceInfo(null);
+    }
   }, []);
 
+  // ============================================================
+  // Carregar tudo
+  // ============================================================
   const carregarTudo = useCallback(async () => {
     setLoading(true);
     try {
@@ -93,14 +76,13 @@ const Pulseira = ({ navigation }: { navigation: any }) => {
         setDeviceInfo(null);
         return;
       }
-      const device = await buscarDispositivoPorAssistido(sel.id);
-      setDeviceInfo(device);
+      await carregarDispositivo(sel.id);
     } catch {
       setDeviceInfo(null);
     } finally {
       setLoading(false);
     }
-  }, [carregarAssistidoSelecionado, buscarDispositivoPorAssistido]);
+  }, [carregarAssistidoSelecionado, carregarDispositivo]);
 
   useEffect(() => {
     carregarTudo();
@@ -113,38 +95,34 @@ const Pulseira = ({ navigation }: { navigation: any }) => {
   };
 
   // ============================================================
-  // 🔧 handleParear (corrigido)
+  // PAREAR DISPOSITIVO
   // ============================================================
-
   const handleParear = async () => {
     if (!assistido?.id) {
-      return Alert.alert("Atenção", "Selecione um idoso.");
+      return Alert.alert("Atenção", "Selecione um assistido.");
     }
     if (!codigo.trim()) {
       return Alert.alert("Atenção", "Informe o código da pulseira.");
     }
 
     setPareando(true);
-    try {
-      const isCurto = codigo.trim().length <= 8;
 
-      // Payload limpo: apenas UM dos dois campos
-      const payload = {
-        assistido_id: assistido.id,
-        ...(isCurto
-          ? { codigo_curto: codigo.trim().toUpperCase() }
-          : { codigo_esp: codigo.trim() }
-        )
-      };
+    try {
+      const clean = codigo.trim();
+
+      const payload =
+        clean.length <= 8
+          ? { codigo_curto: clean.toUpperCase(), assistido_id: assistido.id }
+          : { codigo_esp: clean, assistido_id: assistido.id };
 
       await api.post('/device/pair', payload);
 
-      Alert.alert('Sucesso', 'Pulseira pareada com sucesso!');
+      Alert.alert("Sucesso", "Pulseira vinculada ao assistido!");
       setCodigo('');
-      await carregarTudo();
 
+      await carregarTudo();
     } catch (err: any) {
-      const msg = err?.response?.data?.erro || err?.message || "Falha ao parear.";
+      const msg = err?.response?.data?.erro || "Falha ao parear.";
       Alert.alert("Erro", msg);
     } finally {
       setPareando(false);
@@ -152,27 +130,21 @@ const Pulseira = ({ navigation }: { navigation: any }) => {
   };
 
   // ============================================================
-  // 🔧 handleUnpair (corrigido)
+  // DESVINCULAR DISPOSITIVO
   // ============================================================
-
   const handleUnpair = async () => {
-    if (!deviceInfo) return Alert.alert("Erro", "Nenhuma pulseira vinculada.");
+    if (!deviceInfo) return Alert.alert("Erro", "Nenhum dispositivo vinculado.");
 
-    Alert.alert("Desvincular", "Deseja remover a pulseira deste idoso?", [
+    Alert.alert("Desvincular", "Tem certeza que deseja remover a pulseira?", [
       { text: "Cancelar", style: "cancel" },
       {
-        text: "Desvincular",
+        text: "Sim, remover",
         style: "destructive",
         onPress: async () => {
           try {
-            // Apenas um código enviado!
-            await api.post('/device/unpair', {
-              codigo_esp: deviceInfo.codigo_esp
-            });
-
-            Alert.alert("OK", "Pulseira desvinculada.");
-            carregarTudo();
-
+            await unpairDeviceApi(deviceInfo.codigo_esp);
+            Alert.alert("OK", "Pulseira removida.");
+            await carregarTudo();
           } catch {
             Alert.alert("Erro", "Não foi possível desvincular.");
           }
@@ -181,42 +153,34 @@ const Pulseira = ({ navigation }: { navigation: any }) => {
     ]);
   };
 
-  const handleTestPing = async () => {
-    if (!deviceInfo?.id && !deviceInfo?.codigo_esp) {
-      return Alert.alert("Erro", "Nenhuma pulseira vinculada.");
-    }
-
-    try {
-      await api.post('/device/heartbeat', {
-        codigo_esp: deviceInfo.codigo_esp
-      });
-
-      Alert.alert("OK", "Ping enviado à pulseira.");
-      carregarTudo();
-
-    } catch (err) {
-      Alert.alert("Erro", "Falha ao enviar ping.");
-    }
-  };
+  // ============================================================
+  // UI
+  // ============================================================
+  function formatLastSeen(dt?: string | null) {
+    if (!dt) return 'Nunca';
+    const d = new Date(dt);
+    if (isNaN(d.getTime())) return 'Data inválida';
+    return d.toLocaleString('pt-BR');
+  }
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView 
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+
         <View style={styles.header}>
           <Text style={styles.title}>Gerenciar Pulseira</Text>
-          <Text style={styles.subtitle}>Vincule e gerencie a pulseira do idoso</Text>
+          <Text style={styles.subtitle}>Vincule e gerencie a pulseira do assistido</Text>
         </View>
 
         {loading ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color="#6366F1" />
-            <Text style={styles.loadingText}>Carregando informações...</Text>
+            <Text style={styles.loadingText}>Carregando...</Text>
           </View>
         ) : (
           <View style={styles.card}>
+
+            {/* ================= NÃO VINCULADO ================== */}
             {!deviceInfo ? (
               <>
                 <View style={styles.statusContainer}>
@@ -224,35 +188,34 @@ const Pulseira = ({ navigation }: { navigation: any }) => {
                   <Text style={styles.statusText}>Pulseira não vinculada</Text>
                 </View>
 
-                <View style={styles.formContainer}>
-                  <Text style={styles.label}>Código da Pulseira</Text>
-                  <TextInput
-                    style={styles.input}
-                    placeholder="Digite o código da pulseira..."
-                    placeholderTextColor="#9CA3AF"
-                    value={codigo}
-                    onChangeText={setCodigo}
-                    autoCapitalize="characters"
-                  />
-                  
-                  <TouchableOpacity
-                    style={[styles.primaryButton, pareando && styles.buttonDisabled]}
-                    onPress={handleParear}
-                    disabled={pareando}
-                  >
-                    {pareando ? (
-                      <ActivityIndicator size="small" color="#FFFFFF" />
-                    ) : (
-                      <Text style={styles.primaryButtonText}>Vincular Pulseira</Text>
-                    )}
-                  </TouchableOpacity>
-                </View>
+                <Text style={styles.label}>Código da Pulseira</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Digite o código..."
+                  placeholderTextColor="#9CA3AF"
+                  value={codigo}
+                  onChangeText={setCodigo}
+                  autoCapitalize="characters"
+                />
+
+                <TouchableOpacity
+                  style={[styles.primaryButton, pareando && styles.buttonDisabled]}
+                  disabled={pareando}
+                  onPress={handleParear}
+                >
+                  {pareando ? (
+                    <ActivityIndicator size="small" color="#FFF" />
+                  ) : (
+                    <Text style={styles.primaryButtonText}>Vincular</Text>
+                  )}
+                </TouchableOpacity>
               </>
             ) : (
               <>
+                {/* ================= VINCULADA ================== */}
                 <View style={styles.statusContainer}>
                   <View style={[styles.statusDot, styles.statusPaired]} />
-                  <Text style={styles.statusText}>Pulseira Vinculada</Text>
+                  <Text style={styles.statusText}>Pulseira vinculada</Text>
                 </View>
 
                 <View style={styles.deviceInfo}>
@@ -260,37 +223,32 @@ const Pulseira = ({ navigation }: { navigation: any }) => {
                     <Text style={styles.infoLabel}>Código ESP</Text>
                     <Text style={styles.infoValue}>{deviceInfo.codigo_esp}</Text>
                   </View>
-                  
+
                   <View style={styles.infoItem}>
                     <Text style={styles.infoLabel}>Código Curto</Text>
                     <Text style={styles.infoValue}>{deviceInfo.codigo_curto}</Text>
                   </View>
-                  
+
                   <View style={styles.infoItem}>
-                    <Text style={styles.infoLabel}>Último Contato</Text>
-                    <Text style={styles.infoValue}>{deviceInfo.last_seen || "Não disponível"}</Text>
+                    <Text style={styles.infoLabel}>Último contato</Text>
+                    <Text style={styles.infoValue}>{formatLastSeen(deviceInfo.last_seen)}</Text>
                   </View>
                 </View>
 
                 <View style={styles.actionsContainer}>
-                  <TouchableOpacity 
-                    style={styles.actionButton}
-                    onPress={handleTestPing}
-                  >
-                    <Text style={styles.actionButtonText}>Testar Comunicação</Text>
-                  </TouchableOpacity>
-
+                  {/* Botão TEST removido conforme solicitado */}
                   <TouchableOpacity
                     style={[styles.actionButton, styles.dangerButton]}
                     onPress={handleUnpair}
                   >
                     <Text style={[styles.actionButtonText, styles.dangerButtonText]}>
-                      Desvincular
+                      Remover
                     </Text>
                   </TouchableOpacity>
                 </View>
               </>
             )}
+
           </View>
         )}
       </ScrollView>
@@ -299,167 +257,84 @@ const Pulseira = ({ navigation }: { navigation: any }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    backgroundColor: '#F8FAFC' 
-  },
-  scrollContent: { 
-    padding: 20, 
-    paddingBottom: 40 
-  },
-  header: {
-    marginBottom: 24,
-    alignItems: 'center',
-  },
-  title: { 
-    fontSize: 32, 
-    fontWeight: '700', 
-    color: '#1E293B',
-    marginBottom: 8,
-    textAlign: 'center'
-  },
-  subtitle: { 
-    color: '#64748B', 
-    fontSize: 16,
-    textAlign: 'center'
-  },
-  loadingContainer: { 
-    alignItems: 'center', 
-    justifyContent: 'center',
-    padding: 40
-  },
-  loadingText: {
-    marginTop: 12,
-    color: '#64748B',
-    fontSize: 14
-  },
-  card: { 
-    backgroundColor: '#FFFFFF', 
-    padding: 24, 
-    borderRadius: 16, 
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
+  container: { flex: 1, backgroundColor: '#F8FAFC' },
+  scrollContent: { padding: 20, paddingBottom: 40 },
+
+  header: { alignItems: 'center', marginBottom: 24 },
+  title: { fontSize: 32, fontWeight: '700', color: '#1E293B', marginBottom: 8 },
+  subtitle: { color: '#64748B', fontSize: 16 },
+
+  loadingContainer: { alignItems: 'center', padding: 40 },
+  loadingText: { marginTop: 12, color: '#64748B' },
+
+  card: {
+    backgroundColor: '#FFF',
+    padding: 24,
+    borderRadius: 16,
     elevation: 5,
   },
+
   statusContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 24,
     paddingBottom: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#F1F5F9'
+    borderBottomColor: '#F1F5F9',
   },
-  statusDot: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    marginRight: 8
-  },
-  statusPaired: {
-    backgroundColor: '#10B981'
-  },
-  statusUnpaired: {
-    backgroundColor: '#EF4444'
-  },
-  statusText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#1E293B'
-  },
-  formContainer: {
-    marginTop: 8
-  },
-  label: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#374151',
-    marginBottom: 8
-  },
+
+  statusDot: { width: 12, height: 12, borderRadius: 6, marginRight: 8 },
+  statusPaired: { backgroundColor: '#10B981' },
+  statusUnpaired: { backgroundColor: '#EF4444' },
+  statusText: { fontSize: 16, fontWeight: '600', color: '#1E293B' },
+
+  label: { fontSize: 14, fontWeight: '600', marginBottom: 8, color: '#374151' },
   input: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#FFF',
     borderWidth: 1.5,
     borderColor: '#E2E8F0',
     padding: 16,
     borderRadius: 12,
     fontSize: 16,
-    color: '#1E293B',
-    marginBottom: 20
+    marginBottom: 20,
   },
+
   primaryButton: {
     backgroundColor: '#6366F1',
     padding: 16,
     borderRadius: 12,
     alignItems: 'center',
-    shadowColor: '#6366F1',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 4.65,
-    elevation: 8,
   },
-  buttonDisabled: {
-    backgroundColor: '#9CA3AF',
-    shadowOpacity: 0,
-  },
-  primaryButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600'
-  },
-  deviceInfo: {
-    marginBottom: 8
-  },
+  buttonDisabled: { backgroundColor: '#9CA3AF' },
+  primaryButtonText: { color: '#FFF', fontSize: 16, fontWeight: '600' },
+
+  deviceInfo: { marginBottom: 12 },
   infoItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#F1F5F9'
+    borderBottomColor: '#F1F5F9',
   },
-  infoLabel: {
-    fontSize: 14,
-    color: '#64748B',
-    fontWeight: '500'
-  },
-  infoValue: {
-    fontSize: 14,
-    color: '#1E293B',
-    fontWeight: '600'
-  },
-  actionsContainer: {
-    marginTop: 24,
-    flexDirection: 'row',
-    gap: 12
-  },
+  infoLabel: { fontSize: 14, color: '#64748B' },
+  infoValue: { fontSize: 14, fontWeight: '600', color: '#1E293B' },
+
+  actionsContainer: { flexDirection: 'row', gap: 12, marginTop: 24 },
   actionButton: {
     flex: 1,
-    backgroundColor: '#F8FAFC',
     padding: 16,
     borderRadius: 12,
-    alignItems: 'center',
     borderWidth: 1.5,
-    borderColor: '#E2E8F0'
+    borderColor: '#E2E8F0',
+    alignItems: 'center',
   },
+  actionButtonText: { fontSize: 14, fontWeight: '600', color: '#374151' },
+
   dangerButton: {
     backgroundColor: '#FEF2F2',
-    borderColor: '#FECACA'
+    borderColor: '#FECACA',
   },
-  actionButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#374151'
-  },
-  dangerButtonText: {
-    color: '#DC2626'
-  }
+  dangerButtonText: { color: '#DC2626' },
 });
 
 export default Pulseira;
