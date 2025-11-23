@@ -12,6 +12,8 @@ import {
   ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as Notifications from 'expo-notifications';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { loginUser } from '../services/loginService';
 import { saveAuthToken, saveUserProfile } from '../api/axios';
@@ -25,6 +27,49 @@ const Login = ({ navigation }: { navigation: any }) => {
   const validarEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
+  };
+
+  // 🔥 FUNÇÃO CORRIGIDA PARA REGISTRAR TOKEN PUSH
+  const registrarTokenPushNoLogin = async () => {
+    try {
+      console.log('[Login] Iniciando registro do token push...');
+      
+      // Solicitar permissão primeiro
+      const { status } = await Notifications.requestPermissionsAsync();
+      console.log('[Login] Status da permissão:', status);
+      
+      if (status === 'granted') {
+        // Obter token atual
+        const tokenData = await Notifications.getExpoPushTokenAsync();
+        const expoToken = tokenData.data;
+        console.log('[Login] ✅ Token Expo obtido:', expoToken);
+        
+        // 🔥 CORREÇÃO: Usar api.post diretamente, não saveAuthToken
+        const response = await fetch('http://localhost:3000/api/usuarios/push-token', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${await AsyncStorage.getItem('@bioalert_token')}`
+          },
+          body: JSON.stringify({ expo_push_token: expoToken })
+        });
+
+        if (response.ok) {
+          console.log('[Login] ✅ Token push registrado no backend');
+        } else {
+          console.log('[Login] ❌ Erro ao registrar token no backend');
+        }
+        
+        // Salvar localmente também
+        await AsyncStorage.setItem('@expo_push_token', expoToken);
+        console.log('[Login] ✅ Token push salvo localmente');
+      } else {
+        console.log('[Login] ❌ Permissão de notificações negada');
+      }
+    } catch (error) {
+      console.error('[Login] ❌ Erro ao registrar token push:', error);
+      // Não falha o login se token der erro
+    }
   };
 
   const handleLogin = async () => {
@@ -53,9 +98,18 @@ const Login = ({ navigation }: { navigation: any }) => {
         return;
       }
 
-      // Salvar token e usuário conforme axios.ts
+      console.log('[Login] ✅ Login bem-sucedido, salvando dados...');
+
+      // 🔥 PRIMEIRO salvar token e usuário (isso mantém o login)
       await saveAuthToken(response.token);
       await saveUserProfile(JSON.stringify(response.usuario));
+
+      console.log('[Login] ✅ Dados de autenticação salvos');
+
+      // 🔥 DEPOIS tentar registrar token push (não bloqueia o login)
+      setTimeout(() => {
+        registrarTokenPushNoLogin();
+      }, 1000);
 
       Alert.alert('Sucesso', 'Login realizado com sucesso!', [
         {

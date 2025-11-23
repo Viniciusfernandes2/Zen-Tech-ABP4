@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "BioAlert",
-    "slug": "snack-caa9ed1d-634a-45a5-a3b6-1aa4bb8e2265",
-    "version": "1.0.0",
+    "slug": "snack-90a7024b-a943-465a-a315-125b414b54e3",
+    "version": "3.0.0",
     "orientation": "portrait",
     "icon": "./assets/pulseira-icon-sos.png",
     "userInterfaceStyle": "light",
@@ -12,6 +12,18 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/pulseira-icon-sos.png",
+          "color": "#3E8CE5",
+          "defaultChannel": "alertas"
+        }
+      ]
+    ],
+    
     "ios": {
       "supportsTablet": true
     },
@@ -21,14 +33,15 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.rodrigodeandrade90.snackcaa9ed1d634a45a5a3b61aa4bb8e2265"
+      "predictiveBackGestureEnabled": false,
+      "package": "com.rohdeandrad90.snack90a7024ba943465aa315125b414b54e3"
     },
     "web": {
       "favicon": "./assets/pulseira-icon-sos.png"
     },
     "extra": {
       "eas": {
-        "projectId": "3b9b8cc3-a4d2-455e-8d92-f76b83489115"
+        "projectId": "d6fd4fae-0a13-4077-ad83-bacd70b83a81"
       }
     }
   }
