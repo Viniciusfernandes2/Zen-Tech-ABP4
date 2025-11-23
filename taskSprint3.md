@@ -13,7 +13,7 @@ Legenda IDs
 | IC | Integração e Entrega Contínua          |
 
 
-## Sprint 1 – IoT e Detecção Local
+## Sprint 3 – IoT e Detecção Local
 
 | ID       | Descrição                                                                                      | Autor               | Data     | Status  |
 |----------|------------------------------------------------------------------------------------------------|-------------------|----------|---------|
