@@ -112,6 +112,10 @@ const Pulseira = ({ navigation }: { navigation: any }) => {
     setRefreshing(false);
   };
 
+  // ============================================================
+  // 🔧 handleParear (corrigido)
+  // ============================================================
+
   const handleParear = async () => {
     if (!assistido?.id) {
       return Alert.alert("Atenção", "Selecione um idoso.");
@@ -123,17 +127,17 @@ const Pulseira = ({ navigation }: { navigation: any }) => {
     setPareando(true);
     try {
       const isCurto = codigo.trim().length <= 8;
-      const payload: any = {
-        assistido_id: assistido.id
-      };
-      if (isCurto) payload.codigo_curto = codigo.trim().toUpperCase();
-      else payload.codigo_esp = codigo.trim();
 
-      if (payload.codigo_curto) {
-        await api.post('/device/pair', payload);
-      } else {
-        await deviceService.parearDevice(payload.codigo_esp, payload.assistido_id);
-      }
+      // Payload limpo: apenas UM dos dois campos
+      const payload = {
+        assistido_id: assistido.id,
+        ...(isCurto
+          ? { codigo_curto: codigo.trim().toUpperCase() }
+          : { codigo_esp: codigo.trim() }
+        )
+      };
+
+      await api.post('/device/pair', payload);
 
       Alert.alert('Sucesso', 'Pulseira pareada com sucesso!');
       setCodigo('');
@@ -145,6 +149,36 @@ const Pulseira = ({ navigation }: { navigation: any }) => {
     } finally {
       setPareando(false);
     }
+  };
+
+  // ============================================================
+  // 🔧 handleUnpair (corrigido)
+  // ============================================================
+
+  const handleUnpair = async () => {
+    if (!deviceInfo) return Alert.alert("Erro", "Nenhuma pulseira vinculada.");
+
+    Alert.alert("Desvincular", "Deseja remover a pulseira deste idoso?", [
+      { text: "Cancelar", style: "cancel" },
+      {
+        text: "Desvincular",
+        style: "destructive",
+        onPress: async () => {
+          try {
+            // Apenas um código enviado!
+            await api.post('/device/unpair', {
+              codigo_esp: deviceInfo.codigo_esp
+            });
+
+            Alert.alert("OK", "Pulseira desvinculada.");
+            carregarTudo();
+
+          } catch {
+            Alert.alert("Erro", "Não foi possível desvincular.");
+          }
+        }
+      }
+    ]);
   };
 
   const handleTestPing = async () => {
@@ -163,32 +197,6 @@ const Pulseira = ({ navigation }: { navigation: any }) => {
     } catch (err) {
       Alert.alert("Erro", "Falha ao enviar ping.");
     }
-  };
-
-  const handleUnpair = async () => {
-    if (!deviceInfo) return Alert.alert("Erro", "Nenhuma pulseira vinculada.");
-
-    Alert.alert("Desvincular", "Deseja remover a pulseira deste idoso?", [
-      { text: "Cancelar", style: "cancel" },
-      {
-        text: "Desvincular",
-        style: "destructive",
-        onPress: async () => {
-          try {
-            await api.post('/device/unpair', {
-              codigo_esp: deviceInfo.codigo_esp,
-              codigo_curto: deviceInfo.codigo_curto
-            });
-
-            Alert.alert("OK", "Pulseira desvinculada.");
-            carregarTudo();
-
-          } catch {
-            Alert.alert("Erro", "Não foi possível desvincular.");
-          }
-        }
-      }
-    ]);
   };
 
   return (
