@@ -17,25 +17,25 @@ Legenda IDs
 
 | ID       | Descrição                                                                                      | Autor               | Data     | Status  |
 |----------|------------------------------------------------------------------------------------------------|-------------------|----------|---------|
-| EU 001   | Criação do wireframe do Aplicativo.                                              | Luana Pinheiro     | 18/09    | ✅      |
-| LD 002   | Criação do repositorio do Github e criação do arquivo para as tasks          | Vinicius Barbosa   | 18/09    | ✅      |
-| PD 003   | Criação das páginas de Home, Iniício, Cadastro, e Menu do app.                   | Rodrigo de Andrade | 18/09    | ✅      |
-| EU 004   | Feito requisito da matéria solicitada pelo professor( Jornada do Usuário )       | Edlaine Paula      | 18/09    | ✅      |
-| IC 005   | Criação de novas Tasks                                                           | Bruno Menezes      | 22/09    | ✅      |
-| PD 006   | Implementação do banco de dados relacional SupaBase em ambiente de nuvem.     | Tiago Santini      | 22/09    | ✅      |
-| PD 007   | Criação da página de Configuração de Emergência                                  | Rodrigo de Andrade | 22/09    | ✅      |
-| EU 008   | Desenvolvimento da Logo                                                          | Luana Pinheiro     | 22/09    | ✅      |
-| IC 009   | Atualizando a página do Readme do Github.                                        | Edlaine Paula      | 22/09    | ✅      |
-| LD 010   | Levantamento dos requisitos e elaboração das tasks das 3 Sprints (mutavel)       | Bruno Menezes      | 24/09    | ✅      |
-| IC 011   | Backlog Priorizado por Sprints                                                   | Edlaine Paula      | 24/09    |   ✅   |
-| IC 012   |  configuração do Git (Criação de Branches) e inicio Git Actions    |  Vinicius Barbosa                  | 24/09         | ✅      |
-| PD 013   | Modelagem do Banco de Dados (UML)                                                |  Tiago Santini               |     24/09     | ✅      |
-| IT 014   | Levantamento de Pontos Positivos e Negativos Acelerometro MPU9250 para compra    |  Luana Pinheiro           |  24/09        | ✅      |
-| PD 015   | Imagens da Logo, Bem-Vindo e Cadastro, e Criação dos Cadastros de Idoso e Cuidador    |  Rodrigo de Andrade      |  30/09    | ✅      |
-| DW 016   | Estruturação do ambiente Backend e configuração do servidor    |  Tiago Santini Da Siva      |  30/09    | ✅      |
-| EU 017   | Atualização e ajustes do protótipo no Figma    |  Edlaine Paula      |  30/09    | ✅      |
-| IT 018         | Montar circuito ESP32 + acelerômetro                                             |         Bruno Menezes           |  02/10        | ✅      |
-| DW 019         | Conexão do banco de dados nuvem ja criado com o servidor                                           |   Tiago Santini                 |  02/10        | ✅      |
-| IT 020         | Simulção do funcionamento do sistema com a ESP32 GY85                                           |   Vinicius Barbosa                |  02/10        | ✅      |
-| PD 021         | Atualização do estilo na pagina do Menu em colocação de menu hamburguer                                            |   Rodrigo de Andrade               |  02/10        | ✅      |
-| EU 022         | Mapa de espectativas (MosCow)                                            |   Edlaine Paula               |  02/10        | ✅      |
+| IE 042   | Testes Unitarios    | Edlaine de Paula   | 06/11    | ✅      |
+| IT 043   | Conexão Wifi e Backend da ESP32 p1   | Tiago Santini    | 06/11   | ✅      |
+| IT 044   | Conexão Wifi e backend da ESP32 p2    | Bruno Henrique    | 06/11    | ✅      |
+| PD 045   | Criação teste de Queda e montando estrututa do JSON para receber a queda    | Rodrigo Andrade     | 06/11    | ✅      |
+| LW 046   | Telas de Historico de queda e controllers de Queda    | Rodrigo de Andrade    | 10/11    | ✅      |
+| IT 047   | Controller de queda e cadastro do historico no supabase    | Bruno Henrique    | 10/11   | ✅      |
+| LW 048   | Desenvolvimento do backend da Localização   | Edlaine de Paula  | 10/11    | ✅      |
+| IE 049   | Testes de Cadastros e Login   | Luana Pinheiro    |  10/11    | ✅      |
+| PD 050   | Gerando Docker   | Tiago Santini  | 10/11   | ✅      |
+| IT 051   | Estudo e Entendimento para gerar o APK    | Vinicius Barbosa     |  10/11    | ✅      |
+| IT 052   | Troca do IP na ESP32 via broadcast para idenficar qualquer backend    |  Bruno Henrique   | 12/11    | ✅      |
+| PD 053   | Autenticação de Login    | Rodrigo Andrade  | 12/11   | ✅      |
+| LW 054   | Correção login e criação do controller dispositivo   | Vinicius Barbosa    |  12/11    | ✅      |
+| PD 055   | Instalação do Docker na maquina e iniciando imagem  | Tiago Santini    | 12/11   | ✅      |
+| IE 056   | Testes unitarios de novas funcionalidades   | Edlaine de Paula     | 12/11    | ✅      |
+| IE 057   | Revisão GitHub Actions CI/CD   | Luana Pinheiro     |  12/11    | ✅      |
+| PD 058  | Atualização das rotas no Backend   | Rodrigo de Paula     |  18/11    | ✅      |
+| IT 059   | Testes e Ajustes Trocas de Wifi com ESP32   | Tiago Santini     |  18/11    | ✅      
+| LW 060   | Testes e Ajuste de Rotas e conexões do backend   | Bruno Henrique     |  18/11    | ✅      |
+| LW 061   | Criação de novas rotas, deploy do backend, melhoria da comunicação ESP32  | Vinicius Barbosa |  18/11    | ✅      |
+| EX 062   | Melhorias nas telas   | Edlaine de Paula      |  18/11    | ✅      |
+| EX 063   | Revisão dos esquemas de cores e acessibilidade  | Luana Pinheiro     |  18/11    | ✅      |
