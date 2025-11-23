@@ -59,7 +59,8 @@ const IdososCadastrados = ({ navigation }: { navigation: any }) => {
       const cuidadorSalvo = await AsyncStorage.getItem('@cuidador_data');
       if (cuidadorSalvo) {
         const cuidador = JSON.parse(cuidadorSalvo);
-        const primeiroNome = cuidador.nome.split(' ')[0];
+        // CORREÇÃO: Use nome_completo em vez de nome e pegue apenas o primeiro nome
+        const primeiroNome = cuidador.nome_completo?.split(' ')[0] || 'Cuidador';
         setNomeCuidador(primeiroNome);
       }
     } catch (error) {

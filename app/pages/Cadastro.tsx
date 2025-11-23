@@ -104,9 +104,13 @@ const Cadastro = ({ navigation }: { navigation: any }) => {
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
         style={styles.container}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 20 : 0}
       >
-        <ScrollView contentContainerStyle={styles.scrollContent}>
+        <ScrollView 
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
           <Image source={require('../assets/cadastro.png')} style={styles.logo} />
 
           <Text style={styles.title}>Cadastro do Idoso</Text>
@@ -187,7 +191,11 @@ const Cadastro = ({ navigation }: { navigation: any }) => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f5f5f5' },
-  scrollContent: { padding: 20, paddingBottom: 40 },
+  scrollContent: { 
+    padding: 20, 
+    paddingBottom: 40,
+    flexGrow: 1 
+  },
   logo: { width: 80, height: 80, alignSelf: 'center', marginBottom: 20 },
   title: {
     fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginBottom: 10, color: '#333'

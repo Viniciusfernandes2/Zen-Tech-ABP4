@@ -17,7 +17,7 @@ import Pulseira from './pages/Pulseira';
 import Historico from './pages/Historico';
 import Perfil from './pages/Perfil';
 
-import { setNavigationRef } from '../app/api/axios';
+import { setNavigationRef } from './api/axios';
 
 const Stack = createStackNavigator();
 

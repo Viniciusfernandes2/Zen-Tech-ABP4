@@ -16,7 +16,7 @@ const Home = ({ navigation }: { navigation: any }) => {
       <Image source={require('../assets/pulseira-icon-sos.png')} style={styles.logo} />
       <Text style={styles.title}>BioAlert</Text>
       <Text style={styles.subtitle}>Monitoramento Inteligente de Queda de Idoso</Text>
-      <Text style={styles.version}>Versão 1.0.1</Text>
+      <Text style={styles.version}>Versão 3.0.0</Text>
     </SafeAreaView>
   );
 }
