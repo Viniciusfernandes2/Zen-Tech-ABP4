@@ -76,7 +76,7 @@ Todas as entregas serão realizadas conforme os prazos acordados com o cliente. 
 | ------ | -------------------- | ------ | --------- |-------|
 |   1    | 📅 07/10/2025        | :white_check_mark:| [:round_pushpin: Ver Relatório](./Sprint01.md) |[:round_pushpin: Ver Relatório](./taskSprint1.md) |
 |   2    | 📅 04/11/2025        |:white_check_mark: | [:round_pushpin: Ver Relatório](./Sprint02.md) | [:round_pushpin: Ver Relatório](./taskSprint2.md)|
-|   3    | 📅 25/11/2025        | :construction:| [:round_pushpin: Ver Relatório]() | [:round_pushpin: Ver Relatório]()|
+|   3    | 📅 25/11/2025        | :construction:| [:round_pushpin: Ver Relatório](./Sprint03.md) | [:round_pushpin: Ver Relatório]()|
 
 </div>
 
