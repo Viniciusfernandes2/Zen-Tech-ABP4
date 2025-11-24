@@ -43,31 +43,20 @@ Backlog da Sprint 3:
    
 | item         | Funcionalidade                     | Descrição                                                                                   | Prioridade |
 |--------------|------------------------------------|---------------------------------------------------------------------------------------------|------------|
-| RF01    | **Soldagem do acelerômetro**           | Soldagem do sensor MPU6050 no circuito                                                     | Alta       |
-| RF02    | **Codificação embarcada**              | Soldagem dos componentes e programação da ESP32                                            | Alta       |
-| RF03    | **Comunicação com endpoint**           | Comunicação entre Arduino e endpoint                                                       | Alta       |
-| RF04 | **Integração ESP32 e Backend**         | Correção da comunicação e envio dos eixos                                                  | Alta       |
-| RF05    | **Montagem com Display I2C**           | Montagem do circuito com display I2C e codificação                                         | Alta       |
-| RF06    | **Pesquisa de componentes**            | Levantamento de peças necessárias para montagem                                            | Alta       |
-| RF07    | **CRUD e relacionamento**              | Implementação de CRUD e relações entre tabelas no banco de dados                           | Alta       |
-| RF08    | **Endpoints de usuários**              | Criação dos endpoints para cadastro de usuários                                            | Alta       |
-| RF09   | **Modelagem do banco de dados**        | Atualização da modelagem do banco                                                          | Alta       |
-| RF10    | **CRUD de usuários e assistidos**      | Criação do CRUD completo para usuários e assistidos                                        | Alta       |
-| RF11    | **Telas mobile**                       | Criação de telas de login e cadastro no app mobile                                         | Alta       |
-| RF12    | **Tela de login**                      | Desenvolvimento da tela de login                                                           | Alta       |
-| RF13    | **Página de idosos cadastrados**       | Criação da interface de visualização de idosos cadastrados                                 | Alta       |
-| RNF01 | **Git Actions**                        | Continuação da configuração de automações com GitHub Actions                               | Alta       |
-| RNF01l| **CI/CD**                              | Implementação de integração e entrega contínua                                             | Alta       |
-| RNF01| **Atualização CI/CD**                  | Ajustes e melhorias no pipeline de CI/CD                                                   | Alta       |
-| RNF02| **Testes unitários**                   | Correção e execução de testes com JEST                                                     | Alta       |
-| RNF03| **Atualização do README**              | Revisão e atualização dos documentos no README                                             | Alta       |
-| RNF04| **Backlog no README**                  | Atualização do Product Backlog no README                                                   | Alta       |
-| RNF05| **Avaliação e Trello**                 | Atualização da planilha de avaliação e organização no Trello                               | Média      |
-| RNF06| **Replanejamento de Sprints**          | Reorganização das tasks das Sprints 1 e 2                                                  | Alta       |
-| RF14    | **Mapeamento de localização**          | Inserção do mapeamento de localização no sistema                                           | Alta       |
-| RNF07| **Sprint Review e novas tasks**        | Realização da Sprint Review e definição de novas tarefas                                   | Alta       |
+| RF15    | **Implementação do envio de SMS**           | Implementar o envio de SMS usando o número salvo no Supabase para alertas automáticos e manuais.    | Alta       |
+| RF16    | **Integração Backend + SMS**              |Criar endpoint no backend para envio de SMS e conectar ao app e à ESP32.                                           | Alta       |
+| RF17    | **Ajustes finais nas telas**           | Revisão de UI/UX, acessibilidade, melhorias nas telas e padronização visual.                                                     | Alta       |
+| RF18 | **Ajustes finais das rotas do backend**         | Revisar e corrigir rotas de usuários, quedas, localização e dispositivos.                                                  | Alta       |
+| RF19    | **Testes finais (App + Backend + ESP32)**           |Testes gerais do fluxo completo: queda → backend → banco → SMS → app.                                         | Alta       |
+| RF20    | **Testes da ESP32**            |Testes de troca de Wi-Fi, broadcast do IP, envio de queda e comunicação com backend.                                           | Alta       |
+| RF21    | **Build final do APK**              | Geração da versão final instalável do aplicativo para Android.                          | Alta       |
+| RF22    | **Endpoints de usuários**              | Implantação definitiva do backend dockerizado e acessível online.                                            | Alta       |
+| RF23   | **Deploy final do Backend**        |Validação do funcionamento integrado entre todas as partes do sistema.                                                          | Alta       |
+| RNF08 | **Fluxo End-to-End completo**                        | Atualizar README, endpoints, processos de build, deploy e instruções gerais.                               | Alta       |
+| RNF09| **Testes unitários finais**                              | Rodar, revisar e corrigir testes unitários das novas funcionalidades.                                            | Alta       |
+| RNF10| **Checklist de entrega**                  |Revisão de todos os requisitos para apresentação final.                                                 | Média       |
+| RNF11| **Sprint Review final**                   |Revisão da sprint, conferindo entregas e preparação para demonstração.                                                   | Alta       |
 
-	
   </div>
 </div>
 
