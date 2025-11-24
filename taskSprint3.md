@@ -33,9 +33,15 @@ Legenda IDs
 | PD 055   | Instalação do Docker na maquina e iniciando imagem  | Tiago Santini    | 12/11   | ✅      |
 | IE 056   | Testes unitarios de novas funcionalidades   | Edlaine de Paula     | 12/11    | ✅      |
 | IE 057   | Revisão GitHub Actions CI/CD   | Luana Pinheiro     |  12/11    | ✅      |
-| PD 058  | Atualização das rotas no Backend   | Rodrigo de Paula     |  18/11    | ✅      |
+| PD 058  | Atualização das rotas no Backend   | Rodrigo Andrade     |  18/11    | ✅      |
 | IT 059   | Testes e Ajustes Trocas de Wifi com ESP32   | Tiago Santini     |  18/11    | ✅      
 | LW 060   | Testes e Ajuste de Rotas e conexões do backend   | Bruno Henrique     |  18/11    | ✅      |
 | LW 061   | Criação de novas rotas, deploy do backend, melhoria da comunicação ESP32  | Vinicius Barbosa |  18/11    | ✅      |
 | EX 062   | Melhorias nas telas   | Edlaine de Paula      |  18/11    | ✅      |
 | EX 063   | Revisão dos esquemas de cores e acessibilidade  | Luana Pinheiro     |  18/11    | ✅      |
+| IE 064  | Ajustes nas tasks no Trello e GitHub  | Bruno Henrique     |  24/11    | ✅      |
+| LD 065   | Ajustes Finais backend e frontend e codigo ESP32 | Vinicius Barbosa     |  24/11    | ✅      |
+| PD 066   | APlicação da Build do APK  |  Rodrigo Andrade     |  24/11    | ✅      |
+| IE 067   | Auxilio nos Testes unitarios no APK  | Luana Pinheiro     |  24/11    | ✅      |
+| IE 068   | Planilha de Testes unitarios | Edlaine de Paula     |  24/11    | ✅      |
+
