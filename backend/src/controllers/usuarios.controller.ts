@@ -1,28 +1,118 @@
 import { Request, Response } from 'express';
 import { supabaseAdmin } from '../lib/supabase';
 
-export async function criarCuidador(req: Request, res: Response) {
+/**
+ * GET /usuarios/me
+ * Retorna os dados do usuário logado
+ */
+export async function getMeuPerfil(req: Request, res: Response) {
   try {
-    const { email, senha, nome, telefone } = req.body;
-    if (!email || !senha || !nome) {
-      return res.status(400).json({ erro: 'Informe email, senha e nome.' });
-    }
-    const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
-      email, password: senha, email_confirm: true
-    });
-    if (authError || !authData.user) {
-      return res.status(400).json({ erro: 'Falha ao criar usuário no Auth', detalhe: authError?.message });
-    }
-    const { data: perfil, error: perfilError } = await supabaseAdmin
+    const usuarioId = (req as any).usuarioId as string | undefined;
+    if (!usuarioId) return res.status(401).json({ erro: 'Não autenticado' });
+
+    const { data: usuario, error } = await supabaseAdmin
       .from('usuarios')
-      .insert({ id_auth: authData.user.id, nome, telefone })
-      .select()
+      .select('id, auth_user_id, nome_completo, data_nascimento, telefone, email, criado_em, expo_push_token')
+      .eq('id', usuarioId)
       .single();
-    if (perfilError) {
-      return res.status(400).json({ erro: 'Falha ao criar perfil', detalhe: perfilError.message });
+
+    if (error || !usuario) {
+      return res.status(404).json({ erro: 'Usuário não encontrado', detalhe: error?.message });
     }
-    return res.status(201).json({ mensagem: 'Cuidador criado', usuario: perfil });
+
+    return res.json({ usuario });
   } catch (e: any) {
-    return res.status(500).json({ erro: 'Erro interno', detalhe: e?.message });
+    return res.status(500).json({ erro: 'Erro interno ao carregar perfil', detalhe: e?.message });
+  }
+}
+
+/**
+ * PATCH /usuarios/me
+ * Atualiza os dados do usuário logado + expo_push_token
+ */
+export async function atualizarMeuPerfil(req: Request, res: Response) {
+  try {
+    const usuarioId = (req as any).usuarioId as string | undefined;
+    const supabaseUserId = (req as any).supabaseUserId as string | undefined;
+
+    if (!usuarioId || !supabaseUserId) {
+      return res.status(401).json({ erro: 'Não autenticado' });
+    }
+
+    const camposPermitidos = [
+      'nome_completo',
+      'telefone',
+      'data_nascimento',
+      'expo_push_token' // ⭐ agora permitido
+    ];
+
+    const dadosAtualizar: any = {};
+
+    for (const campo of camposPermitidos) {
+      if (req.body[campo] !== undefined) {
+        dadosAtualizar[campo] = req.body[campo];
+      }
+    }
+
+    if (Object.keys(dadosAtualizar).length === 0) {
+      return res.status(400).json({ erro: 'Nenhum campo válido enviado para atualização.' });
+    }
+
+    const { data: atualizado, error: updateErr } = await supabaseAdmin
+      .from('usuarios')
+      .update(dadosAtualizar)
+      .eq('id', usuarioId)
+      .select('*')
+      .single();
+
+    if (updateErr) {
+      return res.status(500).json({
+        erro: 'Falha ao atualizar usuário',
+        detalhe: updateErr.message
+      });
+    }
+
+    return res.json({ mensagem: 'Perfil atualizado com sucesso!', usuario: atualizado });
+  } catch (e: any) {
+    return res.status(500).json({ erro: 'Erro interno ao atualizar perfil', detalhe: e?.message });
+  }
+}
+
+/**
+ * DELETE /usuarios/me
+ */
+export async function deletarMinhaConta(req: Request, res: Response) {
+  try {
+    const usuarioId = (req as any).usuarioId as string | undefined;
+    const supabaseUserId = (req as any).supabaseUserId as string | undefined;
+
+    if (!usuarioId || !supabaseUserId) {
+      return res.status(401).json({ erro: 'Não autenticado' });
+    }
+
+    const { error: delErrDb } = await supabaseAdmin
+      .from('usuarios')
+      .delete()
+      .eq('id', usuarioId);
+
+    if (delErrDb) {
+      return res.status(500).json({
+        erro: 'Falha ao remover usuário do banco interno',
+        detalhe: delErrDb.message
+      });
+    }
+
+    const { error: delAuthErr } = await supabaseAdmin.auth.admin.deleteUser(supabaseUserId);
+
+    if (delAuthErr) {
+      return res.status(500).json({
+        erro: 'Usuário removido internamente, mas falhou no Supabase Auth',
+        detalhe: delAuthErr.message
+      });
+    }
+
+    return res.json({ mensagem: 'Conta removida com sucesso.' });
+  } catch (e: any) {
+    return res.status(500).json({ erro: 'Erro interno ao remover usuário', detalhe: e?.message });
   }
 }
