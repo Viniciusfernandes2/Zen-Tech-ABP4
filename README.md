@@ -29,12 +29,6 @@ https://github.com/Viniciusfernandes2/deploy-bioalert/tree/main
 Sobre o Projeto :📋 
 </h2>
 
-<h2>
-
-Repositório Deploy-Bio Alert :📋 
-
-</h2>
-
 <p>
 Sistema de Detecção de Quedas para Idosos.
 <p>
