@@ -43,8 +43,6 @@ Backlog da Sprint 3:
    
 | item         | Funcionalidade                     | Descrição                                                                                   | Prioridade |
 |--------------|------------------------------------|---------------------------------------------------------------------------------------------|------------|
-| RF15    | **Implementação do envio de SMS**           | Implementar o envio de SMS usando o número salvo no Supabase para alertas automáticos e manuais.    | Alta       |
-| RF16    | **Integração Backend + SMS**              |Criar endpoint no backend para envio de SMS e conectar ao app e à ESP32.                                           | Alta       |
 | RF17    | **Ajustes finais nas telas**           | Revisão de UI/UX, acessibilidade, melhorias nas telas e padronização visual.                                                     | Alta       |
 | RF18 | **Ajustes finais das rotas do backend**         | Revisar e corrigir rotas de usuários, quedas, localização e dispositivos.                                                  | Alta       |
 | RF19    | **Testes finais (App + Backend + ESP32)**           |Testes gerais do fluxo completo: queda → backend → banco → SMS → app.                                         | Alta       |
