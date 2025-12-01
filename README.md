@@ -96,7 +96,7 @@ Legenda:
 
 A apresentação da Sprint 1 em vídeo pode ser acessada por [aqui!](https://www.youtube.com/watch?v=f40Za_Fj7MA) <br>
 A apresentação da Sprint 2 em vídeo pode ser acessada por [aqui!](https://www.youtube.com/watch?v=wLTZEGiM2kk) <br>
-A apresentação da Sprint 3 em vídeo pode ser acessada por [aqui!](https://www.youtube.com/Lf0f4GdbjfE?si=GSmeH9jsaThz0Plp)
+A apresentação da Sprint 3 em vídeo pode ser acessada por [aqui!](https://youtu.be/Lf0f4GdbjfE?si=GSmeH9jsaThz0Plp)
 
 
 ##### [🔝 Voltar ao topo ](#topo)
