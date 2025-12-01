@@ -54,6 +54,11 @@ ocorrência classificada como queda.</p>
 - 📱  Interface simples e responsiva
 <h2>
 
+**Apk do projeto:**
+<div align="left">
+<img  alt="APK-Projeto" src="./imagens/ApK projeto.jpeg" height="300px" width="200px">
+</div>
+
  Protótipo do Projeto : 📱
 </h2>
 Figma (wireframe):<a href="https://share.google/fCjJlhN0PqWNUljTA">Clique Aqui!</a>
